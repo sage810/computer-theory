@@ -75,3 +75,13 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - 커밋 메시지는 **한글**로 작성한다.
 - 형식: 첫 줄에 `요약: 핵심 내용`을 쓰고, 필요하면 한 줄 띄운 뒤 상세 설명을 쓴다.
   - 예: `CLAUDE.md 추가: Karpathy 코딩 가이드라인 적용`
+
+### 피드백 모드 (수정 요청 메모)
+
+- **"피드백 모드"** 또는 **"메모 켜줘"** → `npm run memo` 를 실행해 켠다. 과목을 말하면 `npm run memo -- ds|algo|os`.
+  끝나면 열린 주소 한 줄과 쓰는 법(글 드래그 또는 🎯 요소 고르기 → 📝 메모 → 요청 적기 → 📤 보내기 → "피드백 처리해줘")을 알린다.
+- **"피드백 처리해줘"** → `.claude/feedback.md` 의 `[ ]` 항목을 `docs/feedback-mode.md` 4절 순서대로 처리한다(최소 diff, 끝나면 `[x]` + 한 줄).
+- **세션 시작 때 `.claude/feedback.md` 에 `[ ]` 항목이 있으면 먼저 알린다.**
+- 붙여넣은 `[수정 요청]` 글(GitHub Pages 에서 복사한 것)도 같은 순서로 처리한다.
+- "메모 꺼줘" → 주소 끝을 `?memo=0` 으로 열게 안내한다(서버는 끌 필요 없다).
+- 설명서: `docs/feedback-mode.md`
