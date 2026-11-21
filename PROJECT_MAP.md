@@ -22,7 +22,7 @@
 | scripts/note_sync.py | Word 원고 → 노트 공부 칸 반영(목록 단계·굵게·고친 곳 표시·그림·표). gen_index.py 와 달리 노트 한 장의 칸만 바꿈 |
 | package.json | `npm run serve`, `npm run memo`, `npm run index` (외부 패키지 없음) |
 | docs/feedback-mode.md | 피드백 모드 켜기·쓰는 법·기록 형식·처리 순서 |
-| fonts/ | 쿠키런 700, 메이플스토리 300·700 (middle school info에서 복사), 넥슨 Lv2 고딕 400·500·700 서브셋 (사용자가 받은 TTF 에서 2350자만 추림, 500·700 은 노트만) |
+| fonts/ | 쿠키런 700, 메이플스토리 300·700 (middle school info에서 복사), 넥슨 Lv2 고딕 400·500·700 서브셋 (사용자가 받은 TTF 에서 2350자만 추림, 700 은 노트만, 500 은 지금 안 씀), KoPub World 돋움 Medium 서브셋 (노트 목록 본문) |
 | .design/style-lock.md | 확정한 색·글꼴·배치 값 |
 | .design/decisions.log | 디자인 판단 이유와 반려한 대안 |
 | .impeccable/config.json | 디자인 점검 훅이 일부러 둔 모양(굵은 테두리+둥근 모서리, 창 속 상자)을 다시 지적하지 않게 하는 예외 목록. `.design/` 과 달리 사람용 기록이 아니라 점검 도구 설정 |
