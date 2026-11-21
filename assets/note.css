@@ -52,6 +52,8 @@ main{padding:20px 20px 32px}
 .part li + li{margin-top:4px}
 .part li > ul,.part li > ol{margin-top:4px}
 .part ul ul{list-style:circle}
+.part ul ul ul{list-style:square}
+.part ul ul ul ul{list-style:'– '}
 /* 용어: 본문 글꼴은 400 만 있어 굵은 글씨는 Maplestory 700 */
 .part strong{font-family:'Maplestory',sans-serif;font-weight:700}
 /* 원본(한글 파일)과 다르게 고친 곳 */

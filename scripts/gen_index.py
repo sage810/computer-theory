@@ -22,7 +22,8 @@ def note_href(sid, no):
     f = os.path.join(SITE, rel)
     if not os.path.exists(f):
         return None
-    return rel if open(f, encoding='utf-8').read().count('<p class="empty">') < 4 else None
+    s = open(f, encoding='utf-8').read()
+    return rel if s.count('<section class="part"') > s.count('<p class="empty">') else None
 n_linked = sum(1 for si, s in enumerate(DATA) for ai, a in enumerate(s['areas']) for ii, _ in enumerate(a['items'])
                if note_href(IDS[si], f'{si+1}.{ai+1}.{ii+1}'))
 

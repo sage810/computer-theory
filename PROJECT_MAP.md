@@ -18,7 +18,8 @@
 | scripts/serve.mjs | 미리보기 서버(8090) + `/__feedback`. info-lesson 쪽(8080)과 달리 빌드 결과가 아니라 저장소를 직접 보여 주되 index.html·fonts·tools·assets·노트 폴더만 |
 | scripts/memo.mjs | `npm run memo` — 서버 켜고 `?memo=1`로 열기. info-lesson 쪽과 달리 빌드 단계 없음 |
 | scripts/gen_index.py · scripts/index-data.json | 첫 화면 만들기(`npm run index`). 전에는 세션 임시 폴더에만 있던 생성기를 옮김. 칸이 채워진 노트는 자동 링크 |
-| 노트 원고/ (git 제외) | 노트 58개의 Word 원고. 노트 HTML 과 같은 순서(머리 → 핵심 개념·예제·코드·기출·예상 문제·참고 자료). 고친 뒤 "노트 반영해줘" |
+| 노트 원고/ (git 제외) | 노트 58개의 Word 원고. 사용자가 만든 3.1.1 원고 서식(제목 → 위치 줄 → 제목 1 칸 이름 → 굵은 묶음 글머리 목록). 고친 뒤 "노트 반영해줘" |
+| scripts/note_sync.py | Word 원고 → 노트 공부 칸 반영(목록 단계·굵게·고친 곳 표시·그림·표). gen_index.py 와 달리 노트 한 장의 칸만 바꿈 |
 | package.json | `npm run serve`, `npm run memo`, `npm run index` (외부 패키지 없음) |
 | docs/feedback-mode.md | 피드백 모드 켜기·쓰는 법·기록 형식·처리 순서 |
 | fonts/ | 쿠키런 700, 메이플스토리 300·700 (middle school info에서 복사), 넥슨 Lv2 고딕 400 서브셋 (사용자가 받은 TTF 에서 2350자만 추림) |

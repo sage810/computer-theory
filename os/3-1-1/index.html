@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>3.1.1 운영체제 목적, 역할 · 컴퓨터 이론</title>
+<title>3.1.1 운영체제 목적과 역할 · 컴퓨터 이론</title>
 <link rel="stylesheet" href="../../assets/note.css">
 <link rel="stylesheet" href="../../assets/sidebar.css">
 </head>
@@ -21,28 +21,40 @@
     </div>
   </nav>
   <main>
-    <div class="note-head"><span class="big cr">3.1.1</span><h1 class="cr">운영체제 목적, 역할</h1><span class="meta">운영체제 › 3.1 운영체제 개요</span></div>
+    <div class="note-head"><span class="big cr">3.1.1</span><h1 class="cr">운영체제 목적과 역할</h1><span class="meta">운영체제 › 3.1 운영체제 개요</span></div>
 
     <!-- 아래 칸을 채워요. '아직 비어 있어요' 줄은 지우고 쓰면 돼요. 칸을 더하거나 빼도 괜찮아요 -->
     <section class="part" id="concept">
-      <h2>핵심 개념</h2>
+      <h2>운영체제의 목적과 역할</h2>
       <ul>
-        <li><strong>운영체제</strong> : 컴퓨터의 각종 자원을 효율적으로 관리 · 운영하기 위한 시스템 소프트웨어</li>
-        <li><strong>목적</strong> : 사용 편리성, 시스템 성능 향상</li>
-        <li><strong>역할</strong> : 사용 편리성, 사용자 환경 제공, 자원 할당, 제어 프로그램</li>
+        <li><strong>운영체제</strong>
+          <ul>
+            <li><strong>정의</strong> : 컴퓨터의 각종 자원을 효율적으로 관리 &amp; 운영하기 위한 시스템 소프트웨어</li>
+            <li><strong>목적</strong> : 사용 편리성, 시스템 성능 향상</li>
+            <li><strong>역할</strong> : 사용 편리성, 사용자 환경 제공, 자원 할당, 제어 프로그램</li>
+            <li><strong>기능:</strong> 프로세스 관리, 메모리 관리, 파일 관리, I/O 관리</li>
+            <li><strong>연산 (커널과 시스템 호출)</strong>
+              <ul>
+                <li><strong>커널</strong>
+                  <ul>
+                    <li>프로세스 관리, 메모리 관리, 저장장치 관리 같은 운영체제 핵심 기능을 모아놓은 것</li>
+                    <li>단일형, 계층형, 마이크로 구조</li>
+                  </ul>
+                </li>
+                <li><strong>시스템 호출</strong>
+                  <ul>
+                    <li>커널이 자신을 보호하기 위해 만든 인터페이스</li>
+                    <li>사용자, 응용 프로그램이 자원에 직접 접근하는 것을 막음</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
       </ul>
-    </section>
-    <section class="part" id="example">
-      <h2>예제·코드</h2>
-      <p class="empty">아직 비어 있어요.</p>
-    </section>
-    <section class="part" id="exam">
-      <h2>기출·예상 문제</h2>
-      <p class="empty">아직 비어 있어요.</p>
-    </section>
-    <section class="part" id="refs">
-      <h2>참고 자료</h2>
-      <p class="empty">아직 비어 있어요.</p>
+      <figure>
+        <img src="fig-1.png" width="698" height="420" alt="운영체제 구조 손그림: 응용 프로그램·유틸리티 아래 인터페이스(GUI), 그 아래 시스템 호출(커널을 보호하기 위해 만든 인터페이스), 커널(핵심 기능), 드라이버, 맨 아래 하드웨어(CPU, 메모리, 마우스, 모니터, 하드디스크)">
+      </figure>
     </section>
   </main>
   <nav class="pager" aria-label="다른 내용요소로 이동">
