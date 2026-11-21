@@ -1,5 +1,7 @@
 /* 영역 노트(ds|algo|os/1-2/) 공통 모양 — 첫 화면(index.html)과 같은 창·제목줄·과목 탭·머리 상자. 영역 안 내용요소가 쭉 이어진다. 값은 .design/style-lock.md */
+@font-face{font-family:'CookieRun';font-weight:400;src:url(../fonts/CookieRun-400.woff2) format('woff2');font-display:swap}
 @font-face{font-family:'CookieRun';font-weight:700;src:url(../fonts/CookieRun-700.woff2) format('woff2');font-display:swap}
+@font-face{font-family:'CookieRun';font-weight:900;src:url(../fonts/CookieRun-900.woff2) format('woff2');font-display:swap}
 @font-face{font-family:'Maplestory';font-weight:300;src:url(../fonts/Maplestory-300.woff2) format('woff2');font-display:swap}
 @font-face{font-family:'Maplestory';font-weight:700;src:url(../fonts/Maplestory-700.woff2) format('woff2');font-display:swap}
 @font-face{font-family:'NEXON Lv2 Gothic';font-weight:400;src:url(../fonts/NEXONLv2Gothic-Regular.subset.woff2) format('woff2');font-display:swap}

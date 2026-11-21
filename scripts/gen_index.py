@@ -35,7 +35,9 @@ n_linked = sum(1 for si, s in enumerate(DATA) for ai, a in enumerate(s['areas'])
                if note_href(IDS[si], f'{si+1}.{ai+1}.{ii+1}'))
 
 CSS = """
+  @font-face{font-family:'CookieRun';font-weight:400;src:url(fonts/CookieRun-400.woff2) format('woff2');font-display:swap}
   @font-face{font-family:'CookieRun';font-weight:700;src:url(fonts/CookieRun-700.woff2) format('woff2');font-display:swap}
+  @font-face{font-family:'CookieRun';font-weight:900;src:url(fonts/CookieRun-900.woff2) format('woff2');font-display:swap}
   @font-face{font-family:'Maplestory';font-weight:300;src:url(fonts/Maplestory-300.woff2) format('woff2');font-display:swap}
   @font-face{font-family:'Maplestory';font-weight:700;src:url(fonts/Maplestory-700.woff2) format('woff2');font-display:swap}
   :root{--ink:#4b3b6b;--paper:#fffdf7;--page:#e7e3f7;--grid:#d8d2ee;--soft:#fffaee;--muted:#5f4f86;--line:rgba(75,59,107,.16);--guide:rgba(75,59,107,.28);--sh:rgba(75,59,107,.18);--focus:#d9488f}
