@@ -17,9 +17,52 @@ venv/
 # Node
 node_modules/
 
-# 비밀 정보
+# ===== 비밀 정보 (키, 비밀번호, 토큰) =====
+# 환경 변수 파일 (예시 파일은 커밋 허용)
 .env
 .env.*
+!.env.example
+!.env.sample
+
+# 개인 키, 인증서
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
+id_rsa*
+id_ed25519*
+id_ecdsa*
+
+# 클라우드, API 인증 정보
+credentials.json
+credentials*.json
+client_secret*.json
+service-account*.json
+service_account*.json
+token.json
+tokens.json
+*.token
+
+# Google Apps Script(clasp) 로그인 토큰
+.clasprc.json
+
+# 비밀번호, 설정 파일
+secrets.*
+secret.*
+*.secret
+*.secrets
+passwords.*
+password.*
+config.local.*
+*.local.json
+.netrc
+.npmrc
+.pypirc
 
 # Claude Code 개인 설정
 .claude/settings.local.json
