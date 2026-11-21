@@ -97,7 +97,7 @@ function feedback(req, res) {
   return true;
 }
 
-// 정적 파일 — 사이트에 올라가는 것(index.html · fonts/ · tools/)만 내보낸다. 메모·설정·엑셀은 보이지 않게
+// 정적 파일 — 사이트에 올라가는 것(index.html · fonts/ · tools/ · assets/ · 노트 ds/ algo/ os/)만 내보낸다. 메모·설정·엑셀은 보이지 않게
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
   '.json': 'application/json', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.ico': 'image/x-icon' };
 function onRequest(req, res) {
@@ -107,7 +107,7 @@ function onRequest(req, res) {
   if (p.endsWith('/')) p += 'index.html';
   const segs = p.split('/').filter(Boolean);
   const f = path.join(ROOT, ...segs);
-  const allowed = (segs.length === 1 && segs[0] === 'index.html') || (segs.length > 1 && ['fonts', 'tools'].includes(segs[0]));
+  const allowed = (segs.length === 1 && segs[0] === 'index.html') || (segs.length > 1 && ['fonts', 'tools', 'assets', 'ds', 'algo', 'os'].includes(segs[0]));
   const blocked = !allowed || segs.some((s) => s.startsWith('.'));
   if (blocked || !f.startsWith(ROOT + path.sep) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); res.end(); return; }
   res.writeHead(200, { 'content-type': TYPES[path.extname(f).toLowerCase()] || 'application/octet-stream', 'cache-control': 'no-store' });

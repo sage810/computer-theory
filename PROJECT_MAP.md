@@ -7,9 +7,11 @@
 | 파일 | 설명 |
 |---|---|
 | index.html | 첫 화면(GitHub Pages). info-lesson 첫 화면과 레트로 창 겉모습은 같으나, 단원 세로 칸 대신 맨 위 과목 탭 + 영역별 트리 개요(`1.1.1`, `#키워드`) + 세부내용 접고 펴기 |
-| .github/workflows/pages.yml | main에 push하면 index.html·fonts·tools/memo.js만 Pages에 배포. info-lesson의 같은 파일과 달리 빌드 없이 복사만 |
+| ds/·algo/·os/ `번호/index.html` | 내용요소 공부 노트 템플릿 58장(예: `ds/1-2-4/`). 머리(번호·이름·키워드·세부내용) + 빈 칸 4개(핵심 개념·예제·코드·기출·예상 문제·참고 자료) + 이전·목차·다음. 첫 화면 목차에는 아직 링크 안 함 |
+| assets/note.css | 노트 58장이 같이 쓰는 모양. 첫 화면과 같은 레트로 창·색·글꼴, 과목 색은 `body.s-ds/s-algo/s-os` |
+| .github/workflows/pages.yml | main에 push하면 index.html·fonts·tools/memo.js·assets·노트 폴더만 Pages에 배포. info-lesson의 같은 파일과 달리 빌드 없이 복사만 |
 | tools/memo.js | 피드백 모드 화면 쪽(`?memo=1`). middle school info의 `msi-memo.js`와 같으나 위치를 '과목 › 영역 › 내용요소'로 적음 |
-| scripts/serve.mjs | 미리보기 서버(8090) + `/__feedback`. info-lesson 쪽(8080)과 달리 빌드 결과가 아니라 저장소를 직접 보여 주되 index.html·fonts·tools만 |
+| scripts/serve.mjs | 미리보기 서버(8090) + `/__feedback`. info-lesson 쪽(8080)과 달리 빌드 결과가 아니라 저장소를 직접 보여 주되 index.html·fonts·tools·assets·노트 폴더만 |
 | scripts/memo.mjs | `npm run memo` — 서버 켜고 `?memo=1`로 열기. info-lesson 쪽과 달리 빌드 단계 없음 |
 | package.json | `npm run serve`, `npm run memo` (외부 패키지 없음) |
 | docs/feedback-mode.md | 피드백 모드 켜기·쓰는 법·기록 형식·처리 순서 |

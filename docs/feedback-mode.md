@@ -51,6 +51,7 @@ GitHub Pages 주소에서 켜면 "📤 보내기" 대신 **➕ 목록에 담기 
 
 1. `.claude/feedback.md` 의 `[ ]` 항목을 읽는다. 세션을 시작할 때 `[ ]` 가 있으면 먼저 알린다.
 2. `index.html` 에서 **위치의 번호(예: `2.2.5`)와 선택한 글**로 Grep 해서 고칠 줄을 찾는다. 요소 이름은 보조.
+   - 제목 줄 페이지가 `/ds/1-2-4/` 처럼 노트 주소면 그 폴더의 `index.html` 을 고친다. 모든 노트에 해당하는 모양이면 `assets/note.css`.
 3. **요청한 범위만 최소 diff** 로 고친다(Edit). 모호하면 고치기 전에 묻고 `[ ]` 로 둔다.
    - 내용요소·세부내용 글을 바꾸는 요청이면, 원본 `example1.xlsx` 와 달라진다는 점을 한 줄로 알린다.
 4. "밋밋해", "더 보기 좋게"처럼 느낌·판단인 요청은 바로 고치지 않고 후보 2~3개를 먼저 보인다. 기준은 `.design/style-lock.md`.
@@ -62,7 +63,7 @@ GitHub Pages 주소에서 켜면 "📤 보내기" 대신 **➕ 목록에 담기 
 | 파일 | 역할 |
 |---|---|
 | `tools/memo.js` | 화면 쪽. `?memo=1` 일 때만 켜짐. 요소 고르기·글 선택·위치 찾기(과목 › 영역 › 내용요소)·보내기/복사. `index.html` 맨 아래에서 불러오고, GitHub Pages 에도 같이 올라간다 |
-| `scripts/serve.mjs` | 미리보기 서버(8090). 사이트에 올라가는 것(`index.html` · `fonts/` · `tools/`)만 보여 준다(메모·설정·엑셀은 안 보임). `/__feedback` — GET 처리 전 목록 · POST 추가 · DELETE 처리 전 항목 지우기. 주소는 127.0.0.1·localhost·이 PC 의 Tailscale 주소만, Origin 은 같은 곳만, 쓰기는 JSON 만(아니면 403·415) |
+| `scripts/serve.mjs` | 미리보기 서버(8090). 사이트에 올라가는 것(`index.html` · `fonts/` · `tools/` · `assets/` · 노트 `ds/` `algo/` `os/`)만 보여 준다(메모·설정·엑셀은 안 보임). `/__feedback` — GET 처리 전 목록 · POST 추가 · DELETE 처리 전 항목 지우기. 주소는 127.0.0.1·localhost·이 PC 의 Tailscale 주소만, Origin 은 같은 곳만, 쓰기는 JSON 만(아니면 403·415) |
 | `scripts/memo.mjs` | `npm run memo` — 서버 켜기·브라우저 열기 |
 
 ## 6. 문제 해결
