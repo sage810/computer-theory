@@ -28,7 +28,15 @@
       <!-- 칸: Word 원고(노트 원고/…/3-5 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-3-5-1-1">
         <h3>입출력 장치의 유형과 특성</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>저장장치의 개념</strong>
+            <ul>
+              <li><strong>저장장치</strong> : 저장 매체와 이 매체에 데이터를 저장하고 검색하기 위한 장치</li>
+              <li>종류 : 자기 테이프, 자기 디스크</li>
+              <li>데이터 전송 시간 = 헤드 활동 시간 (head activation time) + 탐색 시간 (seek time) + 회전 지연 시간 (rotational latency) + 전송 시간 (transfer time) <span class="fix">원본과 다름 · 원본: “탐구 시간 (seek time)”</span></li>
+            </ul>
+          </li>
+        </ul>
       </section>
     </article>
     <article class="topic" id="n-3-5-2">
@@ -44,7 +52,32 @@
       <!-- 칸: Word 원고(노트 원고/…/3-5 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-3-5-3-1">
         <h3>디스크 스케줄링</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>디스크 스케줄링</strong>
+            <ul>
+              <li><strong>디스크 스케줄링</strong> : 디스크에서 찾으려는 데이터가 여러 곳에 흩어져 있을 때, 헤드를 어떻게 움직이느냐를 결정</li>
+            </ul>
+          </li>
+          <li><strong>디스크 접근 시간</strong>
+            <ul>
+              <li><strong>디스크 탐색 시간 (disk seeking time)</strong> : access arm이 움직여서 정보가 저장된 트랙으로 이동하는 시간</li>
+              <li><strong>회전 지연 시간 (latency time, rotational delay)</strong> : 해당 트랙에서 디스크 원판의 회전으로 원하는 섹터가 헤드의 바로 아래 위치할 때까지의 소비 시간</li>
+              <li><strong>전송 시간 (transfer time)</strong> : 디스크 헤드를 통해 읽어 낸 정보를 주기억장치로 전송하는 시간</li>
+            </ul>
+          </li>
+          <li><strong>디스크 스케줄링 분류 기준 (스케줄링의 좋고 나쁨의 기준)</strong>
+            <ul>
+              <li>1. <strong>처리율 (throughput)</strong> : 단위 시간에 디스크 헤드가 찾을 수 있는 데이터의 수 최대화</li>
+              <li>2. <strong>평균 응답 시간 (mean response time)</strong> : 요청이 디스크에 전해질 때부터 결과가 나올 때까지의 시간의 평균값 (대기 시간 + 탐색 시간 + 회전 시간)</li>
+              <li>3. <strong>응답 시간의 편차 (variance of response time)</strong> : 평균 반응 시간을 줄이고 이를 예측할 수 있도록 하는 것. 데이터 읽는 시간들의 차이가 작도록 하는 것</li>
+            </ul>
+          </li>
+          <li><strong>디스크 스케줄링 유형</strong>
+            <ul>
+              <li>FCFS (First Come First Served)</li>
+            </ul>
+          </li>
+        </ul>
       </section>
     </article>
   </main>

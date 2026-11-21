@@ -62,7 +62,88 @@
       <!-- 칸: Word 원고(노트 원고/…/3-3 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-3-3-5-1">
         <h3>페이지 교체 알고리즘</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>페이지 교체 알고리즘</strong>
+            <ul>
+              <li>새 페이지 할당 공간이 없을 경우, 메인 메모리에 적재되어 있던 페이지 중 희생자를 선택해 강제로 내보냄</li>
+              <li><strong>지역 교체</strong> : 페이지 부재 발생한 프로세스가, 자기가 가진 페이지 중에서만 희생 페이지 선정 → 할당 결과가 각각의 특정 프로세스로 지역화됨</li>
+              <li><strong>전역 교체</strong> : 모든 프로세스에 적재된 모든 페이지 중에서 희생 페이지 선정 → 교체와 할당 방법과의 연관성을 높일 수 있다</li>
+            </ul>
+          </li>
+          <li><strong>FIFO</strong>
+            <ul>
+              <li>메인 메모리에 가장 오래 있었던 페이지부터 교체함</li>
+              <li>장점 : 구현이 쉽다</li>
+              <li>단점 : 페이지 부재율이 올라감</li>
+            </ul>
+          </li>
+          <li><strong>LRU (Least Recently Used)</strong>
+            <ul>
+              <li>장점 : FIFO보다 페이지 부재율이 적다</li>
+              <li>단점 : 참조 시간 기록하느라 오버헤드가 크다 → 하드웨어의 지원 필요</li>
+            </ul>
+          </li>
+          <li><strong>클록 알고리즘 (= 2차 기회 알고리즘)</strong>
+            <ul>
+              <li>전제 : 페이지마다 참조 비트가 존재. 별말 없으면, 포인터는 맨 위에서 시작한다.</li>
+              <li>규칙
+                <ul>
+                  <li>1. 페이지 hit일 경우, 현재 포인터 위치 안 옮긴다!!!</li>
+                  <li>2. 페이지 miss이고, 페이지 프레임이 꽉 차서 교체 필요 → 현재 포인터가 가리키는 페이지의 참조 비트를 검사
+                    <ul>
+                      <li>if 현재 포인터가 가리키고 있는 페이지의 참조 비트 = 0 → ① 해당 페이지 교체 ② 이후, 현재 포인터 위치 한 칸 옮김 (next!)</li>
+                      <li>if 현재 포인터가 가리키고 있는 페이지의 참조 비트 = 1 → ① 해당 페이지의 참조 비트를 0으로 변경한다 ② 이후, 현재 포인터 위치 한 칸 옮김 (next!)</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>개선된 2차 기회 알고리즘</strong>
+            <ul>
+              <li>전제 : 클록 알고리즘 + 갱신 비트 추가</li>
+              <li>규칙 : 기본적인 규칙은 클록 알고리즘과 같다.</li>
+            </ul>
+          </li>
+        </ul>
+        <table>
+          <thead><tr><th scope="col">(참조 비트, 갱신 비트)</th><th scope="col"></th></tr></thead>
+          <tbody>
+            <tr><th scope="row">(0, 0) 일 때</th><td>교체 대상이다! 교체함<br>이후, 현재 포인터 위치 한 칸 옮김 (next!)</td></tr>
+            <tr><th scope="row">(0, 1)</th><td>(0, 1) → (0, 0)으로 변경<br>이후, 현재 포인터 위치 한 칸 옮김 (next!)</td></tr>
+            <tr><th scope="row">(1, 0)</th><td>(1, 0) → (0, 1)으로 변경<br>이후, 현재 포인터 위치 한 칸 옮김 (next!)</td></tr>
+            <tr><th scope="row">(1, 1)</th><td>(1, 1) → (1, 0)으로 변경<br>이후, 현재 포인터 위치 한 칸 옮김 (next!)</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="part" id="s-3-3-5-2">
+        <h3>쓰레싱과 작업 집합 (working set)</h3>
+        <ul>
+          <li><strong>쓰레싱 (Thrashing)</strong>
+            <ul>
+              <li>쓰레싱 : (운동 경기에서) 맞는 것, 몽둥이질 당한다</li>
+              <li>프로세스들이 얻어맞고 있다 = 프로세스들이 실행하지 못하고 있다</li>
+              <li>누가 때리는가? 가상 메모리의 페이지 부재 (page fault)</li>
+              <li>즉, <strong>쓰레싱</strong> : 프로세스 실행보다 페이지 부재 처리에 CPU가 힘 쏟고 있는 상황</li>
+              <li>프로그램 수행 시간 &lt; 페이지 교환 시간 → 성능 저하</li>
+              <li>쓰레싱 방지법
+                <ul>
+                  <li>1. 프로세스에게 충분한 메인 메모리 할당해 준다. (현실성 없음)</li>
+                  <li>2. working set 이용</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>working set (작업 집합)</strong>
+            <ul>
+              <li>프로세스의 최소 프레임 요구량 파악</li>
+              <li>프로세스의 최소 프레임 할당을 보장 → working set만큼은 메인 메모리에 유지해 주는 약속을 해 줌 → 쓰레싱 방지</li>
+              <li>working set 안에 없는 페이지를 참조했는데 그 페이지가 없다면 page fault 발생 → 쓰레싱 발생할 수 있음</li>
+              <li><strong>작업 집합 구간 (working set window)</strong> : 일정한 window size △의 메모리 참조 구간</li>
+              <li><strong>작업 집합 (working set)</strong> : 최근의 작업 집합 구간에서 참조한 메모리 페이지들의 집합</li>
+            </ul>
+          </li>
+        </ul>
       </section>
     </article>
   </main>
