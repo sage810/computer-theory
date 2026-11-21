@@ -1,4 +1,4 @@
-/* 내용요소 공부 노트 공통 모양 — 첫 화면(index.html)과 같은 창·제목줄·과목 탭·머리 상자·영역 제목·안내선. 값은 .design/style-lock.md */
+/* 내용요소 공부 노트 공통 모양 — 첫 화면(index.html)과 같은 창·제목줄·과목 탭·머리 상자·영역 제목. 값은 .design/style-lock.md */
 @font-face{font-family:'CookieRun';font-weight:700;src:url(../fonts/CookieRun-700.woff2) format('woff2');font-display:swap}
 @font-face{font-family:'Maplestory';font-weight:300;src:url(../fonts/Maplestory-300.woff2) format('woff2');font-display:swap}
 @font-face{font-family:'Maplestory';font-weight:700;src:url(../fonts/Maplestory-700.woff2) format('woff2');font-display:swap}
@@ -41,10 +41,9 @@ main{padding:20px 20px 32px}
 .det li{display:flex;gap:8px;font-size:15px;line-height:1.6;text-wrap:pretty}
 .det li .br{flex:none;color:var(--muted)}
 
-/* 공부 칸: 영역 제목 + 왼쪽 세로 안내선 (첫 화면 트리와 같음) */
-.part{position:relative;margin-top:36px;padding-left:39px}
-.part::before{content:'';position:absolute;left:12px;top:36px;bottom:0;border-left:3px solid var(--guide)}
-.part > h2{margin:0 0 8px -39px;font-family:'CookieRun','Maplestory',sans-serif;font-size:21px;font-weight:700;line-height:1.3}
+/* 공부 칸: 영역 제목 글꼴 + 선 없이 넓은 칸 사이 여백과 들여쓰기로 묶음 (시안 G) */
+.part{margin-top:48px;padding-left:24px}
+.part > h2{margin:0 0 12px -24px;font-family:'CookieRun','Maplestory',sans-serif;font-size:21px;font-weight:700;line-height:1.3}
 .part > :nth-child(2){margin-top:0}
 .part h3{margin:24px 0 8px;font-family:'Maplestory',sans-serif;font-size:18px;font-weight:700;line-height:1.4}
 .part h4{margin:16px 0 4px;font-family:'Maplestory',sans-serif;font-size:16px;font-weight:700;line-height:1.4;color:var(--muted)}
@@ -91,9 +90,8 @@ img{max-width:100%;height:auto}
   main{padding:16px 12px 24px}
   .note-head h1{font-size:22px}
   .note-head .meta{margin-left:0}
-  .part{padding-left:23px}
-  .part::before{left:4px}
-  .part > h2{margin-left:-23px}
+  .part{margin-top:40px;padding-left:16px}
+  .part > h2{margin-left:-16px}
   .pager{grid-template-columns:1fr 1fr;padding:16px 12px}
   .pager .toc{grid-column:1 / -1;grid-row:1;justify-self:center}
 }
