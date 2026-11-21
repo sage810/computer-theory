@@ -47,6 +47,10 @@
             </ul>
           </li>
         </ul>
+        <p>Tip) 프로세스와 스레드</p>
+        <p>-프로그램 (정적) -&gt; 실행 -&gt; 프로세스 (=task, 동적)</p>
+        <p>-운영체제는 프로그램을 메모리의 적당한 위치로 가져와서 작업 지시서 (PCB, TCB; process control block)을 만들음</p>
+        <p>-어떤 프로그램이 프로세스가 되었다 = 운영체제로부터 프로세스 제어 블록을 받았다는 의미</p>
       </section>
     </article>
     <article class="topic" id="n-3-2-2">
@@ -94,7 +98,84 @@
       <!-- 칸: Word 원고(노트 원고/…/3-2 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-3-2-4-1">
         <h3>교착상태</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>교착상태 탐지</strong>
+            <ul>
+              <li>주기적으로 환형대기 발생했는지 탐지 → 발생 시 해결</li>
+              <li>자원 할당이 가능하다면 항상 자원을 할당해줌</li>
+              <li>교착상태가 발생하면 회복 작업 수행</li>
+              <li><strong>해결법</strong> : 자원할당그래프 소거법, 개선된 은행원 알고리즘</li>
+            </ul>
+          </li>
+          <li><strong>자원할당 그래프</strong>
+            <ul>
+              <li><strong>요청 간선 Pi → Rj</strong> : 프로세스 Pi가 자원 Rj에서 1개의 자원을 요청하고 대기</li>
+              <li><strong>할당 간선 Rj → Pi</strong> : 자원 Rj의 자원 1개가 프로세스 Pi에 할당됨 <span class="fix">원본과 다름 · 원본: “프로세스 Pi가 자원 Rj에서 1개의 자원을 요청했었고 대기”</span></li>
+              <li>if 순환 사이클이 없다 = 교착상태 없다</li>
+              <li>if 순환 사이클이 있다
+                <ul>
+                  <li>순환에 참여한 모든 자원이 하나의 instance만 가지고 있다 = 반드시 교착상태</li>
+                  <li>순환에 참여한 자원이 여러 개의 instance를 가지고 있다 = 반드시 교착상태 X</li>
+                </ul>
+              </li>
+              <li><strong>소거법</strong>
+                <ul>
+                  <li>자원할당 그래프를 이용해서 교착상태 탐지하는 방법</li>
+                  <li>그래프의 간선이 모두 제거된다면 교착상태 X</li>
+                  <li>그래프의 간선이 모두 제거되지 못하면 교착상태 존재 탐지 O</li>
+                </ul>
+              </li>
+              <li><strong>소거법 순서</strong>
+                <ul>
+                  <li>① (자원 입장에서) unblocked P 찾아서 선택 (당장 자원할당 해줄 수 있는 프로세스 찾기)</li>
+                  <li>② 선택한 unblocked P와 관련된 edge 제거 (=종료되었다고 간주)</li>
+                  <li>③ 반복</li>
+                </ul>
+                <figure>
+                  <img src="3-2-4-fig-1.png" width="1440" height="859" alt="소거법 손그림: 자원할당 그래프(R1 → P1 할당, P1 → R2 요청, R1 → P2, P2 → R2, P3·P4 와 두 자원 사이 순환)에서 unblocked 인 P1 을 골라 간선을 지우고, 이어서 P2 를 골라 간선을 지움. P3·P4 의 순환 대기는 지울 수 없어 남음 → 종료 불가능(순환 대기 존재), 자원을 몰아주는 등의 해결책 필요">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>대기 그래프 알고리즘</strong>
+            <ul>
+              <li>자원 타입마다 인스턴스가 하나만 존재하는 경우</li>
+              <li>대기 간선 사용 (대기 간선 Pi → Pj는 프로세스 Pi가 Pj가 가진 자원을 기다리는 것) <span class="fix">원본과 다름 · 원본: “대기 간선 Pi → Rj는 프로세스 Pi가 자원 Rj 기다리는 것”</span></li>
+              <li>사이클 탐지 알고리즘 이용해 검사</li>
+            </ul>
+            <figure>
+              <img src="3-2-4-fig-2.png" width="1240" height="680" alt="(a) 자원 할당 그래프: P1 → R1 → P2, P2 → R3 → P5, P2 → R4 → P3, P3 → R5, P2 → R5, R5 → P4, P4 → R2 → P1. (b) 대응되는 대기 그래프: P1 → P2, P2 → P5, P2 → P3, P2 → P4, P3 → P4, P4 → P1 (자원 노드를 빼고 기다림만 남김)">
+              <figcaption>교재 그림 7.9와 같은 구성으로 다시 그림</figcaption>
+            </figure>
+          </li>
+          <li><strong>교착상태 회복</strong>
+            <ul>
+              <li><strong>교착상태 회복</strong> : 사이클이 없어질 때까지 프로세스 종료시킴 or 할당된 자원 중단시킴</li>
+              <li><strong>(1) 교착상태 프로세스 모두 종료시킴</strong>
+                <ul>
+                  <li><strong>장점</strong> : 확실하게 교착상태 사이클 없앨 수 있다</li>
+                  <li><strong>단점</strong> : 비용이 크다 (프로세스가 연산한 결과 다 버려야함)</li>
+                </ul>
+              </li>
+              <li><strong>(2) 교착상태 제거될 때까지 한 프로세스씩 종료</strong>
+                <ul>
+                  <li><strong>단점</strong> : 오버헤드 크다 (프로세스가 종료될 때마다 탐지 알고리즘 호출해서 프로세스들이 아직도 교착상태인지 확인해야함)</li>
+                </ul>
+              </li>
+              <li><strong>(3) 교착상태 프로세스들로부터 자원을 선점함</strong>
+                <ul>
+                  <li><strong>자원 선점 시 고려사항</strong>
+                    <ul>
+                      <li>① <strong>희생자 선택</strong> : 비용 최소화하는 방향으로 자원 선점 순서 결정해야함</li>
+                      <li>② <strong>복귀 (rollback)</strong> : 시스템이 실행하는 모든 프로세스들의 상태 정보 유지해야함 <span class="fix">원본과 다름 · 원본: “복귀 (rollover)”</span></li>
+                      <li>③ <strong>기아</strong> : 기아상태 발생하면 안됨</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </section>
     </article>
     <article class="topic" id="n-3-2-5">
