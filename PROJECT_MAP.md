@@ -6,10 +6,12 @@
 
 | 파일 | 설명 |
 |---|---|
-| index.html | 첫 화면(GitHub Pages). info-lesson 첫 화면과 레트로 창 겉모습은 같으나, 단원 세로 칸 대신 맨 위 과목 탭 + 영역별 트리 개요(`1.1.1`, `#키워드`) + 세부내용 접고 펴기 |
+| index.html | 첫 화면(GitHub Pages). info-lesson 첫 화면과 레트로 창 겉모습은 같으나, 단원 세로 칸 대신 맨 위 과목 탭 + 영역 상자마다 `번호 | 내용요소 | 세부내용` 표(시안 D) + 왼쪽 고정 목차. `npm run index` 로 만듦 |
 | (index.html 목차 링크) | 노트 칸이 하나라도 채워진 내용요소는 이름이 노트 링크가 되고 '준비 중'이 빠짐, 제목줄 '연결된 자료' 숫자에 셈 |
 | ds/·algo/·os/ `번호/index.html` | 내용요소 공부 노트 템플릿 58장(예: `ds/1-2-4/`). 머리(번호·이름·키워드·세부내용) + 빈 칸 4개(핵심 개념·예제·코드·기출·예상 문제·참고 자료) + 이전·목차·다음. 첫 화면 목차에는 아직 링크 안 함 |
 | os/3-1-1·3-1-2·3-1-3·3-1-5·3-1-6·3-2-1·3-2-2·3-2-5·3-2-6 | 위 템플릿과 같으나 '핵심 개념' 칸을 사용자의 `운영체제.hwp` 정리로 채움. 원본과 다르게 고친 곳은 `.fix` 꼬리표. 3-2-6 폴더에 HRN 손글씨 공식 그림 `hrn-aging.jpeg` |
+| assets/sidebar.css · assets/sidebar.js | 왼쪽 고정 목차. 첫 화면과 노트 58장이 같은 파일을 불러 씀(`data-root`, 노트는 `data-current`). 과목 › 영역 드롭다운, 목차 자체 접기, 좁은 화면은 서랍 |
+| assets/toc.js | 왼쪽 목차 데이터(과목·영역·내용요소·노트 있음 여부). `scripts/gen_index.py` 가 index.html 과 함께 만듦, 손으로 고치지 않음 |
 | assets/note.css | 노트 58장이 같이 쓰는 모양. 첫 화면과 같은 창·제목줄·과목 탭·머리 상자, 과목 색은 `body.s-ds/s-algo/s-os`. 첫 화면과 달리 공부 칸은 세로 안내선 없이 여백·들여쓰기로 묶음 |
 | .github/workflows/pages.yml | main에 push하면 index.html·fonts·tools/memo.js·assets·노트 폴더만 Pages에 배포. info-lesson의 같은 파일과 달리 빌드 없이 복사만 |
 | tools/memo.js | 피드백 모드 화면 쪽(`?memo=1`). middle school info의 `msi-memo.js`와 같으나 위치를 '과목 › 영역 › 내용요소'로 적음 |

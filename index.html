@@ -26,15 +26,13 @@
   .titlebar h1{margin:0;font-size:26px;line-height:1.2;white-space:nowrap}
   .titlebar .sub{font-size:15px}
   .count{margin-left:auto;padding:4px 12px;border:3px solid var(--ink);border-radius:9px;background:var(--paper);box-shadow:3px 3px 0 rgba(75,59,107,.25);font-size:14px;white-space:nowrap}
-  /* 과목 탭 + 모두 펼치기 */
-  .bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:20px 20px 0}
+  /* 과목 탭 */
+  .bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:20px 20px 0}
   .tabs{display:flex;flex-wrap:wrap;gap:8px}
   .tab{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border:3px solid var(--ink);border-radius:10px;background:var(--paper);box-shadow:3px 3px 0 rgba(75,59,107,.25);
     color:var(--ink);font-size:17px;line-height:1.2;cursor:pointer}
   .tab .n{font-family:'Maplestory',sans-serif;font-size:13px}
   .tab[aria-selected="true"]{background:var(--accent);transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(75,59,107,.25)}
-  .btn-all{min-height:44px;padding:8px 16px;border:3px solid var(--ink);border-radius:10px;background:var(--soft);box-shadow:3px 3px 0 rgba(75,59,107,.25);
-    color:var(--ink);font-family:'Maplestory',sans-serif;font-weight:700;font-size:15px;cursor:pointer}
   /* 본문 */
   main{padding:20px 20px 32px}
   .notice{margin:0 0 20px;padding:12px 16px;border:3px solid var(--ink);border-radius:11px;background:var(--soft);font-size:15px;text-wrap:pretty}
@@ -43,57 +41,50 @@
   .subject-head .big{font-size:28px;line-height:1}
   .subject-head h2{margin:0;font-size:26px;line-height:1.2}
   .subject-head .meta{margin-left:auto;font-size:15px}
-  /* 트리 개요: 영역 → 내용요소 → 세부내용 */
-  .area{margin-top:36px}
-  .area-head{display:flex;align-items:baseline;gap:12px;margin:0 0 8px}
+  /* 영역 상자 + 표 (시안 D): 번호 | 내용요소 | 세부내용 */
+  .area{margin-top:24px;border:3px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:5px 5px 0 var(--sh);overflow:hidden}
+  .area-head{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:3px solid var(--ink);background:var(--tint)}
   .area-head .no{font-size:18px}
   .area-head h3{margin:0;font-size:21px;line-height:1.3}
-  .area-head .cnt{font-size:14px;color:var(--muted)}
-  .tree{list-style:none;margin:0 0 0 12px;padding:0;border-left:3px solid var(--guide)}
-  .item{position:relative;display:flex;gap:16px;align-items:flex-start;padding:12px 0 12px 24px}
-  .item > .no{flex:none;width:52px;padding-top:2px;font-size:14px;color:var(--muted)}
-  .item .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+  .area-head .cnt{margin-left:auto;padding:4px 8px;border:2px solid var(--ink);border-radius:6px;background:#fff;font-size:13px;line-height:1;white-space:nowrap}
+  .cols,.item{display:grid;grid-template-columns:64px minmax(0,1.15fr) minmax(0,1fr)}
+  .cols{padding:8px 16px;border-bottom:2px solid var(--ink);background:var(--soft);font-size:14px;color:var(--muted)}
+  .rows{list-style:none;margin:0;padding:0}
+  .item{align-items:start;padding:14px 16px;scroll-margin-top:16px}
+  .item:target{background:var(--tint)}
+  .item > .no{padding-top:2px;font-size:15px;color:var(--muted)}
+  .item .body{min-width:0;display:flex;flex-direction:column;gap:8px;padding-right:20px}
   .item .head{display:flex;align-items:flex-start;gap:12px}
   .item .name{flex:0 1 auto;min-width:0;font-family:'Maplestory',sans-serif;font-size:16px;font-weight:700;line-height:1.55;text-wrap:pretty;text-decoration:none}
   .item a.name{text-decoration:underline;text-decoration-color:var(--guide);text-decoration-thickness:2px;text-underline-offset:4px}
   .soon{flex:none;margin-left:auto;margin-top:2px;padding:4px 8px;border:2px dashed #8b7cb8;border-radius:6px;font-size:12px;line-height:1;color:var(--muted);white-space:nowrap}
-  .tags{display:flex;flex-wrap:wrap;gap:4px 12px;margin:0;padding:0;list-style:none}
-  .tags li{font-size:14px;line-height:1.5;color:var(--muted)}
-  .det summary{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 12px;border:2px solid var(--ink);border-radius:8px;background:var(--tint);
-    font-family:'Maplestory',sans-serif;font-size:14px;font-weight:700;line-height:1.2;cursor:pointer;list-style:none;user-select:none}
-  .det summary::-webkit-details-marker{display:none}
-  /* 스크립트가 있으면: '세부내용' 버튼 대신 이름 오른쪽 ⌄ 버튼으로 접고 편다 (없으면 위 버튼 그대로) */
-  .tog{display:none;flex:none;place-items:center;width:28px;height:28px;margin:-2px 0 0 -10px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--ink);cursor:pointer}
-  .tog[aria-expanded="true"] svg{transform:rotate(180deg)}
-  .js .tog{display:inline-grid}
-  .js .det > summary{display:none}
-  .js .det:not([open]){display:none}
-  .js .det ul{margin-top:0}
-  .det summary svg{flex:none}
-  .det[open] summary svg{transform:rotate(180deg)}
-  .det ul{list-style:none;margin:8px 0 0;padding:12px 16px;border:2px dashed var(--guide);border-radius:10px;background:var(--soft);display:flex;flex-direction:column;gap:8px}
-  .det li{display:flex;gap:8px;font-size:15px;line-height:1.6;text-wrap:pretty}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+  .tags li{padding:4px 8px;border:2px solid var(--accent);border-radius:6px;background:var(--tint);font-size:13px;line-height:1.3}
+  .det{min-width:0;margin:0;padding:0 0 0 16px;list-style:none;border-left:2px dashed var(--guide);display:flex;flex-direction:column;gap:4px}
+  .det li{font-size:15px;line-height:1.6;text-wrap:pretty}
+  .det .none{font-size:15px;color:#8b7cb8}
   /* 마우스가 있는 기기에서만 — 휴대폰에서 누른 뒤 색이 남지 않게 */
   @media (hover:hover){
     .tab[aria-selected="false"]:hover{background:var(--soft)}
-    .btn-all:hover{background:var(--page)}
-    .tog:hover{background:var(--tint)}
     .item a.name:hover{text-decoration-color:var(--ink)}
   }
-  .det li .br{flex:none;color:var(--muted)}
+  @media (max-width:640px){
+    .cols{display:none}
+    .item{grid-template-columns:44px minmax(0,1fr);row-gap:8px;padding:12px}
+    .item > .no{font-size:13px}
+    .item .body{padding-right:0}
+    .det{grid-column:2;padding:8px 0 0 12px;border-left:0;border-top:2px dashed var(--guide)}
+    .det.empty{display:none}
+  }
   @media (max-width:520px){
     body{padding:12px 12px 32px}
     .titlebar h1{font-size:22px}
     .count{margin-left:0}
     .bar{padding:16px 12px 0}
     main{padding:16px 12px 24px}
-    .tree{margin-left:4px}
-    .item{gap:8px;padding:12px 0 12px 16px}
-    .item > .no{width:44px;font-size:13px}
-    .det summary{min-height:44px}
-    .tog{width:44px;height:44px;margin:-10px 0 0 -14px}
   }
 </style>
+<link rel="stylesheet" href="assets/sidebar.css">
 </head>
 <body>
 <div class="window">
@@ -108,117 +99,126 @@
       <button type="button" class="tab cr" role="tab" id="t-algo" data-id="algo" aria-controls="p-algo" aria-selected="false" style="--accent:#f9cade">2 알고리즘 <span class="n">14개</span></button>
       <button type="button" class="tab cr" role="tab" id="t-os" data-id="os" aria-controls="p-os" aria-selected="false" style="--accent:#fbe6a2">3 운영체제 <span class="n">25개</span></button>
     </div>
-    <button type="button" class="btn-all" hidden>세부내용 모두 펼치기</button>
   </div>
   <main>
-    <p class="notice">3과목 · 14영역 · 내용요소 58개. 세부내용이 있는 내용요소는 이름 옆 화살표 버튼을 눌러 펼쳐요. 정리한 노트가 있는 내용요소는 이름을 누르면 노트로 가고, 아직 없는 것은 ‘준비 중’이에요.</p>
+    <p class="notice">3과목 · 14영역 · 내용요소 58개. 정리한 노트가 있는 내용요소는 이름을 누르면 노트로 가고, 아직 없는 것은 ‘준비 중’이에요. 왼쪽 목차에서 원하는 곳으로 바로 갈 수 있어요.</p>
     <section class="panel" id="p-ds" role="tabpanel" aria-labelledby="t-ds" style="--accent:#a9dce4;--tint:#e3f3f6">
       <div class="subject-head"><span class="big cr">1</span><h2 class="cr">자료구조</h2><span class="meta">6개 영역 · 내용요소 19개</span></div>
       <section class="area" id="ds-1">
         <div class="area-head"><span class="no cr">1.1</span><h3 class="cr">기초 자료구조</h3><span class="cnt">2개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">1.1.1</span><div class="body">
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-1-1-1"><span class="no cr">1.1.1</span><div class="body">
             <div class="head"><span class="name">기본 자료형 &amp; 추상 자료형</span><span class="soon">준비 중</span></div>
-          </div></li>
-          <li class="item"><span class="no cr">1.1.2</span><div class="body">
-            <div class="head"><span class="name">순차 데이터 구조 &amp; 연결 데이터 구조</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-1-2" aria-label="순차 데이터 구조 &amp; 연결 데이터 구조 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#배열 개념 및 종류</li><li>#링크를 이용한 노드 연결 개념 및 종류</li></ul>
-            <details class="det" id="d-ds-1-2"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>배열의 개념, 배열의 응용 (희소행렬, 문자열)</span></li></ul></details>
-          </div></li>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-1-1-2"><span class="no cr">1.1.2</span><div class="body">
+            <div class="head"><span class="name">순차 데이터 구조 &amp; 연결 데이터 구조</span><span class="soon">준비 중</span></div>
+            <ul class="tags" aria-label="키워드"><li>배열 개념 및 종류</li><li>링크를 이용한 노드 연결 개념 및 종류</li></ul>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>배열의 개념, 배열의 응용 (희소행렬, 문자열)</li></ul></li>
         </ol>
       </section>
       <section class="area" id="ds-2">
         <div class="area-head"><span class="no cr">1.2</span><h3 class="cr">선형 데이터 구조</h3><span class="cnt">4개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">1.2.1</span><div class="body">
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-1-2-1"><span class="no cr">1.2.1</span><div class="body">
             <div class="head"><span class="name">배열 연산 &amp; 응용</span><span class="soon">준비 중</span></div>
-          </div></li>
-          <li class="item"><span class="no cr">1.2.2</span><div class="body">
-            <div class="head"><span class="name">연결리스트 개념 &amp; 연산</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-2-2" aria-label="연결리스트 개념 &amp; 연산 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-ds-2-2"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>단순 연결리스트 (개념, 삽입/삭제, 연산)</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">1.2.3</span><div class="body">
-            <div class="head"><span class="name">배열 &amp; 연결리스트를 이용한 선형리스트의 구현과 응용</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-2-3" aria-label="배열 &amp; 연결리스트를 이용한 선형리스트의 구현과 응용 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#다항식</li><li>#가용공간리스트</li></ul>
-            <details class="det" id="d-ds-2-3"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>원형 연결리스트, 이중 연결 리스트</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">1.2.4</span><div class="body">
-            <div class="head"><span class="name">스택과 큐의 개념, 표현, 연산, 응용</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-2-4" aria-label="스택과 큐의 개념, 표현, 연산, 응용 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#괄호쌍검사</li><li>#후위수식변환 및 계산</li><li>#환형큐</li><li>#대기큐</li></ul>
-            <details class="det" id="d-ds-2-4"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>스택 (개념, 연산, 연결 스택, 스택을 응용한 수식 계산)</span></li><li><span class="br" aria-hidden="true">└</span><span>큐 (개념, 연산, 원형 큐 개념과 연산, 연결 큐)</span></li></ul></details>
-          </div></li>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-1-2-2"><span class="no cr">1.2.2</span><div class="body">
+            <div class="head"><span class="name">연결리스트 개념 &amp; 연산</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>단순 연결리스트 (개념, 삽입/삭제, 연산)</li></ul></li>
+          <li class="item" id="i-1-2-3"><span class="no cr">1.2.3</span><div class="body">
+            <div class="head"><span class="name">배열 &amp; 연결리스트를 이용한 선형리스트의 구현과 응용</span><span class="soon">준비 중</span></div>
+            <ul class="tags" aria-label="키워드"><li>다항식</li><li>가용공간리스트</li></ul>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>원형 연결리스트, 이중 연결 리스트</li></ul></li>
+          <li class="item" id="i-1-2-4"><span class="no cr">1.2.4</span><div class="body">
+            <div class="head"><span class="name">스택과 큐의 개념, 표현, 연산, 응용</span><span class="soon">준비 중</span></div>
+            <ul class="tags" aria-label="키워드"><li>괄호쌍검사</li><li>후위수식변환 및 계산</li><li>환형큐</li><li>대기큐</li></ul>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>스택 (개념, 연산, 연결 스택, 스택을 응용한 수식 계산)</li><li>큐 (개념, 연산, 원형 큐 개념과 연산, 연결 큐)</li></ul></li>
         </ol>
       </section>
       <section class="area" id="ds-3">
         <div class="area-head"><span class="no cr">1.3</span><h3 class="cr">트리</h3><span class="cnt">4개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">1.3.1</span><div class="body">
-            <div class="head"><span class="name">트리 개념, 기본 용어</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-3-1" aria-label="트리 개념, 기본 용어 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-ds-3-1"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>트리 기본 용어, 일반 트리를 이진 트리로 변환</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">1.3.2</span><div class="body">
-            <div class="head"><span class="name">이진트리 개념 &amp; 특징 &amp; 연산 &amp; 순회</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-3-2" aria-label="이진트리 개념 &amp; 특징 &amp; 연산 &amp; 순회 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-ds-3-2"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>이진 트리의 개념, 특징, 표현 (순차/연결), 순회</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">1.3.3</span><div class="body">
-            <div class="head"><span class="name">여러 가지 이진 트리</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-3-3" aria-label="여러 가지 이진 트리 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-ds-3-3"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>스레드 이진 트리, 힙 트리, 선택 트리</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">1.3.4</span><div class="body">
-            <div class="head"><span class="name">트리의 응용</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-3-4" aria-label="트리의 응용 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-ds-3-4"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>허프만 코드, 분리 집합 표현</span></li></ul></details>
-          </div></li>
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-1-3-1"><span class="no cr">1.3.1</span><div class="body">
+            <div class="head"><span class="name">트리 개념, 기본 용어</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>트리 기본 용어, 일반 트리를 이진 트리로 변환</li></ul></li>
+          <li class="item" id="i-1-3-2"><span class="no cr">1.3.2</span><div class="body">
+            <div class="head"><span class="name">이진트리 개념 &amp; 특징 &amp; 연산 &amp; 순회</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>이진 트리의 개념, 특징, 표현 (순차/연결), 순회</li></ul></li>
+          <li class="item" id="i-1-3-3"><span class="no cr">1.3.3</span><div class="body">
+            <div class="head"><span class="name">여러 가지 이진 트리</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>스레드 이진 트리, 힙 트리, 선택 트리</li></ul></li>
+          <li class="item" id="i-1-3-4"><span class="no cr">1.3.4</span><div class="body">
+            <div class="head"><span class="name">트리의 응용</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>허프만 코드, 분리 집합 표현</li></ul></li>
         </ol>
       </section>
       <section class="area" id="ds-4">
         <div class="area-head"><span class="no cr">1.4</span><h3 class="cr">탐색 구조</h3><span class="cnt">3개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">1.4.1</span><div class="body">
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-1-4-1"><span class="no cr">1.4.1</span><div class="body">
             <div class="head"><span class="name">트리 응용</span><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#우선순위큐</li><li>#힙정렬</li><li>#균형이진탐색트리</li><li>#다원탐색트리</li><li>#B+트리</li></ul>
-          </div></li>
-          <li class="item"><span class="no cr">1.4.2</span><div class="body">
-            <div class="head"><span class="name">이진탐색트리 (binary search tree)의 응용</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-4-2" aria-label="이진탐색트리 (binary search tree)의 응용 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-ds-4-2"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>이진 탐색 트리, AVL 트리, 레드-블랙 트리, 스플레이 트리, 최적이진탐색 트리</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">1.4.3</span><div class="body">
-            <div class="head"><span class="name">다원탐색트리와 B트리</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-4-3" aria-label="다원탐색트리와 B트리 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-ds-4-3"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>2-3 트리, 2-3-4 트리, B 트리, B* 트리, B+ 트리</span></li></ul></details>
-          </div></li>
+            <ul class="tags" aria-label="키워드"><li>우선순위큐</li><li>힙정렬</li><li>균형이진탐색트리</li><li>다원탐색트리</li><li>B+트리</li></ul>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-1-4-2"><span class="no cr">1.4.2</span><div class="body">
+            <div class="head"><span class="name">이진탐색트리 (binary search tree)의 응용</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>이진 탐색 트리, AVL 트리, 레드-블랙 트리, 스플레이 트리, 최적이진탐색 트리</li></ul></li>
+          <li class="item" id="i-1-4-3"><span class="no cr">1.4.3</span><div class="body">
+            <div class="head"><span class="name">다원탐색트리와 B트리</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>2-3 트리, 2-3-4 트리, B 트리, B* 트리, B+ 트리</li></ul></li>
         </ol>
       </section>
       <section class="area" id="ds-5">
         <div class="area-head"><span class="no cr">1.5</span><h3 class="cr">그래프</h3><span class="cnt">3개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">1.5.1</span><div class="body">
-            <div class="head"><span class="name">그래프 개념 &amp; 기본 용어 &amp; 표현</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-5-1" aria-label="그래프 개념 &amp; 기본 용어 &amp; 표현 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-ds-5-1"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>그래프 기본 용어, 인접 행렬, 인접 리스트, 인접 다중리스트</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">1.5.2</span><div class="body">
-            <div class="head"><span class="name">그래프 순회 &amp; 응용</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-5-2" aria-label="그래프 순회 &amp; 응용 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#깊이너비우선</li><li>#신장트리</li><li>#최소신장트리</li><li>#단일출발점 최단경로</li></ul>
-            <details class="det" id="d-ds-5-2"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>깊이우선탐색(DFS), 너비우선탐색(BFS), 연결 요소, 신장 트리</span></li><li><span class="br" aria-hidden="true">└</span><span>이중 결합 요소, 크루스컬 알고리즘, 프림 알고리즘</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">1.5.3</span><div class="body">
-            <div class="head"><span class="name">그래프의 최단경로(Shortest path)와 이행적 폐쇄</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-5-3" aria-label="그래프의 최단경로(Shortest path)와 이행적 폐쇄 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-ds-5-3"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>단일 출발점 최단 경로 문제 (다익스트라 알고리즘)</span></li><li><span class="br" aria-hidden="true">└</span><span>모든 정점의 최단 경로 문제 (플로이드 알고리즘)</span></li></ul></details>
-          </div></li>
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-1-5-1"><span class="no cr">1.5.1</span><div class="body">
+            <div class="head"><span class="name">그래프 개념 &amp; 기본 용어 &amp; 표현</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>그래프 기본 용어, 인접 행렬, 인접 리스트, 인접 다중리스트</li></ul></li>
+          <li class="item" id="i-1-5-2"><span class="no cr">1.5.2</span><div class="body">
+            <div class="head"><span class="name">그래프 순회 &amp; 응용</span><span class="soon">준비 중</span></div>
+            <ul class="tags" aria-label="키워드"><li>깊이너비우선</li><li>신장트리</li><li>최소신장트리</li><li>단일출발점 최단경로</li></ul>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>깊이우선탐색(DFS), 너비우선탐색(BFS), 연결 요소, 신장 트리</li><li>이중 결합 요소, 크루스컬 알고리즘, 프림 알고리즘</li></ul></li>
+          <li class="item" id="i-1-5-3"><span class="no cr">1.5.3</span><div class="body">
+            <div class="head"><span class="name">그래프의 최단경로(Shortest path)와 이행적 폐쇄</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>단일 출발점 최단 경로 문제 (다익스트라 알고리즘)</li><li>모든 정점의 최단 경로 문제 (플로이드 알고리즘)</li></ul></li>
         </ol>
       </section>
       <section class="area" id="ds-6">
         <div class="area-head"><span class="no cr">1.6</span><h3 class="cr">해싱</h3><span class="cnt">3개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">1.6.1</span><div class="body">
-            <div class="head"><span class="name">해싱 개념 &amp; 기본 용어</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-6-1" aria-label="해싱 개념 &amp; 기본 용어 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-ds-6-1"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>해싱 개념, 기본 용어, 함수 (중간제곱함수, 제산함수 등)</span></li><li><span class="br" aria-hidden="true">└</span><span>오버플로 처리 (선형 주소법, 체인법 등)</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">1.6.2</span><div class="body">
-            <div class="head"><span class="name">정적 해싱 &amp; 동적 해싱 개념과 연산</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-ds-6-2" aria-label="정적 해싱 &amp; 동적 해싱 개념과 연산 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-ds-6-2"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>동적 해싱의 개념과 필요성, 디렉토리를 사용하는 동적 해싱</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">1.6.3</span><div class="body">
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-1-6-1"><span class="no cr">1.6.1</span><div class="body">
+            <div class="head"><span class="name">해싱 개념 &amp; 기본 용어</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>해싱 개념, 기본 용어, 함수 (중간제곱함수, 제산함수 등)</li><li>오버플로 처리 (선형 주소법, 체인법 등)</li></ul></li>
+          <li class="item" id="i-1-6-2"><span class="no cr">1.6.2</span><div class="body">
+            <div class="head"><span class="name">정적 해싱 &amp; 동적 해싱 개념과 연산</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>동적 해싱의 개념과 필요성, 디렉토리를 사용하는 동적 해싱</li></ul></li>
+          <li class="item" id="i-1-6-3"><span class="no cr">1.6.3</span><div class="body">
             <div class="head"><span class="name">해싱 응용</span><span class="soon">준비 중</span></div>
-          </div></li>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
         </ol>
       </section>
     </section>
@@ -226,74 +226,83 @@
       <div class="subject-head"><span class="big cr">2</span><h2 class="cr">알고리즘</h2><span class="meta">3개 영역 · 내용요소 14개</span></div>
       <section class="area" id="algo-1">
         <div class="area-head"><span class="no cr">2.1</span><h3 class="cr">알고리즘 기초</h3><span class="cnt">5개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">2.1.1</span><div class="body">
-            <div class="head"><span class="name">알고리즘 정의와 요건</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-algo-1-1" aria-label="알고리즘 정의와 요건 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-algo-1-1"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>알고리즘이 만족해야할 조건</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">2.1.2</span><div class="body">
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-2-1-1"><span class="no cr">2.1.1</span><div class="body">
+            <div class="head"><span class="name">알고리즘 정의와 요건</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>알고리즘이 만족해야할 조건</li></ul></li>
+          <li class="item" id="i-2-1-2"><span class="no cr">2.1.2</span><div class="body">
             <div class="head"><span class="name">알고리즘의 표현</span><span class="soon">준비 중</span></div>
-          </div></li>
-          <li class="item"><span class="no cr">2.1.3</span><div class="body">
-            <div class="head"><span class="name">성능 분석에 필요한 시공간 복잡도</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-algo-1-3" aria-label="성능 분석에 필요한 시공간 복잡도 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-algo-1-3"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>공간 복잡도, 시간 복잡도</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">2.1.4</span><div class="body">
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-2-1-3"><span class="no cr">2.1.3</span><div class="body">
+            <div class="head"><span class="name">성능 분석에 필요한 시공간 복잡도</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>공간 복잡도, 시간 복잡도</li></ul></li>
+          <li class="item" id="i-2-1-4"><span class="no cr">2.1.4</span><div class="body">
             <div class="head"><span class="name">점근 표기법</span><span class="soon">준비 중</span></div>
-          </div></li>
-          <li class="item"><span class="no cr">2.1.5</span><div class="body">
-            <div class="head"><span class="name">반복 (iteration)과 순환 (recursion)</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-algo-1-5" aria-label="반복 (iteration)과 순환 (recursion) 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-algo-1-5"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>순환의 개념, 순환 예시 (거듭제곱, 피보나치수, 하노이타워 등)</span></li></ul></details>
-          </div></li>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-2-1-5"><span class="no cr">2.1.5</span><div class="body">
+            <div class="head"><span class="name">반복 (iteration)과 순환 (recursion)</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>순환의 개념, 순환 예시 (거듭제곱, 피보나치수, 하노이타워 등)</li></ul></li>
         </ol>
       </section>
       <section class="area" id="algo-2">
         <div class="area-head"><span class="no cr">2.2</span><h3 class="cr">알고리즘 설계원리</h3><span class="cnt">7개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">2.2.1</span><div class="body">
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-2-2-1"><span class="no cr">2.2.1</span><div class="body">
             <div class="head"><span class="name">재귀 알고리즘 설계 원리</span><span class="soon">준비 중</span></div>
-          </div></li>
-          <li class="item"><span class="no cr">2.2.2</span><div class="body">
-            <div class="head"><span class="name">분할축소 정복</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-algo-2-2" aria-label="분할축소 정복 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#이진탐색</li><li>#선택</li><li>#하노이탑</li></ul>
-            <details class="det" id="d-algo-2-2"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>Divide and Conquer의 작동 원리</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">2.2.3</span><div class="body">
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-2-2-2"><span class="no cr">2.2.2</span><div class="body">
+            <div class="head"><span class="name">분할축소 정복</span><span class="soon">준비 중</span></div>
+            <ul class="tags" aria-label="키워드"><li>이진탐색</li><li>선택</li><li>하노이탑</li></ul>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>Divide and Conquer의 작동 원리</li></ul></li>
+          <li class="item" id="i-2-2-3"><span class="no cr">2.2.3</span><div class="body">
             <div class="head"><span class="name">그리디 알고리즘</span><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#동전거스름돈</li><li>#부분배낭채우기</li><li>#최소신장트리</li><li>#최단경로</li><li>#허프만코드</li></ul>
-          </div></li>
-          <li class="item"><span class="no cr">2.2.4</span><div class="body">
-            <div class="head"><span class="name">동적 프로그래밍</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-algo-2-4" aria-label="동적 프로그래밍 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#모든 쌍간 최단경로</li><li>#동전거스름돈</li><li>#0-1배낭 채우기</li></ul>
-            <details class="det" id="d-algo-2-4"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>동적 프로그래밍의 작동 원리</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">2.2.5</span><div class="body">
-            <div class="head"><span class="name">되추적</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-algo-2-5" aria-label="되추적 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#그래프 색칠하기</li><li>#여왕말</li><li>#미로찾기</li><li>#0-1배낭채우기</li><li>#방문판매원</li></ul>
-            <details class="det" id="d-algo-2-5"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>백트래킹의 작동 원리</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">2.2.6</span><div class="body">
+            <ul class="tags" aria-label="키워드"><li>동전거스름돈</li><li>부분배낭채우기</li><li>최소신장트리</li><li>최단경로</li><li>허프만코드</li></ul>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-2-2-4"><span class="no cr">2.2.4</span><div class="body">
+            <div class="head"><span class="name">동적 프로그래밍</span><span class="soon">준비 중</span></div>
+            <ul class="tags" aria-label="키워드"><li>모든 쌍간 최단경로</li><li>동전거스름돈</li><li>0-1배낭 채우기</li></ul>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>동적 프로그래밍의 작동 원리</li></ul></li>
+          <li class="item" id="i-2-2-5"><span class="no cr">2.2.5</span><div class="body">
+            <div class="head"><span class="name">되추적</span><span class="soon">준비 중</span></div>
+            <ul class="tags" aria-label="키워드"><li>그래프 색칠하기</li><li>여왕말</li><li>미로찾기</li><li>0-1배낭채우기</li><li>방문판매원</li></ul>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>백트래킹의 작동 원리</li></ul></li>
+          <li class="item" id="i-2-2-6"><span class="no cr">2.2.6</span><div class="body">
             <div class="head"><span class="name">한정분기</span><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#0-1배낭채우기</li><li>#방문판매원</li></ul>
-          </div></li>
-          <li class="item"><span class="no cr">2.2.7</span><div class="body">
+            <ul class="tags" aria-label="키워드"><li>0-1배낭채우기</li><li>방문판매원</li></ul>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-2-2-7"><span class="no cr">2.2.7</span><div class="body">
             <div class="head"><span class="name">알고리즘 설계 기법</span><span class="soon">준비 중</span></div>
-          </div></li>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
         </ol>
       </section>
       <section class="area" id="algo-3">
         <div class="area-head"><span class="no cr">2.3</span><h3 class="cr">정렬/탐색 알고리즘</h3><span class="cnt">2개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">2.3.1</span><div class="body">
-            <div class="head"><span class="name">정렬 알고리즘</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-algo-3-1" aria-label="정렬 알고리즘 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#버블</li><li>#선택</li><li>#삽입</li><li>#합병</li><li>#퀵</li><li>#힙</li><li>#계수</li><li>#기수</li></ul>
-            <details class="det" id="d-algo-3-1"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>정렬 문제의 정의, 각종 정렬</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">2.3.2</span><div class="body">
-            <div class="head"><span class="name">탐색 알고리즘</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-algo-3-2" aria-label="탐색 알고리즘 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#순차탐색</li><li>#이진탐색</li></ul>
-            <details class="det" id="d-algo-3-2"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>탐색의 개념, 유형 (이진탐색, 피보나치탐색, 보간탐색)</span></li></ul></details>
-          </div></li>
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-2-3-1"><span class="no cr">2.3.1</span><div class="body">
+            <div class="head"><span class="name">정렬 알고리즘</span><span class="soon">준비 중</span></div>
+            <ul class="tags" aria-label="키워드"><li>버블</li><li>선택</li><li>삽입</li><li>합병</li><li>퀵</li><li>힙</li><li>계수</li><li>기수</li></ul>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>정렬 문제의 정의, 각종 정렬</li></ul></li>
+          <li class="item" id="i-2-3-2"><span class="no cr">2.3.2</span><div class="body">
+            <div class="head"><span class="name">탐색 알고리즘</span><span class="soon">준비 중</span></div>
+            <ul class="tags" aria-label="키워드"><li>순차탐색</li><li>이진탐색</li></ul>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>탐색의 개념, 유형 (이진탐색, 피보나치탐색, 보간탐색)</li></ul></li>
         </ol>
       </section>
     </section>
@@ -301,119 +310,137 @@
       <div class="subject-head"><span class="big cr">3</span><h2 class="cr">운영체제</h2><span class="meta">5개 영역 · 내용요소 25개</span></div>
       <section class="area" id="os-1">
         <div class="area-head"><span class="no cr">3.1</span><h3 class="cr">운영체제 개요</h3><span class="cnt">6개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">3.1.1</span><div class="body">
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-3-1-1"><span class="no cr">3.1.1</span><div class="body">
             <div class="head"><a class="name" href="os/3-1-1/index.html">운영체제 목적, 역할</a></div>
-          </div></li>
-          <li class="item"><span class="no cr">3.1.2</span><div class="body">
-            <div class="head"><a class="name" href="os/3-1-2/index.html">운영체제의 기능</a><button type="button" class="tog" aria-expanded="false" aria-controls="d-os-1-2" aria-label="운영체제의 기능 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button></div>
-            <details class="det" id="d-os-1-2"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>사용자/컴퓨터 인터페이스로서 운영체제, 자원관리자로서 운영체제</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">3.1.3</span><div class="body">
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-3-1-2"><span class="no cr">3.1.2</span><div class="body">
+            <div class="head"><a class="name" href="os/3-1-2/index.html">운영체제의 기능</a></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>사용자/컴퓨터 인터페이스로서 운영체제, 자원관리자로서 운영체제</li></ul></li>
+          <li class="item" id="i-3-1-3"><span class="no cr">3.1.3</span><div class="body">
             <div class="head"><a class="name" href="os/3-1-3/index.html">하드웨어 이벤트와 하드웨어 소프트웨어 간 상호작용</a></div>
-          </div></li>
-          <li class="item"><span class="no cr">3.1.4</span><div class="body">
-            <div class="head"><span class="name">운영체제 발전</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-os-1-4" aria-label="운영체제 발전 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-os-1-4"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>운영체제 발전, 종류</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">3.1.5</span><div class="body">
-            <div class="head"><a class="name" href="os/3-1-5/index.html">운영체제 구조</a><button type="button" class="tog" aria-expanded="false" aria-controls="d-os-1-5" aria-label="운영체제 구조 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button></div>
-            <details class="det" id="d-os-1-5"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>단일 구조, 계층 구조, 마이크로 커널 구조</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">3.1.6</span><div class="body">
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-3-1-4"><span class="no cr">3.1.4</span><div class="body">
+            <div class="head"><span class="name">운영체제 발전</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>운영체제 발전, 종류</li></ul></li>
+          <li class="item" id="i-3-1-5"><span class="no cr">3.1.5</span><div class="body">
+            <div class="head"><a class="name" href="os/3-1-5/index.html">운영체제 구조</a></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>단일 구조, 계층 구조, 마이크로 커널 구조</li></ul></li>
+          <li class="item" id="i-3-1-6"><span class="no cr">3.1.6</span><div class="body">
             <div class="head"><a class="name" href="os/3-1-6/index.html">커널과 시스템호출</a></div>
-          </div></li>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
         </ol>
       </section>
       <section class="area" id="os-2">
         <div class="area-head"><span class="no cr">3.2</span><h3 class="cr">프로세스 관리</h3><span class="cnt">8개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">3.2.1</span><div class="body">
-            <div class="head"><a class="name" href="os/3-2-1/index.html">프로세스와 쓰레드 개념</a><button type="button" class="tog" aria-expanded="false" aria-controls="d-os-2-1" aria-label="프로세스와 쓰레드 개념 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button></div>
-            <details class="det" id="d-os-2-1"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>프로세스 제어, 프로세스 제어 구조, 인터럽트와 문맥 교환</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">3.2.2</span><div class="body">
-            <div class="head"><a class="name" href="os/3-2-2/index.html">프로세스 상태와 제어</a><button type="button" class="tog" aria-expanded="false" aria-controls="d-os-2-2" aria-label="프로세스 상태와 제어 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button></div>
-            <details class="det" id="d-os-2-2"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>프로세스 연산, 프로세스 상태 및 전이</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">3.2.3</span><div class="body">
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-3-2-1"><span class="no cr">3.2.1</span><div class="body">
+            <div class="head"><a class="name" href="os/3-2-1/index.html">프로세스와 쓰레드 개념</a></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>프로세스 제어, 프로세스 제어 구조, 인터럽트와 문맥 교환</li></ul></li>
+          <li class="item" id="i-3-2-2"><span class="no cr">3.2.2</span><div class="body">
+            <div class="head"><a class="name" href="os/3-2-2/index.html">프로세스 상태와 제어</a></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>프로세스 연산, 프로세스 상태 및 전이</li></ul></li>
+          <li class="item" id="i-3-2-3"><span class="no cr">3.2.3</span><div class="body">
             <div class="head"><span class="name">동기화</span><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#임계영역문제의 개념</li><li>#임계영역 문제해결 알고리즘</li><li>#세마포어 개념</li><li>#고전적인 동기화 문제 알고리즘</li></ul>
-          </div></li>
-          <li class="item"><span class="no cr">3.2.4</span><div class="body">
+            <ul class="tags" aria-label="키워드"><li>임계영역문제의 개념</li><li>임계영역 문제해결 알고리즘</li><li>세마포어 개념</li><li>고전적인 동기화 문제 알고리즘</li></ul>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-3-2-4"><span class="no cr">3.2.4</span><div class="body">
             <div class="head"><span class="name">교착상태</span><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#교착상태 특징</li><li>#교착상태 예방방법</li><li>#교착상태 회피 개념 및 알고리즘</li><li>#교착상태 탐지 및 회복</li></ul>
-          </div></li>
-          <li class="item"><span class="no cr">3.2.5</span><div class="body">
-            <div class="head"><a class="name" href="os/3-2-5/index.html">프로세스 스케줄링</a><button type="button" class="tog" aria-expanded="false" aria-controls="d-os-2-5" aria-label="프로세스 스케줄링 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button></div>
-            <details class="det" id="d-os-2-5"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>스케줄링 목적과 기준, 알고리즘</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">3.2.6</span><div class="body">
+            <ul class="tags" aria-label="키워드"><li>교착상태 특징</li><li>교착상태 예방방법</li><li>교착상태 회피 개념 및 알고리즘</li><li>교착상태 탐지 및 회복</li></ul>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-3-2-5"><span class="no cr">3.2.5</span><div class="body">
+            <div class="head"><a class="name" href="os/3-2-5/index.html">프로세스 스케줄링</a></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>스케줄링 목적과 기준, 알고리즘</li></ul></li>
+          <li class="item" id="i-3-2-6"><span class="no cr">3.2.6</span><div class="body">
             <div class="head"><a class="name" href="os/3-2-6/index.html">CPU 스케줄링 알고리즘</a></div>
-          </div></li>
-          <li class="item"><span class="no cr">3.2.7</span><div class="body">
-            <div class="head"><span class="name">임계영역 알고리즘과 세마포어의 사례</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-os-2-7" aria-label="임계영역 알고리즘과 세마포어의 사례 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-os-2-7"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>경쟁상황, 임계구역과 상호배제, 소프트웨어에 의한 접근 방법, 하드웨어에 의한 지원, 세마포어, 모니터</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">3.2.8</span><div class="body">
-            <div class="head"><span class="name">교착상태(deadlock)와 은행원 알고리즘</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-os-2-8" aria-label="교착상태(deadlock)와 은행원 알고리즘 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-os-2-8"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>교착상태 원리와 발생 조건, 해결방안 (예방/회피/발견 및 회복)</span></li></ul></details>
-          </div></li>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-3-2-7"><span class="no cr">3.2.7</span><div class="body">
+            <div class="head"><span class="name">임계영역 알고리즘과 세마포어의 사례</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>경쟁상황, 임계구역과 상호배제, 소프트웨어에 의한 접근 방법, 하드웨어에 의한 지원, 세마포어, 모니터</li></ul></li>
+          <li class="item" id="i-3-2-8"><span class="no cr">3.2.8</span><div class="body">
+            <div class="head"><span class="name">교착상태(deadlock)와 은행원 알고리즘</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>교착상태 원리와 발생 조건, 해결방안 (예방/회피/발견 및 회복)</li></ul></li>
         </ol>
       </section>
       <section class="area" id="os-3">
         <div class="area-head"><span class="no cr">3.3</span><h3 class="cr">기억장치 관리</h3><span class="cnt">5개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">3.3.1</span><div class="body">
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-3-3-1"><span class="no cr">3.3.1</span><div class="body">
             <div class="head"><span class="name">기억장치관리 요건</span><span class="soon">준비 중</span></div>
-          </div></li>
-          <li class="item"><span class="no cr">3.3.2</span><div class="body">
-            <div class="head"><span class="name">주기억장치 관리기법 (단순 페이징과 단순 세그멘테이션)</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-os-3-2" aria-label="주기억장치 관리기법 (단순 페이징과 단순 세그멘테이션) 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-os-3-2"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>페이징 기법의 논리적 주소 구조, 논리/물리 주소 사상</span></li><li><span class="br" aria-hidden="true">└</span><span>세그멘테이션 기법의 논리적 주소 구조, 논리/물리 주소 사상</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">3.3.3</span><div class="body">
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-3-3-2"><span class="no cr">3.3.2</span><div class="body">
+            <div class="head"><span class="name">주기억장치 관리기법 (단순 페이징과 단순 세그멘테이션)</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>페이징 기법의 논리적 주소 구조, 논리/물리 주소 사상</li><li>세그멘테이션 기법의 논리적 주소 구조, 논리/물리 주소 사상</li></ul></li>
+          <li class="item" id="i-3-3-3"><span class="no cr">3.3.3</span><div class="body">
             <div class="head"><span class="name">가상메모리의 작동원리</span><span class="soon">준비 중</span></div>
-          </div></li>
-          <li class="item"><span class="no cr">3.3.4</span><div class="body">
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-3-3-4"><span class="no cr">3.3.4</span><div class="body">
             <div class="head"><span class="name">가상메모리 관리정책</span><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#반입</li><li>#교체</li><li>#적재집합관리</li><li>#클리닝</li><li>#부하제어정책</li></ul>
-          </div></li>
-          <li class="item"><span class="no cr">3.3.5</span><div class="body">
-            <div class="head"><span class="name">페이지 교체 알고리즘</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-os-3-5" aria-label="페이지 교체 알고리즘 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-os-3-5"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>페이지 폴트 처리 과정, 페이지 교체의 처리 과정, 페이지 교체 알고리즘, 스레싱</span></li></ul></details>
-          </div></li>
+            <ul class="tags" aria-label="키워드"><li>반입</li><li>교체</li><li>적재집합관리</li><li>클리닝</li><li>부하제어정책</li></ul>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-3-3-5"><span class="no cr">3.3.5</span><div class="body">
+            <div class="head"><span class="name">페이지 교체 알고리즘</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>페이지 폴트 처리 과정, 페이지 교체의 처리 과정, 페이지 교체 알고리즘, 스레싱</li></ul></li>
         </ol>
       </section>
       <section class="area" id="os-4">
         <div class="area-head"><span class="no cr">3.4</span><h3 class="cr">파일 관리</h3><span class="cnt">3개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">3.4.1</span><div class="body">
-            <div class="head"><span class="name">파일과 파일 시스템</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-os-4-1" aria-label="파일과 파일 시스템 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#파일의 속성</li><li>#디렉토리 계층구조</li><li>#파일명명</li><li>#파일 연산</li></ul>
-            <details class="det" id="d-os-4-1"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>파일시스템 개념 및 접근 방법, 논리적 구조, 구현 개념, 파일 할당 방법</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">3.4.2</span><div class="body">
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-3-4-1"><span class="no cr">3.4.1</span><div class="body">
+            <div class="head"><span class="name">파일과 파일 시스템</span><span class="soon">준비 중</span></div>
+            <ul class="tags" aria-label="키워드"><li>파일의 속성</li><li>디렉토리 계층구조</li><li>파일명명</li><li>파일 연산</li></ul>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>파일시스템 개념 및 접근 방법, 논리적 구조, 구현 개념, 파일 할당 방법</li></ul></li>
+          <li class="item" id="i-3-4-2"><span class="no cr">3.4.2</span><div class="body">
             <div class="head"><span class="name">파일의 구성과 접근</span><span class="soon">준비 중</span></div>
-            <ul class="tags" aria-label="키워드"><li>#순차파일</li><li>#인덱스파일</li><li>#인덱스 순차 파일</li><li>#해시 파일</li></ul>
-          </div></li>
-          <li class="item"><span class="no cr">3.4.3</span><div class="body">
+            <ul class="tags" aria-label="키워드"><li>순차파일</li><li>인덱스파일</li><li>인덱스 순차 파일</li><li>해시 파일</li></ul>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-3-4-3"><span class="no cr">3.4.3</span><div class="body">
             <div class="head"><span class="name">보조 저장 공간 관리 및 파일 할당 방법</span><span class="soon">준비 중</span></div>
-          </div></li>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
         </ol>
       </section>
       <section class="area" id="os-5">
         <div class="area-head"><span class="no cr">3.5</span><h3 class="cr">입출력 관리</h3><span class="cnt">3개</span></div>
-        <ol class="tree">
-          <li class="item"><span class="no cr">3.5.1</span><div class="body">
-            <div class="head"><span class="name">입출력 장치의 유형과 특성</span><button type="button" class="tog" aria-expanded="false" aria-controls="d-os-5-1" aria-label="입출력 장치의 유형과 특성 세부내용"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></button><span class="soon">준비 중</span></div>
-            <details class="det" id="d-os-5-1"><summary>세부내용 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></summary><ul><li><span class="br" aria-hidden="true">└</span><span>보조기억장치의 종류 및 구조, 대용량기억장치(RAID)의 구조, 디스크 관리, 디스크 스케줄링 알고리즘</span></li></ul></details>
-          </div></li>
-          <li class="item"><span class="no cr">3.5.2</span><div class="body">
+        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>
+        <ol class="rows">
+          <li class="item" id="i-3-5-1"><span class="no cr">3.5.1</span><div class="body">
+            <div class="head"><span class="name">입출력 장치의 유형과 특성</span><span class="soon">준비 중</span></div>
+          </div>
+          <ul class="det" aria-label="세부내용"><li>보조기억장치의 종류 및 구조, 대용량기억장치(RAID)의 구조, 디스크 관리, 디스크 스케줄링 알고리즘</li></ul></li>
+          <li class="item" id="i-3-5-2"><span class="no cr">3.5.2</span><div class="body">
             <div class="head"><span class="name">입출력 기능의 발전</span><span class="soon">준비 중</span></div>
-          </div></li>
-          <li class="item"><span class="no cr">3.5.3</span><div class="body">
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
+          <li class="item" id="i-3-5-3"><span class="no cr">3.5.3</span><div class="body">
             <div class="head"><span class="name">디스크 스케줄링</span><span class="soon">준비 중</span></div>
-          </div></li>
+          </div>
+          <div class="det empty"><span class="none" aria-label="세부내용 없음">—</span></div></li>
         </ol>
       </section>
     </section>
@@ -432,7 +459,7 @@
       if (on && focus) t.focus();
     });
     panels.forEach(function (p) { p.hidden = p.id !== 'p-' + id; });
-    syncAll();
+    if (window.CTSide) window.CTSide.openSubject(id);
   }
   tabs.forEach(function (t, i) {
     t.addEventListener('click', function () {
@@ -448,37 +475,22 @@
       history.replaceState(null, '', '#' + next);
     });
   });
-  // 세부내용 모두 펼치기/접기 — 지금 보이는 과목에만
-  var btn = document.querySelector('.btn-all');
-  function visibleDetails() {
-    var p = panels.filter(function (x) { return !x.hidden; })[0];
-    return p ? Array.prototype.slice.call(p.querySelectorAll('details.det')) : [];
+  // 주소 끝: #ds·#algo·#os = 과목, #i-1-2-3 = 그 내용요소 줄 (왼쪽 목차에서 노트가 없는 줄을 누르면 여기로 온다)
+  function go() {
+    var h = location.hash.slice(1);
+    var m = /^i-(\d+)-/.exec(h);
+    var id = m ? ids[+m[1] - 1] : (ids.indexOf(h) >= 0 ? h : null);
+    select(id || ids[0]);
+    var row = m && document.getElementById(h);
+    if (row) row.scrollIntoView({ block: 'start' });
   }
-  function syncAll() {
-    var ds = visibleDetails();
-    var allOpen = ds.length > 0 && ds.every(function (d) { return d.open; });
-    btn.textContent = allOpen ? '세부내용 모두 접기' : '세부내용 모두 펼치기';
-  }
-  btn.hidden = false;
-  btn.addEventListener('click', function () {
-    var ds = visibleDetails();
-    var open = !ds.every(function (d) { return d.open; });
-    ds.forEach(function (d) { d.open = open; });
-    syncAll();
-  });
-  document.querySelectorAll('details.det').forEach(function (d) { d.addEventListener('toggle', syncAll); });
-  // 이름 오른쪽 ⌄ 버튼 — 눌러서 세부내용 접고 펴기, 모두 펼치기와도 맞춰진다
-  document.querySelectorAll('.tog').forEach(function (b) {
-    var d = document.getElementById(b.getAttribute('aria-controls'));
-    b.addEventListener('click', function () { d.open = !d.open; });
-    d.addEventListener('toggle', function () {
-      b.setAttribute('aria-expanded', d.open ? 'true' : 'false');
-    });
-  });
-  var start = location.hash.slice(1);
-  select(ids.indexOf(start) >= 0 ? start : ids[0]);
+  window.addEventListener('hashchange', go);
+  go();
 })();
 </script>
+<!-- 왼쪽 고정 목차: assets/toc.js(이 생성기가 만듦) + assets/sidebar.js -->
+<script src="assets/toc.js"></script>
+<script src="assets/sidebar.js" data-root=""></script>
 <!-- 수정 요청 메모(피드백 모드): 주소 끝에 ?memo=1 일 때만 켜짐. docs/feedback-mode.md -->
 <script src="tools/memo.js" defer></script>
 </body>

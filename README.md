@@ -11,4 +11,4 @@
 
 1. 노트마다 Word 원고가 `노트 원고/<과목>/<번호> <이름>.docx` 에 있습니다(이 PC·OneDrive 에만, GitHub 에는 올리지 않음).
 2. Word 를 고친 뒤 Claude 에게 "3-1-1 노트 반영해줘"라고 하면 노트(`os/3-1-1/index.html` 등)를 고칩니다.
-3. `npm run index` 로 첫 화면을 다시 만들면, 칸이 하나라도 채워진 노트는 목차에서 자동으로 링크되고 '연결된 자료' 숫자도 맞춰집니다. 목차 원본 데이터는 `scripts/index-data.json` 입니다.
+3. `npm run index` 로 첫 화면을 다시 만들면, 칸이 하나라도 채워진 노트는 목차에서 자동으로 링크되고 '연결된 자료' 숫자와 왼쪽 고정 목차(`assets/toc.js`)도 맞춰집니다. 목차 원본 데이터는 `scripts/index-data.json` 입니다.

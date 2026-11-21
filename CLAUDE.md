@@ -93,5 +93,5 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
   1. 그 Word 를 읽는다(파일을 열어 둔 상태면 `~$` 잠금 파일은 무시). 칸 = 제목 1(핵심 개념·예제·코드·기출·예상 문제·참고 자료), 소제목 = 제목 2·3, 글머리·번호 목록(들여쓰기 = 중첩), 표, 그림.
   2. `<과목id>/<번호>/index.html` 의 해당 `section.part` 안만 바꾼다(머리·이전/다음은 그대로). 모양은 `assets/note.css` 의 기존 클래스를 쓴다 — 용어 굵게 `<strong>`, 분홍 `[원본과 다름 …]` 글은 `<span class="fix">`, 그림은 노트 폴더에 파일로 두고 `<figure>`. 내용이 '아직 비어 있어요.'뿐인 칸은 `<p class="empty">아직 비어 있어요.</p>`.
   3. Word 의 머리(번호·이름·키워드·세부내용)가 바뀌었으면 고치기 전에 알린다(목차·엑셀 기준 데이터 `scripts/index-data.json` 과 어긋남).
-  4. `npm run index` 로 첫 화면을 다시 만든다(칸이 하나라도 채워진 노트는 자동 링크, '연결된 자료' 숫자 갱신). 미리보기(8090)로 확인하고 커밋. push 는 요청할 때만.
+  4. `npm run index` 로 첫 화면을 다시 만든다(칸이 하나라도 채워진 노트는 자동 링크, '연결된 자료' 숫자와 왼쪽 목차 데이터 `assets/toc.js` 갱신). 미리보기(8090)로 확인하고 커밋. push 는 요청할 때만.
 - 노트(HTML)를 직접 고친 경우 Word 원고와 어긋나므로, 고친 뒤 Word 도 맞춰 둘지 사용자에게 묻는다.
