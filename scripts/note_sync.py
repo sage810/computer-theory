@@ -12,12 +12,14 @@ R = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
 A = '{http://schemas.openxmlformats.org/drawingml/2006/main}'
 WP = '{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}'
 PR = '{http://schemas.openxmlformats.org/package/2006/relationships}'
+M = '{http://schemas.openxmlformats.org/officeDocument/2006/math}'
 SITE_URL = 'https://sage810.github.io/computer-theory/'
 FIX_COLOR = 'A3356B'
 MUTED = '5F4F86'
 EMPTY = '아직 비어 있어요.'
 CUR_AREA = ''   # 반영하는 영역 번호(3-2) — 같은 영역 안 링크는 #n-3-2-6 으로
 e = html.escape
+sys.stdout.reconfigure(errors='replace')   # 콘솔이 cp949 라도 '—' 같은 글자에서 멈추지 않게
 
 
 # ── Word → 모형 ──────────────────────────────────────────────
@@ -34,6 +36,36 @@ def img_size(b):
     return 0, 0
 
 
+def omml(el):
+    # Word 수식(OMML) → (HTML, 글자). 아래·위첨자, 분수(a/b), 괄호, 근호만 다루고 나머지는 안의 글자를 잇는다
+    tag = el.tag.split('}')[1]
+    if tag.endswith('Pr'): return '', ''
+    if tag == 't': return e(el.text or ''), el.text or ''
+    part = lambda name: omml(el.find(M + name)) if el.find(M + name) is not None else ('', '')
+    if tag in ('sSub', 'sSup'):
+        (bh, bt), (sh, st) = part('e'), part('sub' if tag == 'sSub' else 'sup')
+        tg = 'sub' if tag == 'sSub' else 'sup'
+        return f'{bh}<{tg}>{sh}</{tg}>', bt + st
+    if tag == 'f':
+        (nh, nt), (dh, dt) = part('num'), part('den')
+        return f'{nh}/{dh}', f'{nt}/{dt}'
+    if tag == 'd':
+        pr = el.find(M + 'dPr')
+        get = lambda k, d: (pr.find(M + k).get(M + 'val') if pr is not None and pr.find(M + k) is not None else d)
+        beg, end = get('begChr', '('), get('endChr', ')')
+        es = [omml(x) for x in el.findall(M + 'e')]
+        return e(beg) + ', '.join(h for h, _ in es) + e(end), beg + ', '.join(t for _, t in es) + end
+    if tag == 'rad':
+        h, t = part('e'); return f'√({h})', f'√({t})'
+    if tag == 'func':
+        (fh, ft), (xh, xt) = part('fName'), part('e')
+        return f'{fh} {xh}', f'{ft} {xt}'
+    hs, ts = [], []
+    for c in el:
+        h, t = omml(c); hs.append(h); ts.append(t)
+    return ''.join(hs), ''.join(ts)
+
+
 def docx_to_model(path, note_dir=None):
     z = zipfile.ZipFile(path)
     doc = ET.fromstring(z.read('word/document.xml'))
@@ -42,6 +74,7 @@ def docx_to_model(path, note_dir=None):
         for st in ET.fromstring(z.read('word/styles.xml')).findall(W + 'style'):
             styles[st.get(W + 'styleId')] = st.find(W + 'name').get(W + 'val').lower()
     fmt = {}   # (numId, ilvl) → 'bullet' | 'decimal' …
+    lvl_left = {}   # (numId, ilvl) → 목록 정의의 왼쪽 들여쓰기 (단계는 Word 에 보이는 들여쓰기로 정한다)
     if 'word/numbering.xml' in z.namelist():
         n = ET.fromstring(z.read('word/numbering.xml'))
         absn = {a.get(W + 'abstractNumId'): a for a in n.findall(W + 'abstractNum')}
@@ -49,8 +82,13 @@ def docx_to_model(path, note_dir=None):
             a = absn.get(num.find(W + 'abstractNumId').get(W + 'val'))
             if a is None: continue
             for lv in a.findall(W + 'lvl'):
-                nf = lv.find(W + 'numFmt')
-                fmt[(num.get(W + 'numId'), lv.get(W + 'ilvl'))] = nf.get(W + 'val') if nf is not None else 'bullet'
+                key = (num.get(W + 'numId'), lv.get(W + 'ilvl'))
+                nf = lv.find(W + 'numFmt'); lt = lv.find(W + 'lvlText')
+                fmt[key] = nf.get(W + 'val') if nf is not None else 'bullet'
+                if lt is not None and not lt.get(W + 'val'): fmt[key] = 'bullet'   # 번호 글자가 없는 단계는 글머리로
+                li = lv.find(f'{W}pPr/{W}ind')
+                if li is not None and (li.get(W + 'left') or li.get(W + 'start')):
+                    lvl_left[key] = int(li.get(W + 'left') or li.get(W + 'start'))
     rels = {}
     if 'word/_rels/document.xml.rels' in z.namelist():
         for r in ET.fromstring(z.read('word/_rels/document.xml.rels')).findall(PR + 'Relationship'):
@@ -72,7 +110,7 @@ def docx_to_model(path, note_dir=None):
     def para_runs(p):
         out = []
         def add(t, b=False, fix=False, href=None, color=''):
-            if out and not out[-1].get('br') and (out[-1]['b'], out[-1]['fix'], out[-1].get('href')) == (b, fix, href):
+            if out and not out[-1].get('br') and not out[-1].get('html') and (out[-1]['b'], out[-1]['fix'], out[-1].get('href')) == (b, fix, href):
                 out[-1]['t'] += t
             else:
                 out.append({'t': t, 'b': b, 'fix': fix, 'href': href, 'color': color})
@@ -89,12 +127,18 @@ def docx_to_model(path, note_dir=None):
                         images.append(blip.get(R + 'embed'))
                         out.append({'img': blip.get(R + 'embed'),
                                     'alt': (c.find('.//' + WP + 'docPr').get('descr') or '') if c.find('.//' + WP + 'docPr') is not None else ''})
+        def math(m):   # Word 수식 → 글자 하나 (아래첨자·분수·괄호 정도만)
+            h, t = omml(m)
+            out.append({'t': t, 'html': h, 'b': False, 'fix': False, 'href': None, 'color': ''})
         for c in p:
             tag = c.tag.split('}')[1]
             if tag == 'r': walk_run(c)
             elif tag == 'hyperlink':
                 tgt = rels.get(c.get(R + 'id'), '')
                 for r in c.findall(W + 'r'): walk_run(r, tgt or None)
+            elif tag == 'oMath': math(c)
+            elif tag == 'oMathPara':
+                for m in c.findall(M + 'oMath'): math(m)
         return out
 
     model = {'items': []}   # 내용요소마다 {'no': '3.1.1', 'title': '3.1.1 …', 'sections': […]}
@@ -165,6 +209,10 @@ def docx_to_model(path, note_dir=None):
             for im in imgs:
                 fig = save_img(im['img'], im['alt'])
                 lvl = max(0, round(left / 400) - 1) if left else None
+                if num is not None:   # 목록 항목 안에 든 그림 → 그 단계의 앞 항목에 붙인다
+                    nid = num.find(W + 'numId').get(W + 'val'); il = num.find(W + 'ilvl')
+                    ilv = il.get(W + 'val') if il is not None else '0'
+                    lvl = max(0, round(lvl_left[(nid, ilv)] / 400) - 1) if (nid, ilv) in lvl_left else int(ilv)
                 host = None
                 if lvl is not None and stack:
                     for lv, lst in reversed(stack):
@@ -182,6 +230,8 @@ def docx_to_model(path, note_dir=None):
             nid = num.find(W + 'numId').get(W + 'val')
             il = num.find(W + 'ilvl'); lvl = int(il.get(W + 'val')) if il is not None else 0
             ordered = fmt.get((nid, str(lvl)), 'bullet') != 'bullet'
+            li_left = lvl_left.get((nid, str(lvl)))
+            if li_left: lvl = max(0, round(li_left / 400) - 1)   # 단계 = 목록 서식의 들여쓰기 (400 마다 한 단계, 다른 목록을 섞어 써도 Word 에 보이는 깊이대로)
             if text == EMPTY: continue
             while stack and stack[-1][0] > lvl: stack.pop()
             if not stack or stack[-1][0] < lvl:
@@ -218,6 +268,7 @@ def runs_html(runs):
     h = ''
     for r in runs:
         if r.get('br'): h += '<br>'; continue
+        if r.get('html'): h += r['html']; continue
         t = r['t']
         if r.get('fix'):
             inner = t.strip().strip('[]').strip()

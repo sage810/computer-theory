@@ -36,23 +36,233 @@
       <ul class="det" aria-label="세부내용"><li><span class="br" aria-hidden="true">└</span><span>이진 탐색 트리, AVL 트리, 레드-블랙 트리, 스플레이 트리, 최적이진탐색 트리</span></li></ul>
       <!-- 칸: Word 원고(노트 원고/…/1-4 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-1-4-2-1">
-        <h3>이진탐색트리 (binary search tree)의 응용</h3>
+        <h3>#이진탐색트리 (binary search tree)</h3>
         <ul>
-          <li><strong>이진 탐색 트리 삭제</strong>
+          <li><strong>정의</strong>
             <ul>
-              <li>if 삭제하려는 노드 = 단말 노드 → 해당 노드만 삭제</li>
-              <li>if 삭제하려는 노드 = 자식으로 1개의 서브트리만 가짐 → 해당 노드 삭제, 서브트리는 자기 부모 노드에게 붙여 줌</li>
-              <li>if 삭제하려는 노드 = 자식으로 2개의 서브트리 가짐 → 해당 노드 삭제, 2개의 서브트리를 하나로 합쳐 부모 노드에게 붙여 준다
+              <li>root를 기준으로 왼쪽 값은 root보다 작고, 오른쪽 값은 root보다 큰 트리</li>
+              <li>data의 값은 반드시 unique 해야함 (중복 데이터 X)</li>
+              <li>서브 트리들도 이진탐색트리의 성질을 유지해야함</li>
+              <li>주의) 완전 이진 트리 X.  그냥 막 생겨도 이진 탐색 트리임</li>
+            </ul>
+          </li>
+          <li><strong>연산</strong>
+            <ul>
+              <li>탐색
                 <ul>
-                  <li>이때 합친 서브트리의 root 노드는 왼쪽 서브트리에서 가장 큰 키값을 가지는 노드 or 오른쪽 서브트리에서 가장 작은 키값을 가지는 노드</li>
+                  <li>1. 순환적 탐색: 자기 자신을 재호출해 O(h) 안에 수행 가능</li>
+                  <li>2. 반복적 탐색: while문 이용, O(h) 안에 수행 가능</li>
+                </ul>
+              </li>
+              <li>삽입
+                <ul>
+                  <li>1. 현재 subtree의 root의 data와 삽입하려는 data를 비교</li>
+                  <li>2. root data = 삽입 data 이면, 삽입 불가 (중복 data 불가능)</li>
+                  <li>3. if ( root data ≠ 삽입 data &amp;&amp; root data &gt; 삽입 data )
+                    <ul>
+                      <li>왼쪽 서브트리로 넘어가 검사 ( 더 이상 검사할 노드가 없다면, 그곳이 바로 삽입 위치)</li>
+                    </ul>
+                  </li>
+                  <li>4. if ( root data ≠ 삽입 data &amp;&amp; root data &lt; 삽입 data )
+                    <ul>
+                      <li>오른쪽 서브트리로 넘어가 검사 ( 더 이상 검사할 노드가 없다면, 그곳이 바로 삽입 위치)</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>삭제
+                <ul>
+                  <li>if 삭제하려는 노드 = 단말 노드 → 해당 노드만 삭제</li>
+                  <li>if 삭제하려는 노드 = 자식으로 1개의 서브트리만 가짐 → 해당 노드 삭제, 서브트리는 자기 부모 노드에게 붙여 줌</li>
+                  <li>if 삭제하려는 노드 = 자식으로 2개의 서브트리 가짐 → 해당 노드 삭제, 2개의 서브트리를 하나로 합쳐 부모 노드에게 붙여 준다</li>
+                  <li>이때 합친 서브트리의 root 노드는 왼쪽 서브트리에서 가장 큰 키값을 가지는 노드 or 오른쪽 서브트리에서 가장 작은 키값을 가지는 노드
+                    <figure>
+                      <img src="1-4-2-fig-1.png" width="900" height="613" alt="이진 탐색 트리 삭제 예. 11 삭제: 루트 11 자리에 오른쪽 서브트리에서 가장 작은 17이 올라감. 3 삭제: 3 자리에 왼쪽 서브트리에서 가장 큰 2가 올라가거나, 오른쪽 서브트리에서 가장 작은 4가 올라감 (둘 다 가능)">
+                    </figure>
+                  </li>
                 </ul>
               </li>
             </ul>
-            <figure>
-              <img src="1-4-2-fig-1.png" width="900" height="613" alt="이진 탐색 트리 삭제 예. 11 삭제: 루트 11 자리에 오른쪽 서브트리에서 가장 작은 17이 올라감. 3 삭제: 3 자리에 왼쪽 서브트리에서 가장 큰 2가 올라가거나, 오른쪽 서브트리에서 가장 작은 4가 올라감 (둘 다 가능)">
-            </figure>
+          </li>
+          <li><strong>이진탐색트리 성능 분석</strong>
+            <ul>
+              <li>트리 모양따라 성능차가 심하다 (<strong>완전 이진 트리</strong>에 가까울수록 성능이 좋다)</li>
+            </ul>
           </li>
         </ul>
+        <table>
+          <tbody>
+            <tr><td>Best</td><td>O(log<sub>2</sub> n)</td><td>완전 이진 트리</td></tr>
+            <tr><td>Worst</td><td>O(n)</td><td>사향 트리</td></tr>
+            <tr><td>Average</td><td>O(log<sub>2</sub> n)</td><td></td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li>장점: 탐색 쉽다</li>
+          <li>단점: worst case일 때 성능이 안 좋다</li>
+        </ul>
+      </section>
+      <section class="part" id="s-1-4-2-2">
+        <h3>이진탐색트리 (binary search tree)의 응용</h3>
+        <ul>
+          <li><strong>이진탐색트리 개선</strong>
+            <figure>
+              <img src="1-4-2-fig-2.png" width="1280" height="1656" alt="이진탐색트리를 개선한 트리들. 균형 개선은 AVL(양쪽 높이가 비슷한 트리), 완전 균형은 Red-Black(빨강·검정 노드), 최적 비용은 OBST, 최적 이진탐색 트리(자주 찾는 키일수록 루트 가까이), 상환 시간은 스플레이(찾은 노드를 루트로 올림). 수행 시간(높이 줄임)은 다원탐색트리에서 시작해, 균형을 더하면 2-3 트리와 2-3-4 트리, 일반화하면 m원 B트리와 B*트리(backtracking X), 탐색에 맞추면 B+트리. 줄기에서 한쪽으로 뻗은 카드에 기준과 트리를 하나씩 담고, 수행 시간 카드에는 한 노드에 키가 여러 개인 B트리 노드 그림">
+            </figure>
+          </li>
+          <li><strong>AVL 트리</strong>
+            <ul>
+              <li>이진 탐색 트리  +  균형 개선</li>
+              <li>이진 탐색 트리 성질 모두 가짐 (여전히 중복 데이터 X)</li>
+              <li>균형을 위해 좌우 높이 1 이상 차이 X
+                <ul>
+                  <li>균형 인수 BF (Balance Factor = | H<sub>L</sub>- H<sub>R</sub> | ≤ 1  ( -1, 0, 1 값 가짐)</li>
+                </ul>
+              </li>
+              <li>트리 높이 불균형이 발생한다면, 회전시킨다
+                <figure>
+                  <img src="1-4-2-fig-3.png" width="315" height="106" alt="AVL 트리 회전 유형 손그림: LL(왼쪽으로만 두 번 내려간 모양), LR(왼쪽 다음 오른쪽), RL(오른쪽 다음 왼쪽), RR(오른쪽으로만 두 번).">
+                </figure>
+              </li>
+              <li>AVL 트리 삽입
+                <ul>
+                  <li>1. 평범한 이진 탐색 트리처럼 삽입한다</li>
+                  <li>2. 새로 삽입한 위치부터 root까지 BF 값을 갱신한다 (밑에서 위로)</li>
+                  <li>3. 위배되는 BF를 회전시킨다</li>
+                  <li>4. 회전 후 BF 값 갱신한다</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <p>* 회전 수행할 노드: 균형 인수가 -2 or 2이고, 새로 삽입된 노드에 가장 가까운 조상노드부터 새로 삽입한 노드 위치 사이의 3개의 노드 (새 노드에서 타고 위로 올라가다가, 처음으로 -2나 2 마주치면 그 아래로 왔던 경로대로 회전 수행함)</p>
+        <ul>
+          <li><strong>레드블랙 트리</strong>
+            <ul>
+              <li><strong>이진 탐색 트리 + 완전 균형 (확장 이진 트리) + red/black 색 = 확장 이진 탐색 트리</strong></li>
+              <li>확장 이진 트리: 외부노드가 추가된 이진 트리. 외부노드 꼭 그려야함</li>
+              <li>규칙
+                <ul>
+                  <li>1. Root와 외부노드는 무조건 black</li>
+                  <li>2. 연속 2개 red 불가능 (black끼리는 연속 가능)</li>
+                  <li>3. root에서 외부 노드까지의 모든 경로는, black 노드의 수 동일</li>
+                  <li>4. node 색깔 = 연결선 색깔</li>
+                  <li>랭크: 한 노드 ~ 외부 노드까지의 경로 상에 있는 검정 연결선 (black pointer)의 수 (red node는 포함 X)
+                    <figure>
+                      <img src="1-4-2-fig-4.png" width="771" height="390" alt="레드블랙 트리 손그림. 예: 루트 65(랭크 2), 빨강 50(랭크 2), 10(랭크 1), 빨강 5(랭크 0), 60, 빨강 63, 80, 빨강 70, 네모는 외부 노드. 오른쪽: red 노드의 의미, 키 x y z 가 한 노드였던 것을 Y 를 부모로 x, z 를 빨강 자식으로 나눈 모양, 원래 같은 노드였다! 아래: 레벨마다 노드가 2^0, 2^1, 2^2 … 2^n 개인 트리, 2^n - 1 개, 루트 노드의 랭크가 N 일 때 내부 노드 최소 개수 2^N - 1.">
+                    </figure>
+                  </li>
+                </ul>
+              </li>
+              <li>연산
+                <ul>
+                  <li>레드블랙트리 탐색: 이진 탐색 트리와 동일</li>
+                  <li>레드블랙트리 삽입
+                    <ul>
+                      <li>규칙
+                        <ul>
+                          <li>-    새 삽입 값은 무조건 <strong>red 노드</strong></li>
+                          <li>Red 노드의 자식은 오직 <strong>black 노드만</strong> 가능</li>
+                          <li>Black 노드의 자식은 색깔 상관 x</li>
+                        </ul>
+                      </li>
+                      <li>과정
+                        <ul>
+                          <li>- 1. 탐색 (외부 노드에서 stop)</li>
+                          <li>2. Key 삽입 (red 노드로 삽입)</li>
+                          <li>3. 성질 위배 검사 (red 노드 연속 2개 x)</li>
+                          <li>4. 균형 알고리즘 – 부모의 형제 색 확인
+                            <ul>
+                              <li>If 부모 red &amp;&amp; 부모의 형제 black -&gt; 회전</li>
+                              <li>If 부모 red &amp;&amp; 부모의 형제 red -&gt; 색 변환과정</li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>레드블랙트리 삽입 중 회전하는 경우 ( 나 red, 부모 red, <strong>부모의 형제 black</strong>)
+                    <ul>
+                      <li>과정
+                        <ul>
+                          <li>1. 회전하려는 값 3개를 나란히 놓는다</li>
+                          <li>2. 3개 중 가운데 값을 부모로 지정 (black 노드가 됨)</li>
+                          <li>3. 나머지 자식 노드가 되는 둘은 red 노드가 된다 (원래 red 노드 아니었더라도 red로)</li>
+                        </ul>
+                      </li>
+                    </ul>
+                    <figure>
+                      <img src="1-4-2-fig-5.png" width="570" height="220" alt="레드블랙 트리 삽입 중 회전 손그림: 2 아래 1 과 빨강 7, 7 아래 6 과 8, 6 아래 빨강 3. 5 를 삽입하면 빨강 3 아래 빨강 5 가 와서 레드가 연속(부모의 형제는 블랙). 회전하면 7 아래 검정 5 가 부모가 되고 빨강 3, 빨강 6 이 자식이 됨.">
+                    </figure>
+                  </li>
+                  <li>레드블랙트리 삽입 중 색 변환하는 경우 ( 나 red, 부모 red, <strong>부모의 형제 red</strong>)
+                    <ul>
+                      <li>과정
+                        <ol>
+                          <li>나의 red 를 (삽입한 값) 지키기 위해, 부모는 black 이 되어준다.</li>
+                          <li>Red랑 black이 나 – 부모 – 조부모가 level 마다 색을 다르게 한다.</li>
+                        </ol>
+                      </li>
+                    </ul>
+                    <figure>
+                      <img src="1-4-2-fig-6.png" width="677" height="168" alt="레드블랙 트리 색 변환 손그림: 검정 5 아래 빨강 3, 빨강 9, 3 아래 빨강 1. 색 변환 뒤 5 아래 3 과 9 는 검정, 1 은 빨강. 5 는 원래 red 가 되어야 하지만 root 니까 봐준다.">
+                    </figure>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <p>(나 red, 부모 black, 조부모 red)</p>
+        <ul>
+          <li><strong>최적 이진 탐색 트리 (OBST)</strong>
+            <ul>
+              <li>여러 가지 이진 탐색 트리 중, 최적인 이진 탐색 트리 찾기</li>
+              <li>방법
+                <ul>
+                  <li>총비용 탐색 → 동적 프로그래밍</li>
+                  <li>가능한 모든 이진 탐색 트리 경우의 수 중, 최소 비용을 그려서 찾아본다.</li>
+                </ul>
+              </li>
+              <li>확장 이진 트리 = 내부 노드 + 외부 노드 (= 실패노드) 가진 이진 트리</li>
+              <li>내부 경로 길이 (I) = 내부 노드들의 경로 길이 합 (경로길이는 root = 0, 그 다음 레벨마다 +1)
+                <figure>
+                  <img src="1-4-2-fig-7.png" width="348" height="182" alt="내부 경로 길이 손그림: 루트 8(0), 자식 5(1)와 9(1), 9 아래 13(2), 13 아래 11(3). 0부터 시작, I = 0+1+1+2+3 = 7.">
+                </figure>
+              </li>
+              <li>외부 경로 길이 (E) = 외부 노드들의 경로 길이 합 (root = 0, 그 다음 레벨마다 +1)</li>
+            </ul>
+          </li>
+        </ul>
+        <figure>
+          <img src="1-4-2-fig-8.png" width="348" height="192" alt="외부 경로 길이 손그림: 같은 트리(8, 5, 9, 13, 11)에 외부 노드(네모)를 붙이고 각 외부 노드의 경로 길이 2, 2, 2, 3, 4, 4 를 적음. E = 2+2+2+3+4+4 = 17.">
+        </figure>
+        <ul>
+          <li>스플레이 트리
+            <ul>
+              <li>이진 탐색 트리 + 상환 시간 개선</li>
+              <li><strong>최근에 탐색/삽입된 노드를 루트로 이동시킨다 (=스플레이 시킨다)</strong></li>
+              <li>연산 → splay 노드 결정 → splay 노드를 root로 옮기기 위해 회전 수행</li>
+              <li>탐색/삽입/삭제: O(log<sub>2</sub> n)</li>
+              <li>Splay 노드 결정
+                <ul>
+                  <li>탐색: 찾고자 하는 key값 노드</li>
+                  <li>삽입: 새로 삽입한 노드</li>
+                </ul>
+              </li>
+              <li>Splay 회전
+                <ul>
+                  <li>splay 노드를 root가 될 때까지 회전시킨다.</li>
+                  <li>회전은 노드 3개씩, 이진 탐색 트리 숫자를 보면서 함</li>
+                  <li>무조건 3개 중 splay 노드를 위로 배치시키고, 나머지 정리</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <figure>
+          <img src="1-4-2-fig-9.png" width="873" height="546" alt="스플레이 트리에 2, 25 추가 삽입 손그림. 12 아래 7, 20, 7 아래 3, 10, 3 아래 1 인 트리에 2 를 넣으면 1 의 오른쪽에 붙고, 노드 3개씩 회전해 2 가 루트가 됨(2 아래 1 과 7, 7 아래 3 과 12, 12 아래 10 과 20). 이어서 25 를 넣으면 20 의 오른쪽에 붙고, 회전을 거쳐 25 가 루트가 됨(25 아래 7, 7 아래 2 와 20, 2 아래 1 과 3, 20 아래 12, 12 아래 10). 새로 삽입한 값이 root 가 될 때까지 회전.">
+        </figure>
       </section>
     </article>
     <article class="topic" id="n-1-4-3">
@@ -61,7 +271,78 @@
       <!-- 칸: Word 원고(노트 원고/…/1-4 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-1-4-3-1">
         <h3>다원탐색트리와 B트리</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>23트리</strong>
+            <ul>
+              <li>한 노드에 key값 2개까지 허용, 간선 3개까지 허용</li>
+              <li>완전 균형 트리 지향 (균형성 보장, 모든 단말노드는 같은 레벨에 놓이게)</li>
+              <li>23 트리 단점: back tracking 해야함 (부모의 부모까지 다 재구성)</li>
+            </ul>
+            <figure>
+              <img src="1-4-3-fig-1.png" width="560" height="101" alt="2-3 트리 손그림: 최소 key 수 1, 최소 자식 수 2(키 1개, 자식 2개인 노드). 최대 key 수, 최대 자식 수(키 2개, 자식 3개인 노드).">
+            </figure>
+          </li>
+          <li><strong>234트리</strong>
+            <ul>
+              <li>23트리는 backtracking 해야 하지만 (균형 깨지면 부모의 부모까지 다 재구성하러 올라감),</li>
+            </ul>
+            <figure>
+              <img src="1-4-3-fig-2.png" width="631" height="127" alt="2-3-4 트리 손그림: 최소 key 수 1, 최소 자식 수 2(키 1개, 자식 2개인 노드). 최대 key 수 3, 최대 자식 수 4(키 3개, 자식 4개인 노드).">
+            </figure>
+          </li>
+        </ul>
+        <p>234 트리는 <strong>backtracking X</strong></p>
+        <ul>
+          <li>Backtracking 하지 않고, 애초에 삽입 위치 찾으러 가는 탐색 도중에 (루트 포함) 4노드 만나면 찢어버린다</li>
+          <li>Stack 불필요 (되돌아갈 필요 없어서)</li>
+          <li>병렬처리 가능 (파이프라이닝) : 하나의 삽입 작업이 트리 모습 바꾸면서 내려가는 동안, 동시에 이어서 두 번째 삽입 작업 가능</li>
+          <li>탐색: 23 트리 탐색 처럼 + 4노드 처리</li>
+        </ul>
+        <ul>
+          <li><strong>m원 B트리</strong>
+            <ul>
+              <li><strong>성질</strong>
+                <ul>
+                  <li>루트 노드는 적어도 2개의 자식 노드를 가짐</li>
+                  <li>루트 노드 &amp; 외부 노드를 제외한 모든 노드는, 적어도 ⌈m/2⌉ 개의 자식 노드를 가짐</li>
+                  <li>모든 외부 노드는 같은 레벨에 있음 <strong>(균형성 보장)</strong></li>
+                  <li><strong>탐색:</strong> 23트리, 234 트리와 같음</li>
+                  <li><strong>삽입:</strong> 23트리와 같음 <strong>(백트래킹 존재)</strong></li>
+                </ul>
+              </li>
+            </ul>
+            <figure>
+              <img src="1-4-3-fig-3.png" width="750" height="428" alt="m원 B트리 손그림 표. 행 머리: 최소 key 수, 최소 자식 수 ⌈m/2⌉, 최대 key 수 m-1, 최대 자식 수. m=3 이면 최소 key 1, 최소 자식 ⌈3/2⌉=2(2 node), 최대 key 2, 최대 자식 3(3 node) = 2-3 트리, 균형 알고리즘 같음. m=4 이면 1, 2, 3, 4 = 2-3-4 트리, 균형 알고리즘 다름(X). m=5 이면 2, ⌈5/2⌉=3, 4, 5, 2-3-4-5 트리는 아님, 균형 알고리즘 다름(X).">
+            </figure>
+          </li>
+          <li><strong>B* 트리</strong>
+            <ul>
+              <li>최소로 채워야 할 data(key)의 개수를  ⌈2m/3⌉ 개로 늘린 것</li>
+              <li>트리의 높이가 낮아지는 효과</li>
+              <li>삽입 연산 시, 데이터 삽입 후 성질 위배해도 바로 분할하지 않고 먼저 형제 노드로 회전 후 분할을 실행한다</li>
+            </ul>
+          </li>
+          <li><strong>B+ 트리</strong>
+            <ul>
+              <li>B 트리의 순차탐색 안되는 점을 개선</li>
+              <li>Index node, data node로 구분
+                <ul>
+                  <li>Index node: B+ 트리의 내부 노드</li>
+                </ul>
+              </li>
+            </ul>
+            <figure>
+              <img src="1-4-3-fig-4.png" width="799" height="274" alt="B+ 트리 손그림: 위의 삼각형(B 트리 모양)이 index node, 아래 원소값 칸이 data node. index node 의 최소 key 개수 ⌈2m/3⌉, 삽입 시 분할+재배치 고려(분할 최대한 늦춤). data node 의 최소 key 개수 ⌈c/2⌉, 최대 key 개수 c.">
+            </figure>
+          </li>
+        </ul>
+        <p>Data node: B+ 트리의 외부 노드</p>
+        <ul>
+          <li>Index node와 data node의 크기는 똑같지 않아도 된다.</li>
+          <li>모든 data는 같은 level에 위치한다. (균형성)</li>
+          <li>Data node는 원소만 포함하고 있다.</li>
+          <li>Index node는 index일 뿐, 실제로 원소값을 가지고 있는 게 아니다.</li>
+        </ul>
       </section>
     </article>
   </main>
