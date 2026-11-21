@@ -36,7 +36,138 @@
       <!-- 칸: Word 원고(노트 원고/…/1-2 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-1-2-2-1">
         <h3>연결리스트 개념 &amp; 연산</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <h4>전제</h4>
+        <table>
+          <tbody>
+            <tr><td>struct ListNode {<br>    int data;<br>    struct ListNode *link;   // 링크 = 포인터. 따라서 헤드포인터와 대등하게 연산 가능<br>};   // 포인터: 노드를 가리킬 수 있는 실가닥 있는 애.<br>     //         항상 노드전체를 가리키고있음 <span class="fix">원본과 다름 · 원본: “struct Listnode {” · “struct node *link;” · 끝의 “}” (구조체 이름을 ListNode 로 맞추고 ; 붙임)</span></td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>헤드노드</strong> : 헤드 포인터. 노드를 전문적으로 가리키는 애. 어딜 가리킬지 정해줘야 한다.</li>
+          <li>포인터 이름만 적는다 = 우리는 그 포인터가 &#x27;가리키고 있는 노드&#x27;가 누군지가 필요한 거다</li>
+          <li>주소 = 값; 꼴로 읽기 (저장소) = (값), 노드 = 값</li>
+          <li>포인터A = 포인터B; 꼴일 경우, A라는 포인터에 <strong>B가 가리키던 값을</strong> 똑같이 <strong>가리키게 만든다</strong> 라는 의미</li>
+          <li>포인터는 거의, 누군가 이미 가리키고 있는 값을 복사해서 가리키거나, 자기가 가리키는 노드의 link가 가리키는 값을 가리키면서 전진하던가 함</li>
+        </ul>
+        <h4>선형 연결리스트 삽입 연산</h4>
+        <ul>
+          <li><strong>1. 리스트 맨 처음 위치에 새로운 노드 추가할 경우</strong>
+            <figure>
+              <img src="1-2-2-fig-1.png" width="880" height="400" alt="맨 앞 삽입: 새 노드 5 의 link 가 원래 첫 노드 10 을 가리키고(1), head 가 새 노드 5 를 가리킴(2). head 가 10 을 가리키던 원래 화살표는 끊김.">
+              <figcaption>분홍 점선 = 새로 이은 링크, 흐린 선과 X = 끊긴 원래 링크</figcaption>
+            </figure>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>① p-&gt;link = head;</td><td>포인터 대 포인터. (헤드포인터 p가 가리키던 노드의 link라는 저장소)에 head가 가리키던 값을 복사해서 가리킨다.</td></tr>
+            <tr><td>② head = p;</td><td>헤드포인터 head 라는 저장소에, p가 가리키던 값을 복사해서 가리킴</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>2. 리스트 중간 위치에 새로운 노드 추가할 경우</strong>
+            <ul>
+              <li><strong>반드시 삽입하려는 곳 이전 노드를 알아야 삽입 가능</strong></li>
+            </ul>
+            <figure>
+              <img src="1-2-2-fig-2.png" width="960" height="420" alt="중간 삽입: 새 노드 35 의 link 가 30 을 가리키고(1), pre 가 가리키는 20 의 link 가 35 를 가리킴(2). 20 → 30 원래 링크는 끊김.">
+            </figure>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>① p-&gt;link = pre-&gt;link;</td><td>헤드포인터 p가 가리키던 노드의 link라는 저장소에 헤드포인터 pre가 가리키는 노드의 link가 가리키던 값을 복사해서 가리킴</td></tr>
+            <tr><td>② pre-&gt;link = p;</td><td>헤드포인터 pre가 가리키는 노드의 link라는 저장소에 헤드포인터 p가 가리키던 값을 복사해서 가리키게 한다</td></tr>
+          </tbody>
+        </table>
+        <h4>선형 연결리스트 삭제 연산</h4>
+        <ul>
+          <li><strong>1. 리스트 첫 노드를 삭제할 경우</strong>
+            <figure>
+              <img src="1-2-2-fig-3.png" width="940" height="400" alt="첫 노드 삭제: removed 가 첫 노드 10 을 가리키고(1), head 가 20 을 가리키게 한 뒤(2), 10 을 free(3).">
+            </figure>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>ListNode *removed;</td><td>(노드를 가리킬 수 있는) 포인터 선언</td></tr>
+            <tr><td>① removed = head;</td><td>removed 포인터라는 저장소가 head가 가리키는 값을 복사해서 가리키게 만든다</td></tr>
+            <tr><td>② head = removed-&gt;link;</td><td>head 포인터 저장소에 removed 포인터가 가리키는 노드의 link의 값을 복사해서 가리키게 만든다</td></tr>
+            <tr><td>③ free (removed);</td><td>removed가 가리키는 노드의 메모리 반환 <span class="fix">원본과 다름 · 원본: “헤드포인터 반환” (free 는 포인터가 아니라 노드 메모리를 돌려줌)</span></td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>2. 리스트 중간 노드를 삭제할 경우</strong>
+            <figure>
+              <img src="1-2-2-fig-4.png" width="1080" height="420" alt="중간 노드 삭제: removed 가 pre 다음 노드 30 을 가리키고(1), 20 의 link 가 40 을 가리키게 한 뒤(2), 30 을 free(3).">
+            </figure>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>ListNode *removed;</td><td>(노드를 가리킬 수 있는) 포인터 선언</td></tr>
+            <tr><td>① removed = pre-&gt;link;</td><td>removed 포인터라는 저장소가 pre 포인터가 가리키는 노드의 link 값을 복사해서 가리키게 만든다 (가닥 대 가닥으로 복사)</td></tr>
+            <tr><td>② pre-&gt;link = removed-&gt;link;</td><td>pre 포인터가 가리키는 노드의 link 저장소에 removed 포인터가 가리키는 노드의 link의 값을 복사해서 가리키게 만든다</td></tr>
+            <tr><td>③ free (removed);</td><td>removed가 가리키는 노드의 메모리 반환 <span class="fix">원본과 다름 · 원본: “헤드포인터 반환”</span></td></tr>
+          </tbody>
+        </table>
+        <h4>2개의 리스트를 하나로 합치기</h4>
+        <figure>
+          <img src="1-2-2-fig-5.png" width="940" height="460" alt="두 리스트 합치기: head1 리스트(10, 20, 30)의 끝 노드 30 에서 p 가 멈추고, 30 의 link 가 head2 리스트의 첫 노드 40 을 가리킴.">
+        </figure>
+        <table>
+          <tbody>
+            <tr><td>ListNode* concat_list(ListNode *head1, ListNode *head2)<br>{<br>    if (head1 == NULL) return head2;<br>    else if (head2 == NULL) return head1;<br>    else {<br>        ListNode *p;<br>        p = head1;<br>        while (p-&gt;link != NULL)<br>            p = p-&gt;link;<br>        p-&gt;link = head2;<br>        return head1;<br>    }<br>}</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>아이디어</strong> : 리스트1로 맨 끝으로 가서 → 리스트1의 마지막 노드의 link가 리스트2의 첫 노드를 가리키게 만들자</li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>p = head1;</td><td>포인터 p라는 저장소에 head1이 가리키던 값을 복사해서 가리키게 만든다</td></tr>
+            <tr><td>while (p-&gt;link != NULL)<br>    p = p-&gt;link;</td><td>p가 순회한다. null 값을 가진 link를 만날 때까지</td></tr>
+            <tr><td>p-&gt;link = head2;</td><td>멈춘 자리는, 포인터 p가 가리키는 노드의 link값이 null이다.<br>그 노드의 link 저장소에 head2 포인터가 가리키는 값을 복사해서 가리키게 함</td></tr>
+          </tbody>
+        </table>
+        <h4>리스트를 역순으로 만드는 연산</h4>
+        <ul>
+          <li><strong>개념</strong>
+            <ul>
+              <li>p, q, r은 순회하는 포인터</li>
+              <li><strong>p</strong> : 역순으로 만들 리스트 (미래)</li>
+              <li><strong>q</strong> : 현재 역순으로 만들 노드 (현재)</li>
+              <li><strong>r</strong> : 이미 역순으로 변경한 노드 (과거)</li>
+              <li>r → q → p 순으로 서로를 쫓아감</li>
+              <li><strong>주의점</strong> : 링크의 방향을 역순으로 바꾸기 전, 미리 뒤에 있는 노드가 누군지 알고 있어야함!</li>
+            </ul>
+            <figure>
+              <img src="1-2-2-fig-6.png" width="1080" height="420" alt="역순 만들기 중간 단계: r 은 20, q 는 30, p 는 40 을 가리킴. 10 의 link 는 NULL, 20 의 link 는 10, 이번에 q-&gt;link = r 로 30 의 link 가 20 을 가리킴. 원래 앞으로 가던 링크들은 끊김.">
+              <figcaption>q 가 30 일 때의 모습</figcaption>
+            </figure>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>ListNode* reverse(ListNode *head)<br>{<br>    // 순회 포인터로 p, q, r을 사용<br>    ListNode *p, *q, *r;<br><br>    p = head;     // p는 역순으로 만들 리스트<br>    q = NULL;     // q는 역순으로 만들 노드<br>    while (p != NULL) {<br>        r = q;    // r은 역순으로 된 리스트.<br>                  // r은 q, q는 p를 차례로 따라간다.<br>        q = p;<br>        p = p-&gt;link;<br>        q-&gt;link = r;   // q의 링크 방향을 바꾼다.<br>    }<br>    return q;<br>}</td></tr>
+          </tbody>
+        </table>
+        <figure>
+          <img src="1-2-2-fig-7.png" width="602" height="636" alt="손글씨 메모: head → 노드 → 노드. ① q, p 아래 r 동그라미 ② r, p 아래 q 동그라미 ③ r, q 다음 p 동그라미 ④ q 노드의 링크를 r 쪽으로 돌리는 화살표. 뒷노드 자리 저장을 3번 연속한 후 현재 노드의 링크를 뒷노드 가리키게 함.">
+          <figcaption>손글씨 메모: 뒷노드 자리 저장을 3번 연속한 후, 현재 노드의 링크를 뒷노드 가리키게 함</figcaption>
+        </figure>
+        <table>
+          <tbody>
+            <tr><td>p = head;</td><td>p라는 포인터에 head가 가리키던 값을 복사해 가리키게 한다 (head 대체하며 시작)</td></tr>
+            <tr><td>q = NULL;</td><td></td></tr>
+            <tr><td>while (p != NULL)</td><td></td></tr>
+            <tr><td>{   r = q;</td><td>포인터 r는 q가 가리키던 값을 복사해 가리킨다 (이번 턴에 가리키고 싶은 앞이 될 노드 r = 현재 q가 가리키는 중)</td></tr>
+            <tr><td>    q = p;</td><td>포인터 q는 p가 가리키는 값을 복사해서 가리킨다 (q 전진시키기)</td></tr>
+            <tr><td>    p = p-&gt;link;</td><td>포인터 p는 (p가 가리키는 노드의 link) 라는 포인터가 가리키는 값을 복사해서 가리킨다 (p 전진시키기)</td></tr>
+            <tr><td>    q-&gt;link = r;   }</td><td>(q가 가리키는 노드의 link = 현재노드)라는 저장소에 r이 가리키는 값을 복사해 가리키게함 (링크 방향을 역순으로)</td></tr>
+            <tr><td>return q;</td><td></td></tr>
+          </tbody>
+        </table>
       </section>
     </article>
     <article class="topic" id="n-1-2-3">
@@ -46,7 +177,71 @@
       <!-- 칸: Word 원고(노트 원고/…/1-2 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-1-2-3-1">
         <h3>배열 &amp; 연결리스트를 이용한 선형리스트의 구현과 응용</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <h4>원형 연결리스트 삽입 연산</h4>
+        <ul>
+          <li><strong>1. 원형 연결리스트의 처음에 삽입할 때</strong>
+            <ul>
+              <li><strong>주의</strong> : 원형 연결리스트에서는, 헤드포인터 head가 마지막 노드를 가리키고 있다. 마지막 = head</li>
+              <li><strong>아이디어</strong> : new 노드가 원래의 첫 노드를 가리키게 함 → 맨 마지막 노드가 new 노드 가리키게함</li>
+            </ul>
+            <figure>
+              <img src="1-2-3-fig-1.png" width="1000" height="320" alt="원형 리스트 처음에 삽입: head 는 마지막 노드 30 을 가리킴. 새 노드 40 의 link 가 첫 노드 10 을 가리키고(1), 30 의 link 가 40 을 가리킴(2).">
+            </figure>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>node-&gt;link = head-&gt;link;</td><td>새롭게 삽입할 노드의 link라는 저장소가 포인터 head가 가리키던 노드의 link가 가리키고 있던 값을 복사해서 가리킨다</td></tr>
+            <tr><td>head-&gt;link = node;</td><td>포인터 head가 가리키던 노드의 link라는 저장소는, 포인터 node가 가리키는 값을 복사해서 가리킨다</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>2. 원형 연결리스트의 끝에 삽입할 때</strong>
+            <ul>
+              <li>원형 연결리스트에서는, 마지막 = head였다. 그럼 삽입한 노드가 head가 되면 마지막에 삽입한 꼴임</li>
+            </ul>
+            <figure>
+              <img src="1-2-3-fig-2.png" width="1000" height="320" alt="원형 리스트 끝에 삽입: 처음 삽입과 같이 40 의 link 가 10 을(1), 30 의 link 가 40 을 가리키게 한 뒤(2), head 가 40 을 가리킴(3).">
+            </figure>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>node-&gt;link = head-&gt;link;</td><td>(포인터 node가 가리키는 노드의 link라는 저장소)가 (포인터 head가 가리키는 노드의 link라는 저장소가 가리키는 값)을 복사해서 가리키게 한다</td></tr>
+            <tr><td>head-&gt;link = node;</td><td>(포인터 head가 가리키는 노드의 link라는 저장소)가 (포인터 node가 가리키는 값)을 복사해서 가리키게 한다</td></tr>
+            <tr><td>head = node;</td><td>(포인터 head라는 저장소)가 (포인터 node가 가리키는 값)을 복사해서 가리킴</td></tr>
+          </tbody>
+        </table>
+        <h4>이중 연결리스트 삽입 연산</h4>
+        <ul>
+          <li><strong>아이디어</strong> : 새로 만든 노드의 링크부터 먼저 연결시킴 → 원래 링크들 변경
+            <figure>
+              <img src="1-2-3-fig-3.png" width="1000" height="600" alt="이중 연결리스트 삽입: before 노드와 오른쪽 노드 사이에 newnode 를 넣음. (1) newnode 의 llink → before, (2) newnode 의 rlink → 오른쪽 노드, (3) 오른쪽 노드의 llink → newnode, (4) before 의 rlink → newnode. 두 노드 사이의 원래 링크는 끊김.">
+            </figure>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>DListNode *newnode = (DListNode *)malloc(sizeof(DListNode));<br>newnode-&gt;data = data;<br>newnode-&gt;llink = before;<br>newnode-&gt;rlink = before-&gt;rlink;<br>before-&gt;rlink-&gt;llink = newnode;<br>before-&gt;rlink = newnode;</td></tr>
+          </tbody>
+        </table>
+        <table>
+          <tbody>
+            <tr><td>newnode-&gt;llink = before;</td><td>(포인터 newnode가 가리키는 노드의 llink 저장소)가 (포인터 before가 가리키는 노드)를 똑같이 가리킨다</td></tr>
+            <tr><td>newnode-&gt;rlink = before-&gt;rlink;</td><td>(포인터 newnode가 가리키는 노드의 rlink 저장소)가 (포인터 before가 가르키는 노드의 rlink가 가리키는 노드)를 똑같이 가리킨다</td></tr>
+            <tr><td>before-&gt;rlink-&gt;llink = newnode;</td><td></td></tr>
+            <tr><td>before-&gt;rlink = newnode;</td><td></td></tr>
+          </tbody>
+        </table>
+        <h4>이중 연결리스트 삭제 연산</h4>
+        <figure>
+          <img src="1-2-3-fig-4.png" width="1000" height="600" alt="이중 연결리스트 삭제: removed 노드 양옆 노드끼리 바로 잇는다. (1) 왼쪽 노드의 rlink → 오른쪽 노드, (2) 오른쪽 노드의 llink → 왼쪽 노드. removed 와 이어지던 링크 4개는 끊김.">
+        </figure>
+        <table>
+          <tbody>
+            <tr><td>if (removed == head) return;<br>removed-&gt;llink-&gt;rlink = removed-&gt;rlink;<br>removed-&gt;rlink-&gt;llink = removed-&gt;llink;<br>free(removed);</td></tr>
+          </tbody>
+        </table>
       </section>
     </article>
     <article class="topic" id="n-1-2-4">
@@ -56,7 +251,75 @@
       <!-- 칸: Word 원고(노트 원고/…/1-2 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-1-2-4-1">
         <h3>스택과 큐의 개념, 표현, 연산, 응용</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <h4>연결리스트로 스택 구현</h4>
+        <div class="figs">
+          <figure>
+            <img src="1-2-4-fig-1.png" width="920" height="352" alt="연결 스택 삽입: 새 노드 D 의 link 가 top 노드 C 를 가리키고(1), top 이 D 를 가리킴(2).">
+            <figcaption>삽입 연산</figcaption>
+          </figure>
+          <figure>
+            <img src="1-2-4-fig-2.png" width="920" height="400" alt="연결 스택 삭제: temp 가 top 노드 C 를 가리키고(1), top 이 B 를 가리키게 한 뒤(2), C 를 free(3).">
+            <figcaption>삭제 연산</figcaption>
+          </figure>
+        </div>
+        <table>
+          <thead><tr><th scope="col">삽입 연산</th><th scope="col">삭제 연산</th></tr></thead>
+          <tbody>
+            <tr><td>temp-&gt;link = top;<br>top = temp;</td><td>temp = top;<br>top = temp-&gt;link;<br>free(temp); <span class="fix">원본과 다름 · 원본: “top = tep-&gt;link;”</span></td></tr>
+          </tbody>
+        </table>
+        <h4>연결리스트로 큐 구현 (Linked Queue)</h4>
+        <figure>
+          <img src="1-2-4-fig-3.png" width="1040" height="280" alt="연결 큐: front 는 첫 노드 A, rear 는 마지막 노드 D 를 가리킴. A → B → C → D → NULL. 노드는 item 과 link 두 칸.">
+        </figure>
+        <ul>
+          <li><strong>개념</strong>
+            <ul>
+              <li><strong>기본적인 구조</strong> : 단일 연결리스트인데 노드를 가리킬 수 있는 2개의 포인터 front, rear가 추가된 형태</li>
+              <li><strong>front 포인터</strong> : 삭제 관련</li>
+              <li><strong>rear 포인터</strong> : 삽입 관련</li>
+            </ul>
+          </li>
+          <li><strong>삽입 연산</strong></li>
+        </ul>
+        <div class="figs">
+          <figure>
+            <img src="1-2-4-fig-4.png" width="960" height="600" alt="빈 큐에 삽입: front 와 rear 가 NULL 일 때, 새 노드 A 를 temp 가 가리키고, 삽입 뒤 front 와 rear 가 모두 A 를 가리킴.">
+            <figcaption>공백일 때</figcaption>
+          </figure>
+          <figure>
+            <img src="1-2-4-fig-5.png" width="960" height="600" alt="노드가 있는 큐에 삽입: rear 노드 C 의 link 가 새 노드 D 를 가리키고(1), rear 가 D 를 가리킴(2).">
+            <figcaption>기존 노드 존재할 때</figcaption>
+          </figure>
+        </div>
+        <table>
+          <thead><tr><th scope="col">공백일 때</th><th scope="col">기존 노드 존재할 때</th></tr></thead>
+          <tbody>
+            <tr><td>temp-&gt;data = data;<br>temp-&gt;link = NULL;<br>if (is_empty(q)) {<br>    front = temp;<br>    rear = temp;<br>} <span class="fix">원본과 다름 · 원본: “if_empty(q)”</span></td><td>else {<br>    rear-&gt;link = temp;<br>    rear = temp;<br>} <span class="fix">원본과 다름 · 원본에는 닫는 } 가 없음</span></td></tr>
+            <tr><td>공백 상태라면, front와 rear가 새로운 노드 가리키도록 만든다</td><td>기존 노드가 있다면, rear의 위치를 바꾼다 (코드 순서 중요!)</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>연결리스트로 구현한 큐 삭제 연산</strong></li>
+        </ul>
+        <div class="figs">
+          <figure>
+            <img src="1-2-4-fig-6.png" width="960" height="624" alt="노드가 여러 개인 큐에서 삭제: temp 가 front 노드 A 를 가리키고(1), front 가 B 를 가리키게 한 뒤(2), A 를 free.">
+            <figcaption>큐에 노드가 여러 개 있을 때</figcaption>
+          </figure>
+          <figure>
+            <img src="1-2-4-fig-7.png" width="960" height="624" alt="노드가 1개 남은 큐에서 삭제: front 와 rear 가 D 를 가리키다가, temp 가 D 를 가리키고 front 와 rear 는 모두 NULL 이 됨. D 는 free.">
+            <figcaption>큐에 노드가 1개 남았을 때</figcaption>
+          </figure>
+        </div>
+        <table>
+          <tbody>
+            <tr><td>temp = front;</td><td>front가 가리키고 있는 노드를 temp가 똑같이 가리키게 함</td></tr>
+            <tr><td>front = front-&gt;link;</td><td>front에는 front의 link값 대입 (다음 노드를 가리키게 되거나, NULL이 되거나)</td></tr>
+            <tr><td>if (front == NULL)<br>    rear = NULL;</td><td></td></tr>
+            <tr><td>free(temp);</td><td>temp 삭제</td></tr>
+          </tbody>
+        </table>
       </section>
     </article>
   </main>
