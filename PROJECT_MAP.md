@@ -13,7 +13,7 @@
 | scripts/memo.mjs | `npm run memo` — 서버 켜고 `?memo=1`로 열기. info-lesson 쪽과 달리 빌드 단계 없음 |
 | package.json | `npm run serve`, `npm run memo` (외부 패키지 없음) |
 | docs/feedback-mode.md | 피드백 모드 켜기·쓰는 법·기록 형식·처리 순서 |
-| fonts/ | 쿠키런 700, 메이플스토리 300·700 (middle school info에서 복사), Pretendard 400 서브셋 + OFL 허가서 |
+| fonts/ | 쿠키런 700, 메이플스토리 300·700 (middle school info에서 복사), 넥슨 Lv2 고딕 400 서브셋 (사용자가 받은 TTF 에서 2350자만 추림) |
 | .design/style-lock.md | 확정한 색·글꼴·배치 값 |
 | .design/decisions.log | 디자인 판단 이유와 반려한 대안 |
 | README.md | 저장소 소개 + 내용요소에 자료 링크 붙이는 방법 |
