@@ -71,6 +71,9 @@ main{padding:20px 20px 32px}
 /* 빈 칸: 첫 화면 '준비 중' 꼬리표와 같은 모양 */
 .part p.empty{display:inline-block;margin:4px 0 0;padding:4px 8px;border:2px dashed #8b7cb8;border-radius:6px;font-size:12px;line-height:1;color:var(--muted)}
 .part figure{margin:8px 0}
+/* 그림이 연달아 있으면 가로 한 줄 (넓으면 셋, 좁으면 아래로) */
+.part .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;align-items:start;margin:8px 0}
+.part .figs figure{margin:0}
 .part figure img{display:block;margin:0 auto;max-width:min(100%,480px);border:2px solid var(--line);border-radius:10px;background:#fff}
 .part figcaption{margin-top:4px;text-align:center;font-size:14px;color:var(--muted)}
 /* 채울 때 쓰는 기본 모양: 코드, 표, 그림 */

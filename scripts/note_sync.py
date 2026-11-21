@@ -290,8 +290,18 @@ def sections_html(sections, slug):
         sections = [{'name': '', 'blocks': [{'t': 'empty'}]}]
     out = []
     for i, s in enumerate(sections):
+        parts, bl = [], s['blocks']
+        k = 0
+        while k < len(bl):
+            run = 0
+            while k + run < len(bl) and bl[k + run]['t'] == 'img': run += 1
+            if run >= 2:   # 그림이 연달아 있으면 가로 한 줄로 (<div class="figs">)
+                parts.append('        <div class="figs">\n' + '\n'.join(fig_html(f, '          ') for f in bl[k:k + run]) + '\n        </div>')
+                k += run
+            else:
+                parts.append(block_html(bl[k], '        ')); k += 1
         out.append(f'      <section class="part" id="s-{slug}-{i + 1}">\n        <h3>{e(s["name"])}</h3>\n' +
-                   '\n'.join(block_html(b, '        ') for b in s['blocks']) + '\n      </section>')
+                   '\n'.join(parts) + '\n      </section>')
     return '\n'.join(out)
 
 
