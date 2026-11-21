@@ -5,6 +5,12 @@ desktop.ini
 
 # 편집기
 .vscode/
+
+# 화면 확인용 브라우저(Playwright) 임시 파일
+.playwright-mcp/
+
+# 내 PC에만 두는 원본 자료
+example1.xlsx
 .idea/
 *.swp
 
@@ -66,3 +72,4 @@ config.local.*
 
 # Claude Code 개인 설정
 .claude/settings.local.json
+.claude/pending-changes.log
