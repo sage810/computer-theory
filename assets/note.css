@@ -24,12 +24,12 @@ a{color:inherit}
   background:linear-gradient(90deg,#f9cade 0%,#d6c4f5 55%,#c4d8f7 100%)}
 .home{font-size:26px;line-height:1.2;white-space:nowrap;text-decoration:none}
 
-/* 과목 탭: 첫 화면으로 가는 링크, 지금 과목은 눌린 모양 */
-.bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:20px 20px 0}
-.tabs{display:flex;flex-wrap:wrap;gap:8px}
-.tab{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border:3px solid var(--ink);border-radius:10px;background:var(--paper);box-shadow:3px 3px 0 rgba(75,59,107,.25);
-  color:var(--ink);font-size:17px;line-height:1.2;text-decoration:none}
-.tab[aria-current]{background:var(--accent);transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(75,59,107,.25)}
+/* 과목 탭: 제목줄 안 오른쪽 끝, 한 덩어리 알약(시안 J). 첫 화면으로 가는 링크, 지금 과목 칸만 과목 색 */
+.bar{margin-left:auto}
+.tabs{display:flex;gap:4px;padding:4px;border:3px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:3px 3px 0 rgba(75,59,107,.25)}
+.tab{display:inline-flex;align-items:center;min-height:44px;padding:6px 16px;border:2px solid transparent;border-radius:9px;
+  color:var(--ink);font-size:16px;line-height:1.2;white-space:nowrap;text-decoration:none}
+.tab[aria-current]{background:var(--accent);border-color:var(--ink)}
 
 /* 머리: 과목 머리 상자와 같은 모양(영역 번호·이름) */
 main{padding:20px 20px 32px}
@@ -98,7 +98,9 @@ img{max-width:100%;height:auto}
 @media (max-width:520px){
   body{padding:12px 12px 32px}
   .home{font-size:22px}
-  .bar{padding:16px 12px 0}
+  .bar{margin-left:0}
+  .tabs{gap:2px}
+  .tab{padding:6px 10px;font-size:15px}
   main{padding:16px 12px 24px}
   .note-head h1{font-size:22px}
   .note-head .meta{margin-left:0}
@@ -111,3 +113,8 @@ img{max-width:100%;height:auto}
   .pager{grid-template-columns:1fr 1fr;padding:16px 12px}
   .pager .toc{grid-column:1 / -1;grid-row:1;justify-self:center}
 }
+@media (max-width:360px){
+  .titlebar{padding:14px 12px}
+  .tab{padding:6px 6px;font-size:14px}
+}
+
