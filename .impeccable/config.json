@@ -1,0 +1,27 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "border-accent-on-rounded",
+        "value": "*",
+        "files": [
+          "index.html",
+          "assets/note.css"
+        ],
+        "createdAt": "2026-11-21T05:51:51.183Z",
+        "reason": "user confirmed: 레트로 창 디자인(시안 A, info-lesson 형제)을 고르고 개편 때도 '디자인은 현재 그대로'로 유지 지시 — 굵은 잉크 테두리+둥근 모서리가 그 스타일의 핵심"
+      },
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-21T05:51:51.738Z",
+        "reason": "user confirmed: 레트로 창(바깥 창 안에 과목 머리·안내 상자) 구조를 사용자가 선택하고 유지 지시 — info-lesson과 같은 창 속 카드 구성"
+      }
+    ]
+  }
+}

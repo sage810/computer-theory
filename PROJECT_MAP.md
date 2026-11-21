@@ -18,6 +18,7 @@
 | fonts/ | 쿠키런 700, 메이플스토리 300·700 (middle school info에서 복사), 넥슨 Lv2 고딕 400 서브셋 (사용자가 받은 TTF 에서 2350자만 추림) |
 | .design/style-lock.md | 확정한 색·글꼴·배치 값 |
 | .design/decisions.log | 디자인 판단 이유와 반려한 대안 |
+| .impeccable/config.json | 디자인 점검 훅이 일부러 둔 모양(굵은 테두리+둥근 모서리, 창 속 상자)을 다시 지적하지 않게 하는 예외 목록. `.design/` 과 달리 사람용 기록이 아니라 점검 도구 설정 |
 | README.md | 저장소 소개 + 내용요소에 자료 링크 붙이는 방법 |
 | CLAUDE.md | Karpathy 코딩 가이드라인 + 프로젝트 규칙(한글 커밋 메시지) |
 | .gitignore | 운영체제·편집기·Python·Node 부산물과 키·비밀번호·토큰 파일 제외 |
