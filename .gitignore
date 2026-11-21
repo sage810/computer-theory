@@ -1,0 +1,25 @@
+# 운영체제
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# 편집기
+.vscode/
+.idea/
+*.swp
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# 비밀 정보
+.env
+.env.*
+
+# Claude Code 개인 설정
+.claude/settings.local.json
