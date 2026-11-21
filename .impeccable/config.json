@@ -21,6 +21,15 @@
         ],
         "createdAt": "2026-11-21T05:51:51.738Z",
         "reason": "user confirmed: 레트로 창(바깥 창 안에 과목 머리·안내 상자) 구조를 사용자가 선택하고 유지 지시 — info-lesson과 같은 창 속 카드 구성"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "assets/note.css"
+        ],
+        "createdAt": "2026-11-21T09:10:00.000Z",
+        "reason": "user confirmed: 첫 화면 트리의 세로 안내선(피드백으로 '세로선은 그대로' 유지)을 노트에도 같게 해 달라는 요청 — 카드 강조선이 아니라 목차와 같은 3px 연한 안내선"
       }
     ]
   }
