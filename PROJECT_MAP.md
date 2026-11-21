@@ -8,6 +8,7 @@
 |---|---|
 | index.html | 첫 화면(GitHub Pages). info-lesson 첫 화면과 레트로 창 겉모습은 같으나, 단원 세로 칸 대신 맨 위 과목 탭 + 영역별 트리 개요(`1.1.1`, `#키워드`) + 세부내용 접고 펴기 |
 | ds/·algo/·os/ `번호/index.html` | 내용요소 공부 노트 템플릿 58장(예: `ds/1-2-4/`). 머리(번호·이름·키워드·세부내용) + 빈 칸 4개(핵심 개념·예제·코드·기출·예상 문제·참고 자료) + 이전·목차·다음. 첫 화면 목차에는 아직 링크 안 함 |
+| os/3-1-1·3-1-2·3-1-3·3-1-5·3-1-6·3-2-1·3-2-2·3-2-5·3-2-6 | 위 템플릿과 같으나 '핵심 개념' 칸을 사용자의 `운영체제.hwp` 정리로 채움. 원본과 다르게 고친 곳은 `.fix` 꼬리표. 3-2-6 폴더에 HRN 손글씨 공식 그림 `hrn-aging.jpeg` |
 | assets/note.css | 노트 58장이 같이 쓰는 모양. 첫 화면과 같은 레트로 창·색·글꼴, 과목 색은 `body.s-ds/s-algo/s-os` |
 | .github/workflows/pages.yml | main에 push하면 index.html·fonts·tools/memo.js·assets·노트 폴더만 Pages에 배포. info-lesson의 같은 파일과 달리 빌드 없이 복사만 |
 | tools/memo.js | 피드백 모드 화면 쪽(`?memo=1`). middle school info의 `msi-memo.js`와 같으나 위치를 '과목 › 영역 › 내용요소'로 적음 |

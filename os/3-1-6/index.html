@@ -21,7 +21,23 @@
     <!-- 아래 칸을 채워요. '아직 비어 있어요' 줄은 지우고 쓰면 돼요. 칸을 더하거나 빼도 괜찮아요 -->
     <section class="part" id="concept">
       <h2>핵심 개념</h2>
-      <p class="empty">아직 비어 있어요.</p>
+      <ul>
+        <li><strong>시스템 호출 (system call)</strong> : 운영체제가 권한을 가진 작업을 운영체제가 허가하도록 사용자 프로그램이 요청하는 수단을 제공</li>
+        <li><strong>이중연산</strong>
+          <ul>
+            <li><strong>커널모드</strong> : 운영체제가 깨어있음</li>
+            <li><strong>사용자모드</strong> : 운영체제가 자고있음. 사용자가 사용 중</li>
+          </ul>
+        </li>
+        <li><strong>과정</strong>
+          <ol>
+            <li>컴퓨터 부팅</li>
+            <li>OS (커널모드) 시작</li>
+            <li>워드 같은 프로그램 (사용자모드) 시작</li>
+            <li>저장하기 누르면 트랩으로 다시 커널모드 전환</li>
+          </ol>
+        </li>
+      </ul>
     </section>
     <section class="part" id="example">
       <h2>예제·코드</h2>
