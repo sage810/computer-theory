@@ -8,6 +8,7 @@
   },
   "scripts": {
     "serve": "node scripts/serve.mjs",
-    "memo": "node scripts/memo.mjs"
+    "memo": "node scripts/memo.mjs",
+    "index": "python -I scripts/gen_index.py scripts/index-data.json index.html"
   }
 }
