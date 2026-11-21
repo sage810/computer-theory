@@ -1,5 +1,5 @@
-// 왼쪽 고정 목차(사이드바) — 첫 화면과 노트 58장이 같이 쓴다. 모양은 assets/sidebar.css, 목차 데이터는 assets/toc.js (npm run index 가 만듦)
-// 불러오는 쪽: <script src=".../assets/sidebar.js" data-root="../../" data-current="3-1-6"></script>  (첫 화면은 data-root="" 이고 data-current 없음)
+// 왼쪽 고정 목차(사이드바) — 첫 화면과 영역 노트 14장이 같이 쓴다. 모양은 assets/sidebar.css, 목차 데이터는 assets/toc.js (npm run index 가 만듦)
+// 불러오는 쪽: <script src=".../assets/sidebar.js" data-root="../../" data-current="3-1"></script>  (영역 번호. 첫 화면은 data-root="" 이고 data-current 없음)
 (function () {
   var me = document.currentScript;
   var TOC = window.CT_TOC;
@@ -16,7 +16,7 @@
   var CHEV = '<svg class="chev" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"/></svg>';
   var PANEL = '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9 4v16"/></svg>';
 
-  // 처음 펼쳐 둘 곳: 노트면 그 과목·영역, 첫 화면이면 지금 고른 과목 탭
+  // 처음 펼쳐 둘 곳: 영역 노트면 그 과목·영역, 첫 화면이면 지금 고른 과목 탭
   var openSid = '', openArea = '';
   if (CUR) {
     var p = CUR.split('-');
@@ -39,9 +39,9 @@
         '<span class="no">' + sn + '.' + (ai + 1) + '</span><span>' + esc(a.name) + '</span></summary><ul>';
       a.items.forEach(function (it, ii) {
         var slug = an + '-' + (ii + 1);
-        // 노트가 없으면 첫 화면의 그 줄로 (첫 화면 안에서는 새로 불러오지 않게 #만)
-        var href = it.note ? ROOT + s.id + '/' + slug + '/index.html' : (CUR ? ROOT + 'index.html' : '') + '#i-' + slug;
-        h += '<li><a href="' + href + '"' + (it.note ? ' class="has-note"' : '') + (slug === CUR ? ' aria-current="page"' : '') + '>' +
+        // 영역 노트의 그 내용요소로 (같은 영역 페이지 안에서는 새로 불러오지 않게 #만)
+        var href = (an === CUR ? '' : ROOT + s.id + '/' + an + '/index.html') + '#n-' + slug;
+        h += '<li><a href="' + href + '" data-slug="' + slug + '"' + (it.note ? ' class="has-note"' : '') + '>' +
           '<span class="no">' + slug.replace(/-/g, '.') + '</span><span>' + esc(it.t) + '</span></a></li>';
       });
       h += '</ul></details>';
@@ -87,9 +87,36 @@
     if (!wide.matches && ev.target.closest('a')) setOpen(false);
   });
 
-  // 지금 보는 내용요소를 목차 안에서 보이게
-  var cur = side.querySelector('[aria-current]');
-  if (cur) nav.scrollTop = Math.max(0, cur.offsetTop - nav.clientHeight / 3);
+  // 영역 노트: 지금 화면에 보이는 내용요소를 목차에서 표시하고, 목차 안에서도 보이게
+  var mark = null;
+  function setCur(slug, scroll) {
+    var a = side.querySelector('a[data-slug="' + slug + '"]');
+    if (!a || a === mark) return;
+    if (mark) mark.removeAttribute('aria-current');
+    a.setAttribute('aria-current', 'location'); mark = a;
+    if (scroll || !wide.matches) nav.scrollTop = Math.max(0, a.offsetTop - nav.clientHeight / 3);
+    else if (a.offsetTop < nav.scrollTop || a.offsetTop > nav.scrollTop + nav.clientHeight - 40) a.scrollIntoView({ block: 'nearest' });
+  }
+  var topics = Array.prototype.slice.call(document.querySelectorAll('.topic[id^="n-"]'));
+  if (CUR && topics.length) {
+    var pick = function () {   // 화면 위쪽 1/3 선을 지난 마지막 내용요소
+      var line = window.innerHeight / 3, cur = topics[0];
+      topics.forEach(function (t) { if (t.getBoundingClientRect().top <= line) cur = t; });
+      // 페이지 끝이라 더 못 내려가면: 주소의 #n-… 내용요소가 화면에 있으면 그것
+      var tgt = /^#n-/.test(location.hash) && document.getElementById(location.hash.slice(1));
+      var atEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      if (atEnd && tgt && tgt.getBoundingClientRect().top < window.innerHeight) cur = tgt;
+      setCur(cur.id.slice(2));
+    };
+    var h0 = location.hash.slice(1);
+    setCur(/^n-/.test(h0) ? h0.slice(2) : topics[0].id.slice(2), true);
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(function () { ticking = false; pick(); });
+    }, { passive: true });
+    window.addEventListener('hashchange', pick);
+  }
 
   // 첫 화면 과목 탭이 바뀌면 그 과목을 펼친다
   window.CTSide = {

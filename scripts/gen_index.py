@@ -1,6 +1,7 @@
 # 첫 화면(index.html) 만들기: python -I scripts/gen_index.py scripts/index-data.json index.html
-# 과목·영역·내용요소·키워드·세부내용은 index-data.json (example1.xlsx 에서 옮김). 칸이 채워진 노트는 목차에서 자동으로 링크된다
-# 왼쪽 고정 목차(사이드바)가 쓰는 assets/toc.js 도 함께 만든다 (첫 화면 + 노트 58장 공통)
+# 과목·영역·내용요소·키워드·세부내용은 index-data.json (example1.xlsx 에서 옮김). 칸이 채워진 내용요소는 목차에서 자동으로 링크된다
+# 노트는 영역마다 한 페이지(ds|algo|os/1-2/index.html)이고 내용요소는 그 안의 #n-1-2-3
+# 왼쪽 고정 목차(사이드바)가 쓰는 assets/toc.js 도 함께 만든다 (첫 화면 + 영역 노트 14장 공통)
 import sys, json, html
 
 DATA = json.load(open(sys.argv[1], encoding='utf-8'))
@@ -14,16 +15,22 @@ TINT = ['#e3f3f6', '#fdeaf2', '#fdf5d9']
 n_areas = sum(len(s['areas']) for s in DATA)
 n_items = sum(len(a['items']) for s in DATA for a in s['areas'])
 
-# 노트(ds|algo|os/번호/index.html)의 칸이 하나라도 채워졌으면 목차에서 링크한다
-import os
+# 영역 노트(ds|algo|os/1-2/index.html) 안 그 내용요소(<article id="n-1-2-3">)의 칸이 하나라도 채워졌으면 목차에서 링크한다
+import os, re
 SITE = os.path.dirname(os.path.abspath(OUT))
+def area_rel(sid, no):
+    return f"{sid}/{'-'.join(no.split('.')[:2])}/index.html"
 def note_href(sid, no):
-    rel = f"{sid}/{no.replace('.', '-')}/index.html"
+    rel = area_rel(sid, no)
     f = os.path.join(SITE, rel)
     if not os.path.exists(f):
         return None
-    s = open(f, encoding='utf-8').read()
-    return rel if s.count('<section class="part"') > s.count('<p class="empty">') else None
+    slug = no.replace('.', '-')
+    m = re.search(rf'<article class="topic" id="n-{slug}">(.*?)</article>', open(f, encoding='utf-8').read(), re.S)
+    if not m:
+        return None
+    s = m.group(1)
+    return f'{rel}#n-{slug}' if s.count('<section class="part"') > s.count('<p class="empty">') else None
 n_linked = sum(1 for si, s in enumerate(DATA) for ai, a in enumerate(s['areas']) for ii, _ in enumerate(a['items'])
                if note_href(IDS[si], f'{si+1}.{ai+1}.{ii+1}'))
 
@@ -66,6 +73,7 @@ CSS = """
   .area-head{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:3px solid var(--ink);background:var(--tint)}
   .area-head .no{font-size:18px}
   .area-head h3{margin:0;font-size:21px;line-height:1.3}
+  .area-head h3 a{text-decoration:underline;text-decoration-color:var(--guide);text-decoration-thickness:2px;text-underline-offset:4px}
   .area-head .cnt{margin-left:auto;padding:4px 8px;border:2px solid var(--ink);border-radius:6px;background:#fff;font-size:13px;line-height:1;white-space:nowrap}
   .cols,.item{display:grid;grid-template-columns:64px minmax(0,1.15fr) minmax(0,1fr)}
   .cols{padding:8px 16px;border-bottom:2px solid var(--ink);background:var(--soft);font-size:14px;color:var(--muted)}
@@ -86,7 +94,7 @@ CSS = """
   /* 마우스가 있는 기기에서만 — 휴대폰에서 누른 뒤 색이 남지 않게 */
   @media (hover:hover){
     .tab[aria-selected="false"]:hover{background:var(--soft)}
-    .item a.name:hover{text-decoration-color:var(--ink)}
+    .item a.name:hover,.area-head h3 a:hover{text-decoration-color:var(--ink)}
   }
   @media (max-width:640px){
     .cols{display:none}
@@ -165,7 +173,7 @@ for si, s in enumerate(DATA):
 w('    </div>\n  </div>\n')
 
 w('  <main>\n')
-w(f'    <p class="notice">{len(DATA)}과목 · {n_areas}영역 · 내용요소 {n_items}개. 정리한 노트가 있는 내용요소는 이름을 누르면 노트로 가고, 아직 없는 것은 ‘준비 중’이에요. 왼쪽 목차에서 원하는 곳으로 바로 갈 수 있어요.</p>\n')
+w(f'    <p class="notice">{len(DATA)}과목 · {n_areas}영역 · 내용요소 {n_items}개. 정리한 노트가 있는 영역·내용요소는 이름을 누르면 노트로 가고(한 영역이 한 페이지), 아직 없는 것은 ‘준비 중’이에요. 왼쪽 목차에서 원하는 곳으로 바로 갈 수 있어요.</p>\n')
 toc = []
 for si, s in enumerate(DATA, 1):
     sid = IDS[si-1]
@@ -176,7 +184,9 @@ for si, s in enumerate(DATA, 1):
     for ai, a in enumerate(s['areas'], 1):
         t_a = {'name': a['name'], 'items': []}
         w(f'      <section class="area" id="{sid}-{ai}">\n')
-        w(f'        <div class="area-head"><span class="no cr">{si}.{ai}</span><h3 class="cr">{e(a["name"])}</h3><span class="cnt">{len(a["items"])}개</span></div>\n')
+        filled = any(note_href(sid, f'{si}.{ai}.{ii}') for ii in range(1, len(a['items']) + 1))
+        aname = f'<a href="{area_rel(sid, f"{si}.{ai}")}">{e(a["name"])}</a>' if filled else e(a['name'])
+        w(f'        <div class="area-head"><span class="no cr">{si}.{ai}</span><h3 class="cr">{aname}</h3><span class="cnt">{len(a["items"])}개</span></div>\n')
         w('        <div class="cols cr" aria-hidden="true"><span>번호</span><span>내용요소</span><span>세부내용</span></div>\n')
         w('        <ol class="rows">\n')
         for ii, it in enumerate(a['items'], 1):

@@ -1,7 +1,8 @@
-# Word 원고 → 노트(HTML) 반영: python -I scripts/note_sync.py "노트 원고/운영체제/3-1-1 ….docx" os/3-1-1
-# - 노트 index.html 의 공부 칸(<!-- 아래 칸을 채워요 --> 부터 </main> 앞까지)만 바꾼다. 머리·이전/다음·목차는 그대로
-# - 원고 서식(3.1.1 기준): 제목 → 위치 줄(·키워드·세부내용) → 제목 1(칸 이름) → 글머리 목록(단계 = 들여쓰기, 굵게 = 용어) · 그림 · 표
-# - 분홍 [원본과 다름 …] 글 → <span class="fix">, 그림은 노트 폴더에 fig-1.png … 로 저장
+# Word 원고 → 영역 노트(HTML) 반영: python -I scripts/note_sync.py "노트 원고/운영체제/3-1 운영체제 개요.docx" os/3-1
+# - 원고 한 개 = 영역 한 개. 안에 내용요소가 쭉 이어진다: 제목(3.1.1 …) → 위치 줄(·키워드·세부내용) → 제목 1(칸 이름)
+#   → 글머리 목록(단계 = 들여쓰기, 굵게 = 용어) · 그림 · 표 → 다음 제목(3.1.2 …) …
+# - 영역 페이지(os/3-1/index.html)에서 원고에 있는 내용요소마다 <article id="n-3-1-1"> 의 공부 칸만 바꾼다. 머리·이전/다음·목차는 그대로
+# - 분홍 [원본과 다름 …] 글 → <span class="fix">, 그림은 영역 폴더에 3-1-1-fig-1.png … 로 저장
 # - 원고 제목이 노트 제목과 다르면 알리기만 한다 (목차 이름은 scripts/index-data.json 에서 고친다)
 import sys, os, re, zipfile, struct, html
 import xml.etree.ElementTree as ET
@@ -15,6 +16,7 @@ SITE_URL = 'https://sage810.github.io/computer-theory/'
 FIX_COLOR = 'A3356B'
 MUTED = '5F4F86'
 EMPTY = '아직 비어 있어요.'
+CUR_AREA = ''   # 반영하는 영역 번호(3-2) — 같은 영역 안 링크는 #n-3-2-6 으로
 e = html.escape
 
 
@@ -95,7 +97,8 @@ def docx_to_model(path, note_dir=None):
                 for r in c.findall(W + 'r'): walk_run(r, tgt or None)
         return out
 
-    model = {'title': '', 'sections': []}
+    model = {'items': []}   # 내용요소마다 {'no': '3.1.1', 'title': '3.1.1 …', 'sections': […]}
+    item = None
     sec = None
     stack = []          # [(level, list block)]
     last_img = None     # 바로 앞 문단이 그림이면 그 figure (설명 붙이기용)
@@ -105,9 +108,9 @@ def docx_to_model(path, note_dir=None):
         nonlocal n_img
         target = rels.get(rid, '')
         data = z.read('word/' + target) if target else b''
-        ext = os.path.splitext(target)[1].lower() or '.png'
+        ext = '.png' if data[:4] == b'\x89PNG' else '.jpeg' if data[:2] == b'\xff\xd8' else '.gif' if data[:3] == b'GIF' else os.path.splitext(target)[1].lower() or '.png'
         n_img += 1
-        name = f'fig-{n_img}{".jpeg" if ext in (".jpg", ".jpeg") else ext}'
+        name = f'{item["no"].replace(".", "-")}-fig-{n_img}{ext}'
         if note_dir:
             open(os.path.join(note_dir, name), 'wb').write(data)
         w, h = img_size(data)
@@ -141,9 +144,15 @@ def docx_to_model(path, note_dir=None):
         imgs = [r for r in runs if 'img' in r]
         runs = [r for r in runs if 'img' not in r]
         if st == 'title':
-            model['title'] = text; continue
+            m = re.match(r'(\d+\.\d+\.\d+)\s', text + ' ')
+            if m:   # 새 내용요소 (번호가 두 단계인 제목은 영역 이름이라 넘어간다)
+                item = {'no': m.group(1), 'title': text, 'sections': []}; model['items'].append(item)
+                sec = None; stack = []; last_img = None; n_img = 0
+            continue
+        if item is None:
+            continue
         if st == 'heading 1':
-            sec = {'name': text, 'blocks': []}; model['sections'].append(sec); stack = []; last_img = None; continue
+            sec = {'name': text, 'blocks': []}; item['sections'].append(sec); stack = []; last_img = None; continue
         if sec is None:
             continue   # 위치 줄·키워드·세부내용 (머리는 목차 데이터에서 만든다)
         if st in ('heading 2', 'heading 3'):
@@ -189,8 +198,9 @@ def docx_to_model(path, note_dir=None):
         stack = []
         if text == EMPTY: continue
         sec['blocks'].append({'t': 'p', 'runs': clean(runs)})
-    for s in model['sections']:
-        if not s['blocks']: s['blocks'] = [{'t': 'empty'}]
+    for it in model['items']:
+        for s in it['sections']:
+            if not s['blocks']: s['blocks'] = [{'t': 'empty'}]
     return model
 
 
@@ -216,7 +226,13 @@ def runs_html(runs):
         x = e(t)
         href = r.get('href')
         if href:
-            if href.startswith(SITE_URL): href = '../../' + href[len(SITE_URL):]
+            if href.startswith(SITE_URL):
+                href = href[len(SITE_URL):]
+                m = re.match(r'(ds|algo|os)/(\d+-\d+)-(\d+)/(index\.html)?$', href)   # 예전 노트 주소 → 영역 페이지의 그 내용요소
+                if m:
+                    slug = f'{m.group(2)}-{m.group(3)}'
+                    href = f'#n-{slug}' if m.group(2) == CUR_AREA else f'{m.group(1)}/{m.group(2)}/index.html#n-{slug}'
+                if not href.startswith('#'): href = '../../' + href
             x = f'<a href="{e(href)}">{x}</a>'
         if r.get('b'):
             lead = len(x) - len(x.lstrip(' ')); trail = len(x) - len(x.rstrip(' '))
@@ -249,7 +265,9 @@ def list_html(l, ind):
 def block_html(b, ind):
     t = b['t']
     if t == 'empty': return f'{ind}<p class="empty">{EMPTY}</p>'
-    if t in ('h3', 'h4'): return f'{ind}<{t}>{e(b["text"])}</{t}>'
+    if t in ('h3', 'h4'):   # 원고 제목 2·3 → 칸 안 소제목 h4·h5 (h2 = 내용요소, h3 = 칸 이름)
+        tag = {'h3': 'h4', 'h4': 'h5'}[t]
+        return f'{ind}<{tag}>{e(b["text"])}</{tag}>'
     if t == 'p': return f'{ind}<p>{runs_html(b["runs"])}</p>'
     if t == 'list': return list_html(b, ind)
     if t == 'img': return fig_html(b, ind)
@@ -267,33 +285,49 @@ def block_html(b, ind):
     return ''
 
 
-def sections_html(sections):
+def sections_html(sections, slug):
+    if not sections:
+        sections = [{'name': '', 'blocks': [{'t': 'empty'}]}]
     out = []
     for i, s in enumerate(sections):
-        sid = 'concept' if i == 0 else f'part-{i + 1}'
-        out.append(f'    <section class="part" id="{sid}">\n      <h2>{e(s["name"])}</h2>\n' +
-                   '\n'.join(block_html(b, '      ') for b in s['blocks']) + '\n    </section>')
+        out.append(f'      <section class="part" id="s-{slug}-{i + 1}">\n        <h3>{e(s["name"])}</h3>\n' +
+                   '\n'.join(block_html(b, '        ') for b in s['blocks']) + '\n      </section>')
     return '\n'.join(out)
 
 
-MARK = '    <!-- 아래 칸을 채워요.'
+MARK = '      <!-- 칸:'   # 영역 페이지의 내용요소마다 이 줄 아래부터 </article> 앞까지가 공부 칸
+END = '    </article>'
 
-def write_sections(note_html, sections):
-    s = open(note_html, encoding='utf-8').read()
-    i = s.index(MARK); j = s.index('\n', i) + 1; k = s.index('  </main>')
-    s = s[:j] + sections_html(sections) + '\n' + s[k:]
-    open(note_html, 'w', encoding='utf-8', newline='\n').write(s)
+def write_item(s, slug, sections):
+    a = s.index(f'<article class="topic" id="n-{slug}">')
+    i = s.index(MARK, a); j = s.index('\n', i) + 1; k = s.index(END, j)
+    return s[:j] + sections_html(sections, slug) + '\n' + s[k:]
 
 
 if __name__ == '__main__':
-    docx, note_dir = sys.argv[1], sys.argv[2]
-    for old in os.listdir(note_dir):
-        if re.match(r'fig-\d+\.(png|jpe?g|gif)$', old): os.remove(os.path.join(note_dir, old))
-    m = docx_to_model(docx, note_dir)
-    f = os.path.join(note_dir, 'index.html')
-    h1 = re.search(r'<h1 class="cr">(.*?)</h1>', open(f, encoding='utf-8').read())
-    no = os.path.basename(os.path.normpath(note_dir)).replace('-', '.')
-    if h1 and m['title'] != f'{no} {html.unescape(h1.group(1))}':
-        print(f'! 원고 제목이 노트 제목과 달라요: 원고 "{m["title"]}" / 노트 "{no} {html.unescape(h1.group(1))}" — 목차 이름은 scripts/index-data.json 에서 고칩니다')
-    write_sections(f, m['sections'])
-    print('반영:', f, '| 칸', [s['name'] for s in m['sections']])
+    docx, area_dir = sys.argv[1], sys.argv[2]
+    CUR_AREA = os.path.basename(os.path.normpath(area_dir))
+    f = os.path.join(area_dir, 'index.html')
+    page = open(f, encoding='utf-8').read()
+    m = docx_to_model(docx)   # 먼저 읽기만 해서 원고에 있는 내용요소를 안다
+    for old in os.listdir(area_dir):
+        hit = re.match(r'(\d+-\d+-\d+)-fig-\d+\.(png|jpe?g|gif)$', old)
+        if hit and hit.group(1) in {it['no'].replace('.', '-') for it in m['items']}:
+            os.remove(os.path.join(area_dir, old))
+    m = docx_to_model(docx, area_dir)
+    done = []
+    for it in m['items']:
+        slug = it['no'].replace('.', '-')
+        if f'id="n-{slug}"' not in page:
+            print(f'! 원고의 "{it["title"]}" 은 이 영역 페이지에 없어서 건너뛰어요')
+            continue
+        name = re.search(rf'id="n-{slug}">\s*<div class="topic-head">.*?<h2 class="cr">(.*?)</h2>', page, re.S)
+        if name and it['title'] != f'{it["no"]} {html.unescape(name.group(1))}':
+            print(f'! 원고 제목이 노트 제목과 달라요: 원고 "{it["title"]}" / 노트 "{it["no"]} {html.unescape(name.group(1))}" — 목차 이름은 scripts/index-data.json 에서 고칩니다')
+        page = write_item(page, slug, it['sections'])
+        done.append(it['no'])
+    missing = [x.replace('-', '.') for x in re.findall(r'<article class="topic" id="n-([\d-]+)">', page) if x.replace('-', '.') not in done]
+    if missing:
+        print('! 원고에 없어서 그대로 둔 내용요소:', ', '.join(missing))
+    open(f, 'w', encoding='utf-8', newline='\n').write(page)
+    print('반영:', f, '| 내용요소', ', '.join(done))

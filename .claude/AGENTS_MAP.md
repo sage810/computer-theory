@@ -12,7 +12,7 @@
 | better-interface (middle school info 의 `.claude/skills/better-*`) | 첫 화면 전체 다듬기 — 한글 줄바꿈, 터치 hover, 버튼 이름, 본문 글꼴 점검 |
 | impeccable 디자인 점검 훅 | 파일 저장 때 자동 점검. 고른 레트로 모양은 `.impeccable/config.json` 예외로 둠 |
 | impeccable 스킬 | 점검 훅의 side-tab 지적을 기준으로 노트 공부 칸 시안 G/H/I 를 만들고 G 적용 (v4.10.0 으로 업데이트) |
-| anthropic-skills:docx | 노트 58개의 Word 원고(`노트 원고/`, git 제외) 만들기 |
+| anthropic-skills:docx | 노트 Word 원고(`노트 원고/`, git 제외) 만들기 — 처음엔 노트 58개, 영역 노트로 합치며 영역 14개로 |
 | Playwright 브라우저 | 화면 확인(320·390·1280px 폭, 글꼴·가로 스크롤·누르는 자리 크기) |
 
 ## 추천받았지만 쓰지 않은 것

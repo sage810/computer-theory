@@ -1,4 +1,4 @@
-/* 내용요소 공부 노트 공통 모양 — 첫 화면(index.html)과 같은 창·제목줄·과목 탭·머리 상자·영역 제목. 값은 .design/style-lock.md */
+/* 영역 노트(ds|algo|os/1-2/) 공통 모양 — 첫 화면(index.html)과 같은 창·제목줄·과목 탭·머리 상자. 영역 안 내용요소가 쭉 이어진다. 값은 .design/style-lock.md */
 @font-face{font-family:'CookieRun';font-weight:700;src:url(../fonts/CookieRun-700.woff2) format('woff2');font-display:swap}
 @font-face{font-family:'Maplestory';font-weight:300;src:url(../fonts/Maplestory-300.woff2) format('woff2');font-display:swap}
 @font-face{font-family:'Maplestory';font-weight:700;src:url(../fonts/Maplestory-700.woff2) format('woff2');font-display:swap}
@@ -31,24 +31,30 @@ a{color:inherit}
 .tab .n{font-family:'Maplestory',sans-serif;font-size:13px}
 .tab[aria-current]{background:var(--accent);transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(75,59,107,.25)}
 
-/* 머리: 과목 머리 상자와 같은 모양 + 키워드 + 세부내용 */
+/* 머리: 과목 머리 상자와 같은 모양(영역 번호·이름) */
 main{padding:20px 20px 32px}
 .note-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:12px 16px;border:3px solid var(--ink);border-radius:12px;background:var(--accent);box-shadow:5px 5px 0 var(--sh)}
 .note-head .big{font-size:28px;line-height:1}
 .note-head h1{margin:0;font-size:26px;line-height:1.2;text-wrap:pretty}
 .note-head .meta{margin-left:auto;font-size:15px}
+/* 내용요소: 번호·이름 띠 + 키워드 + 세부내용 + 공부 칸. 영역 안에서 쭉 이어진다 */
+.topic{margin-top:64px;scroll-margin-top:16px}
+.note-head + .topic{margin-top:32px}
+.topic-head{display:flex;align-items:baseline;gap:8px 12px;padding:10px 16px;border:3px solid var(--ink);border-radius:12px;background:var(--tint);box-shadow:4px 4px 0 var(--sh)}
+.topic-head .no{flex:none;font-size:19px;line-height:1.3}
+.topic-head h2{margin:0;font-size:21px;line-height:1.3;text-wrap:pretty}
 .tags{display:flex;flex-wrap:wrap;gap:4px 12px;margin:16px 0 0;padding:0;list-style:none}
 .tags li{font-size:14px;line-height:1.5;color:var(--muted)}
 .det{list-style:none;margin:12px 0 0;padding:12px 16px;border:2px dashed var(--guide);border-radius:10px;background:var(--soft);display:flex;flex-direction:column;gap:8px}
 .det li{display:flex;gap:8px;font-size:15px;line-height:1.6;text-wrap:pretty}
 .det li .br{flex:none;color:var(--muted)}
 
-/* 공부 칸: 영역 제목 글꼴 + 선 없이 넓은 칸 사이 여백과 들여쓰기로 묶음 (시안 G) */
+/* 공부 칸: 선 없이 넓은 칸 사이 여백과 들여쓰기로 묶음 (시안 G). h3 = 칸 이름, h4·h5 = 칸 안 소제목 */
 .part{margin-top:48px;padding-left:24px}
-.part > h2{margin:0 0 12px calc(1em - 24px);font-family:'NEXON Lv2 Gothic','Malgun Gothic',sans-serif;font-size:21px;font-weight:700;line-height:1.3}
+.part > h3{margin:0 0 12px calc(1em - 24px);font-family:'NEXON Lv2 Gothic','Malgun Gothic',sans-serif;font-size:21px;font-weight:700;line-height:1.3}
 .part > :nth-child(2){margin-top:0}
-.part h3{margin:24px 0 8px;font-family:'Maplestory',sans-serif;font-size:18px;font-weight:700;line-height:1.4}
-.part h4{margin:16px 0 4px;font-family:'Maplestory',sans-serif;font-size:16px;font-weight:700;line-height:1.4;color:var(--muted)}
+.part h4{margin:24px 0 8px;font-family:'Maplestory',sans-serif;font-size:18px;font-weight:700;line-height:1.4}
+.part h5{margin:16px 0 4px;font-family:'Maplestory',sans-serif;font-size:16px;font-weight:700;line-height:1.4;color:var(--muted)}
 .part p,.part li{font-size:16px;line-height:1.7;text-wrap:pretty}
 .part li{font-family:'KoPubWorld Dotum','NEXON Lv2 Gothic','Malgun Gothic',sans-serif;font-weight:500}   /* 목록 본문: KoPub 돋움 Medium (피드백) */
 .part ul,.part ol{margin:0;padding-left:24px}
@@ -96,7 +102,10 @@ img{max-width:100%;height:auto}
   .note-head h1{font-size:22px}
   .note-head .meta{margin-left:0}
   .part{margin-top:40px;padding-left:16px}
-  .part > h2{margin-left:calc(1em - 16px)}
+  .part > h3{margin-left:calc(1em - 16px)}
+  .topic{margin-top:48px}
+  .topic-head{padding:8px 12px}
+  .topic-head h2{font-size:19px}
   .pager{grid-template-columns:1fr 1fr;padding:16px 12px}
   .pager .toc{grid-column:1 / -1;grid-row:1;justify-self:center}
 }

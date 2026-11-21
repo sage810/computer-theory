@@ -2,7 +2,8 @@
 // "피드백 모드" / "메모 켜줘" — 이 PC 에서 수정 요청 메모(tools/memo.js)를 바로 쓸 수 있게 한다.
 //   npm run memo              → 첫 화면을 연다
 //   npm run memo -- algo      → 알고리즘 탭으로 연다 (ds · algo · os)
-//   npm run memo -- 3-1-1     → 그 노트를 연다 (3.1.1 도 됨)
+//   npm run memo -- 3-1-1     → 그 내용요소가 있는 영역 노트를 그 자리에서 연다 (3.1.1 도 됨)
+//   npm run memo -- 3-1       → 그 영역 노트를 연다
 // 하는 일: ① 미리보기 서버(8090)가 꺼져 있으면 뒤에서 켬 ② 주소 끝에 ?memo=1 을 붙여 브라우저로 연다.
 // 이 서버에서 연 메모 창은 "📤 보내기"로 요청을 .claude/feedback.md 에 바로 쌓는다(scripts/serve.mjs).
 // 서버는 PC 를 끄거나 작업 관리자에서 node 를 끝내면 꺼진다.
@@ -14,10 +15,10 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const base = 'http://127.0.0.1:8090';
 const tab = (process.argv.slice(2).find((a) => !a.startsWith('--')) || '').replace(/^#/, '');
-const hash = ['ds', 'algo', 'os'].includes(tab) ? '#' + tab : '';
-// 노트 번호(3-1-1 또는 3.1.1)면 그 노트를 연다
-const note = /^([123])[.-](\d+)[.-](\d+)$/.exec(tab);
-const pagePath = note ? `/${['ds', 'algo', 'os'][+note[1] - 1]}/${note[1]}-${note[2]}-${note[3]}/` : '/';
+// 영역 번호(3-1) 또는 내용요소 번호(3-1-1, 3.1.1)면 그 영역 노트를 연다 (내용요소면 그 자리로)
+const note = /^([123])[.-](\d+)(?:[.-](\d+))?$/.exec(tab);
+const pagePath = note ? `/${['ds', 'algo', 'os'][+note[1] - 1]}/${note[1]}-${note[2]}/` : '/';
+const hash = ['ds', 'algo', 'os'].includes(tab) ? '#' + tab : note && note[3] ? `#n-${note[1]}-${note[2]}-${note[3]}` : '';
 
 // ① 서버 — /__feedback 이 응답해야 이 저장소의 서버다
 const up = async () => { try { return (await fetch(base + '/__feedback', { signal: AbortSignal.timeout(1500) })).ok; } catch { return false; } };

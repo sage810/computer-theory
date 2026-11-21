@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3.1 운영체제 개요 · 컴퓨터 이론</title>
+<link rel="stylesheet" href="../../assets/note.css">
+<link rel="stylesheet" href="../../assets/sidebar.css">
+</head>
+<body class="s-os">
+<div class="window">
+  <header class="titlebar">
+    <a class="home cr" href="../../index.html#os">컴퓨터 이론</a>
+    <span class="sub">자료구조 · 알고리즘 · 운영체제 공부 노트</span>
+  </header>
+  <nav class="bar" aria-label="과목">
+    <div class="tabs">
+      <a class="tab cr" href="../../index.html#ds" style="--accent:#a9dce4">1 자료구조 <span class="n">19개</span></a>
+      <a class="tab cr" href="../../index.html#algo" style="--accent:#f9cade">2 알고리즘 <span class="n">14개</span></a>
+      <a class="tab cr" href="../../index.html#os" style="--accent:#fbe6a2" aria-current="true">3 운영체제 <span class="n">25개</span></a>
+    </div>
+  </nav>
+  <main>
+    <div class="note-head"><span class="big cr">3.1</span><h1 class="cr">운영체제 개요</h1><span class="meta">운영체제 · 내용요소 6개</span></div>
+
+    <article class="topic" id="n-3-1-1">
+      <div class="topic-head"><span class="no cr">3.1.1</span><h2 class="cr">운영체제 목적과 역할</h2></div>
+      <!-- 칸: Word 원고(노트 원고/…/3-1 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
+      <section class="part" id="s-3-1-1-1">
+        <h3>#운영체제의 목적과 역할</h3>
+        <ul>
+          <li><strong>운영체제</strong>
+            <ul>
+              <li><strong>정의</strong> : 컴퓨터의 각종 자원을 효율적으로 관리 &amp; 운영하기 위한 시스템 소프트웨어</li>
+              <li><strong>목적</strong> : 사용 편리성, 시스템 성능 향상</li>
+              <li><strong>역할</strong> : 사용 편리성, 사용자 환경 제공, 자원 할당, 제어 프로그램</li>
+              <li><strong>기능:</strong> 프로세스 관리, 메모리 관리, 파일 관리, I/O 관리</li>
+              <li><strong>연산 (커널과 시스템 호출)</strong>
+                <ul>
+                  <li><strong>커널</strong>
+                    <ul>
+                      <li>프로세스 관리, 메모리 관리, 저장장치 관리 같은 운영체제 핵심 기능을 모아놓은 것</li>
+                      <li>단일형, 계층형, 마이크로 구조</li>
+                    </ul>
+                  </li>
+                  <li><strong>시스템 호출</strong>
+                    <ul>
+                      <li>커널이 자신을 보호하기 위해 만든 인터페이스</li>
+                      <li>사용자, 응용 프로그램이 자원에 직접 접근하는 것을 막음</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <figure>
+          <img src="3-1-1-fig-1.png" width="1280" height="1200" alt="운영체제 구조도: 맨 위 응용 프로그램·유틸리티, 그 아래 인터페이스(GUI)가 실행 결과를 올려 줌. 운영체제(인터페이스~커널) 안에서 시스템 호출(커널을 보호하기 위해 만든 인터페이스)은 무조건 거치고, 인터페이스의 명령은 커널(핵심 기능)을 지나 드라이버로 전달됨. 맨 아래 하드웨어(CPU, 메모리, 마우스, 모니터, 하드디스크)에서 커널로는 드라이버를 거치기도, 안 거치기도 함">
+        </figure>
+      </section>
+    </article>
+    <article class="topic" id="n-3-1-2">
+      <div class="topic-head"><span class="no cr">3.1.2</span><h2 class="cr">운영체제의 기능</h2></div>
+      <ul class="det" aria-label="세부내용"><li><span class="br" aria-hidden="true">└</span><span>사용자/컴퓨터 인터페이스로서 운영체제, 자원관리자로서 운영체제</span></li></ul>
+      <!-- 칸: Word 원고(노트 원고/…/3-1 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
+      <section class="part" id="s-3-1-2-1">
+        <h3>운영체제의 기능</h3>
+        <ul>
+          <li><strong>기능 &amp; 서비스</strong> : 프로세스, 메모리, 입출력, 파일</li>
+        </ul>
+      </section>
+    </article>
+    <article class="topic" id="n-3-1-3">
+      <div class="topic-head"><span class="no cr">3.1.3</span><h2 class="cr">하드웨어 이벤트와 하드웨어 소프트웨어 간 상호작용</h2></div>
+      <!-- 칸: Word 원고(노트 원고/…/3-1 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
+      <section class="part" id="s-3-1-3-1">
+        <h3>하드웨어 이벤트와 하드웨어 소프트웨어 간 상호작용</h3>
+        <ul>
+          <li>현대의 운영체제는 인터럽트 구동식</li>
+          <li><strong>인터럽트 구동식 (Interrupt driven)</strong> : 가만히 있다가 인터럽트를 받으면 인터럽트를 보고 수행해야 할 일을 수행하는 방식</li>
+          <li><strong>트랩 (trap)</strong> : 작업 중에 시스템 호출하는 시점 (= 예외처리 비슷)</li>
+          <li><strong>인터럽트</strong> : 시스템 호출 (가로채는 이벤트)</li>
+          <li>인터럽트 1개당 1개의 인터럽트 서비스 루틴이 만들어진다. (= 인터럽트마다 담당 이벤트가 다르다. 어떤 인터럽트가 들어왔을 때 그 인터럽트에 해당하는 동작을 각각 정해두는 것)</li>
+        </ul>
+      </section>
+    </article>
+    <article class="topic" id="n-3-1-4">
+      <div class="topic-head"><span class="no cr">3.1.4</span><h2 class="cr">운영체제 발전</h2></div>
+      <ul class="det" aria-label="세부내용"><li><span class="br" aria-hidden="true">└</span><span>운영체제 발전, 종류</span></li></ul>
+      <!-- 칸: Word 원고(노트 원고/…/3-1 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
+      <section class="part" id="s-3-1-4-1">
+        <h3>운영체제 발전</h3>
+        <p class="empty">아직 비어 있어요.</p>
+      </section>
+    </article>
+    <article class="topic" id="n-3-1-5">
+      <div class="topic-head"><span class="no cr">3.1.5</span><h2 class="cr">운영체제 구조</h2></div>
+      <ul class="det" aria-label="세부내용"><li><span class="br" aria-hidden="true">└</span><span>단일 구조, 계층 구조, 마이크로 커널 구조</span></li></ul>
+      <!-- 칸: Word 원고(노트 원고/…/3-1 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
+      <section class="part" id="s-3-1-5-1">
+        <h3>운영체제 구조</h3>
+        <ul>
+          <li><strong>간단한 구조</strong>
+            <ul>
+              <li>모듈의 구분이 없음</li>
+              <li><strong>모놀리식 (monolithic)</strong> : 커널이 cpu 스케줄링, 메모리 관리, 파일 시스템 등 운영체제 기능 수행 <span class="fix">원본과 다름 · 원본: “모노토닉 (monotonic)”</span></li>
+            </ul>
+          </li>
+          <li><strong>계층 구조</strong>
+            <ul>
+              <li>운영체제를 나누어 제어 (모듈화)</li>
+            </ul>
+          </li>
+          <li><strong>마이크로 구조</strong>
+            <ul>
+              <li>커널로부터 많은 기능을 제거하고 사용자 공간으로 이전시킴</li>
+              <li>커널은 최소한의 프로세스 및 메모리 관리와 통신 기능 담당</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+    </article>
+    <article class="topic" id="n-3-1-6">
+      <div class="topic-head"><span class="no cr">3.1.6</span><h2 class="cr">커널과 시스템호출</h2></div>
+      <!-- 칸: Word 원고(노트 원고/…/3-1 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
+      <section class="part" id="s-3-1-6-1">
+        <h3>커널과 시스템호출</h3>
+        <ul>
+          <li><strong>시스템 호출 (system call)</strong> : 운영체제가 권한을 가진 작업을 운영체제가 허가하도록 사용자 프로그램이 요청하는 수단을 제공</li>
+          <li><strong>이중연산</strong>
+            <ul>
+              <li><strong>커널모드</strong> : 운영체제가 깨어있음</li>
+              <li><strong>사용자모드</strong> : 운영체제가 자고있음. 사용자가 사용 중</li>
+            </ul>
+          </li>
+          <li><strong>과정</strong>
+            <ol>
+              <li>컴퓨터 부팅</li>
+              <li>OS (커널모드) 시작</li>
+              <li>워드 같은 프로그램 (사용자모드) 시작</li>
+              <li>저장하기 누르면 트랩으로 다시 커널모드 전환</li>
+            </ol>
+          </li>
+        </ul>
+      </section>
+    </article>
+  </main>
+  <nav class="pager" aria-label="다른 영역으로 이동">
+    <a class="prev" href="../../algo/2-3/index.html">← 2.3 정렬/탐색 알고리즘</a>
+    <a class="toc" href="../../index.html#os">목차</a>
+    <a class="next" href="../../os/3-2/index.html">3.2 프로세스 관리 →</a>
+  </nav>
+</div>
+<!-- 왼쪽 고정 목차: assets/toc.js + assets/sidebar.js -->
+<script src="../../assets/toc.js"></script>
+<script src="../../assets/sidebar.js" data-root="../../" data-current="3-1"></script>
+<!-- 수정 요청 메모(피드백 모드): 주소 끝에 ?memo=1 일 때만 켜짐. docs/feedback-mode.md -->
+<script src="../../tools/memo.js" defer></script>
+</body>
+</html>
