@@ -13,7 +13,8 @@
   @font-face{font-family:'Maplestory';font-weight:700;src:url(fonts/Maplestory-700.woff2) format('woff2');font-display:swap}
   :root{--ink:#4b3b6b;--paper:#fffdf7;--page:#e7e3f7;--grid:#d8d2ee;--soft:#fffaee;--muted:#5f4f86;--line:rgba(75,59,107,.16);--guide:rgba(75,59,107,.28);--sh:rgba(75,59,107,.18);--focus:#d9488f}
   *{box-sizing:border-box}
-  body{margin:0;padding:24px 16px 48px;color:var(--ink);font-family:'Maplestory','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-weight:300;line-height:1.5;word-break:keep-all;overflow-wrap:break-word;
+  @font-face{font-family:'Pretendard';font-weight:400;src:url(fonts/Pretendard-Regular.subset.woff2) format('woff2');font-display:swap}
+  body{margin:0;padding:24px 16px 48px;color:var(--ink);font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-weight:400;line-height:1.5;word-break:keep-all;overflow-wrap:break-word;
     background-color:var(--page);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
   a{color:inherit}
   :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
@@ -53,12 +54,12 @@
   .item > .no{flex:none;width:52px;padding-top:2px;font-size:14px;color:var(--muted)}
   .item .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
   .item .head{display:flex;align-items:flex-start;gap:12px}
-  .item .name{flex:0 1 auto;min-width:0;font-size:16px;font-weight:700;line-height:1.55;text-wrap:pretty;text-decoration:none}
+  .item .name{flex:0 1 auto;min-width:0;font-family:'Maplestory',sans-serif;font-size:16px;font-weight:700;line-height:1.55;text-wrap:pretty;text-decoration:none}
   .soon{flex:none;margin-left:auto;margin-top:2px;padding:4px 8px;border:2px dashed #8b7cb8;border-radius:6px;font-size:12px;line-height:1;color:var(--muted);white-space:nowrap}
   .tags{display:flex;flex-wrap:wrap;gap:4px 12px;margin:0;padding:0;list-style:none}
   .tags li{font-size:14px;line-height:1.5;color:var(--muted)}
   .det summary{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 12px;border:2px solid var(--ink);border-radius:8px;background:var(--tint);
-    font-size:14px;font-weight:700;line-height:1.2;cursor:pointer;list-style:none;user-select:none}
+    font-family:'Maplestory',sans-serif;font-size:14px;font-weight:700;line-height:1.2;cursor:pointer;list-style:none;user-select:none}
   .det summary::-webkit-details-marker{display:none}
   /* 스크립트가 있으면: '세부내용' 버튼 대신 이름 오른쪽 ⌄ 버튼으로 접고 편다 (없으면 위 버튼 그대로) */
   .tog{display:none;flex:none;place-items:center;width:32px;height:32px;margin-top:-3px;padding:0;border:2px solid var(--ink);border-radius:8px;background:var(--tint);color:var(--ink);cursor:pointer}

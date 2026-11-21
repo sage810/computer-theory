@@ -30,8 +30,11 @@
 
 ## 타이포
 
-- 본문 폰트: Maplestory 300/700 (`fonts/`), 대체: Apple SD Gothic Neo, Malgun Gothic
+- 본문 폰트: Pretendard 400 (`fonts/Pretendard-Regular.subset.woff2`, KS X 1001 2350자, OFL), 대체: Apple SD Gothic Neo, Malgun Gothic — 키워드·세부내용·안내·개수
+- 굵은 글씨: Maplestory 700 (`fonts/`) — 내용요소 이름·탭 개수·버튼. Pretendard 는 400 만 있으니 굵게 쓰지 않는다
 - 제목·번호 폰트: CookieRun 700 (`fonts/`)
+- Maplestory 300 은 메모 창(tools/memo.js)만 쓴다
+- 한글 줄바꿈: body 에 `word-break:keep-all`, 이름·안내·세부내용은 `text-wrap:pretty`
 - 기본 크기: 내용요소 16px, 세부 항목 14px, 영역 제목 19px, 과목 제목 26px
 
 ## 레이아웃 구조
