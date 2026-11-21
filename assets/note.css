@@ -64,8 +64,8 @@ main{padding:20px 20px 32px}
 /* 빈 칸: 첫 화면 '준비 중' 꼬리표와 같은 모양 */
 .part p.empty{display:inline-block;margin:4px 0 0;padding:4px 8px;border:2px dashed #8b7cb8;border-radius:6px;font-size:12px;line-height:1;color:var(--muted)}
 .part figure{margin:8px 0}
-.part figure img{display:block;max-width:min(100%,480px);border:2px solid var(--line);border-radius:10px;background:#fff}
-.part figcaption{margin-top:4px;font-size:14px;color:var(--muted)}
+.part figure img{display:block;margin:0 auto;max-width:min(100%,480px);border:2px solid var(--line);border-radius:10px;background:#fff}
+.part figcaption{margin-top:4px;text-align:center;font-size:14px;color:var(--muted)}
 /* 채울 때 쓰는 기본 모양: 코드, 표, 그림 */
 code{padding:1px 4px;border-radius:4px;background:var(--tint);font-family:Consolas,'D2Coding',monospace;font-size:.92em}
 pre{overflow-x:auto;padding:12px 16px;border:2px solid var(--ink);border-radius:10px;background:var(--soft);line-height:1.5}
