@@ -45,7 +45,7 @@ main{padding:20px 20px 32px}
 
 /* 공부 칸: 영역 제목 글꼴 + 선 없이 넓은 칸 사이 여백과 들여쓰기로 묶음 (시안 G) */
 .part{margin-top:48px;padding-left:24px}
-.part > h2{margin:0 0 12px -24px;font-family:'NEXON Lv2 Gothic','Malgun Gothic',sans-serif;font-size:21px;font-weight:700;line-height:1.3}
+.part > h2{margin:0 0 12px calc(1em - 24px);font-family:'NEXON Lv2 Gothic','Malgun Gothic',sans-serif;font-size:21px;font-weight:700;line-height:1.3}
 .part > :nth-child(2){margin-top:0}
 .part h3{margin:24px 0 8px;font-family:'Maplestory',sans-serif;font-size:18px;font-weight:700;line-height:1.4}
 .part h4{margin:16px 0 4px;font-family:'Maplestory',sans-serif;font-size:16px;font-weight:700;line-height:1.4;color:var(--muted)}
@@ -96,7 +96,7 @@ img{max-width:100%;height:auto}
   .note-head h1{font-size:22px}
   .note-head .meta{margin-left:0}
   .part{margin-top:40px;padding-left:16px}
-  .part > h2{margin-left:-16px}
+  .part > h2{margin-left:calc(1em - 16px)}
   .pager{grid-template-columns:1fr 1fr;padding:16px 12px}
   .pager .toc{grid-column:1 / -1;grid-row:1;justify-self:center}
 }
