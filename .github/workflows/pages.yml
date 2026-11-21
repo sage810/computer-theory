@@ -1,0 +1,38 @@
+# main 에 push 하면 첫 화면을 GitHub Pages 에 자동으로 올린다.
+# 저장소 Settings → Pages → Build and deployment → Source 가 "GitHub Actions" 여야 한다.
+# 주소: https://sage810.github.io/computer-theory/
+name: 사이트 배포 (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      # 공개할 파일만 _site 에 모은다 (메모·설정 파일은 올리지 않음)
+      - run: |
+          mkdir _site
+          cp index.html _site/
+          cp -r fonts _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
