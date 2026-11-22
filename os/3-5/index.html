@@ -55,14 +55,22 @@
         <ul>
           <li><strong>디스크 스케줄링</strong>
             <ul>
-              <li><strong>디스크 스케줄링</strong> : 디스크에서 찾으려는 데이터가 여러 곳에 흩어져 있을 때, 헤드를 어떻게 움직이느냐를 결정</li>
+              <li><strong>디스크 스케줄링</strong> : 디스크에서 찾으려는 데이터가 여러 곳에 흩어져 있을 때, 헤드를 어떻게 움직이느냐를 결정
+                <ul>
+                  <li>탐색, 회전 수 최적화 고려</li>
+                </ul>
+              </li>
             </ul>
           </li>
           <li><strong>디스크 접근 시간</strong>
             <ul>
               <li><strong>디스크 탐색 시간 (disk seeking time)</strong> : access arm이 움직여서 정보가 저장된 트랙으로 이동하는 시간</li>
               <li><strong>회전 지연 시간 (latency time, rotational delay)</strong> : 해당 트랙에서 디스크 원판의 회전으로 원하는 섹터가 헤드의 바로 아래 위치할 때까지의 소비 시간</li>
-              <li><strong>전송 시간 (transfer time)</strong> : 디스크 헤드를 통해 읽어 낸 정보를 주기억장치로 전송하는 시간</li>
+              <li><strong>전송 시간 (transfer time)</strong> : 디스크 헤드를 통해 읽어 낸 정보를 주기억장치로 전송하는 시간
+                <figure>
+                  <img src="3-5-3-fig-1.png" width="190" height="184" alt="디스크 원판 손그림: 헤드가 트랙으로 옮겨 가는 것이 디스크 탐색, 원판이 돌아 원하는 섹터가 헤드 아래로 오는 것이 회전 지연">
+                </figure>
+              </li>
             </ul>
           </li>
           <li><strong>디스크 스케줄링 분류 기준 (스케줄링의 좋고 나쁨의 기준)</strong>
@@ -74,7 +82,51 @@
           </li>
           <li><strong>디스크 스케줄링 유형</strong>
             <ul>
-              <li>FCFS (First Come First Served)</li>
+              <li>FCFS (First Come First Served)
+                <ul>
+                  <li>풀이할 때 확인할 것 : ① 트랙의 시작, 끝 ② 하나의 작업 큐에 다 있는지 ③ 헤드의 위치 ④ 진행 방향</li>
+                </ul>
+                <figure>
+                  <img src="3-5-3-fig-2.png" width="559" height="273" alt="FCFS 디스크 스케줄링 동작 (트랙 0~24, 헤드 15에서 시작): 요청이 들어온 순서대로 15 → 8 → 17 → 11 → 3 → 23 → 19 → 14 → 20 으로 안팎을 오가며 이동, 선 옆 숫자는 이동 거리">
+                </figure>
+              </li>
+              <li><strong>SSTF (Shortest Seek Time First)</strong> : 탐색 거리가 짧은 순으로 스케줄링
+                <ul>
+                  <li>바깥쪽에 있는 트랙이 서비스를 덜 받게 됨</li>
+                  <li>처리율, 평균 응답 시간이 FCFS보다 향상</li>
+                  <li>일괄 처리 시스템에는 유용하지만, 대화형 시스템에는 부적합</li>
+                </ul>
+                <figure>
+                  <img src="3-5-3-fig-3.png" width="580" height="310" alt="SSTF 디스크 스케줄링 동작 (트랙 0~24, 헤드 15에서 시작): 매번 현재 위치에서 가장 가까운 요청으로 이동해 14 → 17 → 19 → 20 → 23 을 먼저 처리한 뒤 안쪽 11 → 8 → 3 으로 이동">
+                </figure>
+              </li>
+              <li><strong>SCAN</strong> : 한 방향의 서비스들이 모두 수행될 때까지 그 방향으로 계속 진행, 서비스가 끝나면 방향을 바꿔 진행
+                <figure>
+                  <img src="3-5-3-fig-4.png" width="567" height="309" alt="SCAN 디스크 스케줄링 동작 (트랙 0~24, 헤드 15에서 시작): 안쪽으로 14 → 11 → 8 → 3 을 처리하고 끝(0번)까지 이동한 뒤, 방향을 바꿔 17 → 19 → 20 → 23 을 처리하고 끝(24번)까지 이동">
+                </figure>
+              </li>
+              <li><strong>LOOK</strong> : SCAN과 비슷, 끝까지 안 가고 마지막 트랙에서 방향 전환
+                <figure>
+                  <img src="3-5-3-fig-5.png" width="552" height="324" alt="LOOK 디스크 스케줄링 동작 (트랙 0~24, 헤드 15에서 시작): 안쪽으로 14 → 11 → 8 → 3 을 처리한 뒤 0번까지 가지 않고 3에서 방향을 바꿔 17 → 19 → 20 → 23 처리. 중간에서 회전하는 점이 SCAN 과의 차이">
+                </figure>
+              </li>
+              <li><strong>C-SCAN</strong> : 바깥쪽 → 안쪽 → 바깥쪽
+                <figure>
+                  <img src="3-5-3-fig-6.png" width="514" height="295" alt="C-SCAN 디스크 스케줄링 동작 (트랙 0~24, 헤드 15에서 시작): 안쪽으로 14 → 11 → 8 → 3 을 처리하고 0번 끝까지 간 뒤, 작업 없이 반대쪽 끝 24번으로 이동해 다시 같은 방향으로 23 → 20 → 19 → 17 처리">
+                </figure>
+              </li>
+              <li><strong>C-LOOK</strong> : C-SCAN과 비슷, 헤드 변경 시점에서 차이
+                <figure>
+                  <img src="3-5-3-fig-7.png" width="573" height="280" alt="C-LOOK 디스크 스케줄링 동작 (트랙 0~24, 헤드 15에서 시작): 안쪽으로 14 → 11 → 8 → 3 을 처리하고 0번까지 가지 않고 3에서 작업 없이 가장 바깥 요청 23 으로 이동한 뒤 20 → 19 → 17 처리. 끝까지 가지 않는 점이 C-SCAN 과의 차이">
+                </figure>
+              </li>
+              <li><strong>N단계 SCAN</strong> : 헤드가 한쪽 방향으로 이동하면서 최초 요청을 서비스하다가 반대편으로 가면서 나중에 도착한 것 처리
+                <ul>
+                  <li>현재 큐에 대기 중인 요청만 처리</li>
+                  <li>SSTF나 SCAN보다 응답 시간 편차 ↓</li>
+                  <li>현재 실린더에 많은 요구가 도착해서 생기는 무한 지연 가능성 제거</li>
+                </ul>
+              </li>
             </ul>
           </li>
         </ul>

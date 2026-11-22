@@ -27,7 +27,39 @@
       <!-- 칸: Word 원고(노트 원고/…/1-2 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-1-2-1-1">
         <h3>배열 연산 &amp; 응용</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>배열의 주소 계산</strong> (각 원소가 s byte, 배열 A 의 시작 주소가 a)
+            <ul>
+              <li><strong>1차원 배열</strong> A[L:U] (L = 시작값, U = 끝값)
+                <ul>
+                  <li>길이 = U − L + 1</li>
+                  <li>A[i] 의 주소 = a + s·i (L = 0 일 때) <span class="fix">원본과 다름 · 원본: “a × s + i” 에 손으로 X 표시, 시작 주소 a 에 s·i 를 더함</span></li>
+                </ul>
+              </li>
+              <li><strong>2차원 배열</strong> A[L0:U0, L1:U1]
+                <ul>
+                  <li>원소의 개수 = (U0 − L0 + 1) × (U1 − L1 + 1)</li>
+                  <li><strong>행 우선</strong> : A[i, j] → a + s(n·i + j)</li>
+                  <li><strong>열 우선</strong> : A[i, j] → a + s(n·j + i)</li>
+                  <li>행 우선의 n 은 한 행의 원소 수(열 수), 열 우선의 n 은 한 열의 원소 수(행 수)</li>
+                </ul>
+              </li>
+              <li><strong>3차원 배열</strong> A[l:m:n] 의 원소 A[i, j, k]
+                <ul>
+                  <li><strong>행 우선</strong> : a + s(m·n·i + n·j + k)</li>
+                  <li><strong>열 우선</strong> : a + s(m·n·i + m·k + j)</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>배열의 삽입·삭제</strong>
+            <ul>
+              <li>연속 공간이므로 삽입하면 뒤의 데이터를 한 칸씩 밀고, 삭제하면 한 칸씩 당겨 와야 함 → 효율성↓ O(n)</li>
+              <li><strong>평균 이동 횟수</strong> = (n + (n−1) + … + 1) / n = (n(n+1)/2) / n = (n+1)/2 = ½n + ½ → 최고차수만 남겨서 O(n)</li>
+              <li>연결리스트는 임의의 노드만 안다면 삽입·삭제가 O(1)</li>
+            </ul>
+          </li>
+        </ul>
       </section>
     </article>
     <article class="topic" id="n-1-2-2">
@@ -48,7 +80,44 @@
           <li>주소 = 값; 꼴로 읽기 (저장소) = (값), 노드 = 값</li>
           <li>포인터A = 포인터B; 꼴일 경우, A라는 포인터에 <strong>B가 가리키던 값을</strong> 똑같이 <strong>가리키게 만든다</strong> 라는 의미</li>
           <li>포인터는 거의, 누군가 이미 가리키고 있는 값을 복사해서 가리키거나, 자기가 가리키는 노드의 link가 가리키는 값을 가리키면서 전진하던가 함</li>
+          <li><strong>포인터와 구조체 기초</strong></li>
         </ul>
+        <table>
+          <tbody>
+            <tr><td>int i;      // 정수형 변수           i = 10;<br>int a[3];   // 정수형 배열 변수<br>int *p;     // 정수형 포인터 변수    p = &amp;i;   → p 는 i 를 가리킴</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>구조체 변수와 구조체 포인터로 값 넣기</strong></li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>struct 이름 {<br>    int data;<br>    struct 이름 *link;<br>};<br>struct 이름 new;     // 구조체 변수<br>struct 이름 *newp;   // 구조체 포인터 (new 를 가리킴)</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li>99 를 넣고 싶으면 — <strong>직접</strong> : new.data = 99</li>
+          <li><strong>간접</strong> : newp.data = 99 (X) → (*newp).data = 99 (O), newp-&gt;data = 99 (O) <span class="fix">원본과 다름 · 원본: “new -&gt; data = 99”, -&gt; 는 포인터 newp 에 씀</span></li>
+        </ul>
+        <ul>
+          <li><strong>동적 할당</strong> : np = (struct 이름 *) malloc(sizeof(struct 이름));
+            <ul>
+              <li><strong>cast 연산자</strong> : malloc 이 돌려주는 주소를 구조체 포인터형으로 형변환 <span class="fix">원본과 다름 · 원본: “np 는 구조체 형이고 sizeof (struct 이름)은 int 형이라 형변환 필요”, malloc 의 반환형이 void * 라서 형변환함</span></li>
+            </ul>
+          </li>
+          <li><strong>typedef 로 노드 정의</strong></li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>typedef struct node *list_pointer;<br>typedef struct node {<br>    int data;            // data 부분<br>    list_pointer link;   // = struct node *link<br>};</td></tr>
+          </tbody>
+        </table>
+        <table>
+          <thead><tr><th scope="col">ex1)</th><th scope="col">ex2)</th></tr></thead>
+          <tbody>
+            <tr><td>int a;<br>int *p;<br>a = 50;<br>*p = 70;   // p 가 가리키는 공간에 70<br>           // (p = 70 : 주소를 70 으로)</td><td>struct node {<br>    int data;<br>    struct node *link;<br>};<br>struct node a;<br>struct node *b;<br>a.data = 5;<br>(*b).data = 10;   // = b-&gt;data = 10</td></tr>
+          </tbody>
+        </table>
         <h4>선형 연결리스트 삽입 연산</h4>
         <ul>
           <li><strong>1. 리스트 맨 처음 위치에 새로운 노드 추가할 경우</strong>
@@ -168,6 +237,23 @@
             <tr><td>return q;</td><td></td></tr>
           </tbody>
         </table>
+        <ul>
+          <li><strong>기출 2014</strong> : 오름차순으로 정렬된 단일 연결리스트에 insertNode() 로 (아이디, 점수) 노드 삽입 – 빈칸 ㉠㉡㉢과 배열에 비해 연결리스트가 가지는 장점
+            <figure>
+              <img src="1-2-2-fig-8.png" width="1311" height="1955" alt="2014 기출 19번 문제와 손풀이. insertNode(head, id, score) 에서 ㉠ ptr = ptr-&gt;next, ㉡ elm-&gt;next = ptr, ㉢ prevptr-&gt;next = elm 이고, 장점은 노드의 삽입·삭제가 쉽다는 것이다. 리스트가 비었을 때·중간·맨 끝 삽입 경우를 노드 그림으로 그렸다.">
+            </figure>
+          </li>
+          <li><strong>기출 2020</strong> : findLast() 로 마지막 노드를 찾아 insert() 로 학번 노드를 끝에 추가 – 빈칸, 실행 결과
+            <figure>
+              <img src="1-2-2-fig-9.png" width="1383" height="1772" alt="2020 기출 4번 문제와 손풀이. ㉠ start, ㉡ p-&gt;next 이고, 실행 결과는 insert : 10000, findLast : 10000, insert : 20000 이며, ㉢을 insert(start-&gt;next, 30000) 으로 바꾸면 마지막 노드의 학번은 30000 이다.">
+            </figure>
+          </li>
+          <li><strong>기출 2011 – 역체인</strong> : 오름차순 단일 연결리스트를 포인터 변경만으로 내림차순으로 바꾸는 reverse() 의 출력 결과
+            <figure>
+              <img src="1-2-2-fig-10.png" width="1401" height="1761" alt="2011 기출 22번 문제와 손풀이. 10, 20, 30, 40, 50 리스트에서 ptr, ptr1, ptr2 가 이동하며 링크를 거꾸로 바꾸는 과정을 count = 1 ~ 5 단계별로 그렸고, void 함수라 마지막에 *head = ptr1 로 머리를 바꾼다는 메모가 있다.">
+            </figure>
+          </li>
+        </ul>
       </section>
     </article>
     <article class="topic" id="n-1-2-3">
@@ -242,6 +328,13 @@
             <tr><td>if (removed == head) return;<br>removed-&gt;llink-&gt;rlink = removed-&gt;rlink;<br>removed-&gt;rlink-&gt;llink = removed-&gt;llink;<br>free(removed);</td></tr>
           </tbody>
         </table>
+        <ul>
+          <li><strong>기출 2008</strong> : 입력 데이터 7, 1, 8, 5, 9 를 순서대로 이중 연결 리스트에 오름차순으로 삽입하는 sorted_insert() – 빈칸과 출력 결과
+            <figure>
+              <img src="1-2-3-fig-5.png" width="1373" height="1769" alt="2008 기출 5번 문제와 손풀이. head·tail 더미 노드가 있는 이중 연결 리스트에서 ㉠ s-&gt;next, ㉡ s-&gt;prev-&gt;next, ㉢ s-&gt;prev 이고, 7, 1, 8, 5 를 넣은 뒤 ㉣ 출력은 1, 8 이다. 새 노드 i 를 s 앞에 끼우는 링크 순서 ①~④ 를 그림으로 그렸다.">
+            </figure>
+          </li>
+        </ul>
       </section>
     </article>
     <article class="topic" id="n-1-2-4">
@@ -251,14 +344,37 @@
       <!-- 칸: Word 원고(노트 원고/…/1-2 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-1-2-4-1">
         <h3>스택과 큐의 개념, 표현, 연산, 응용</h3>
+        <ul>
+          <li><strong>스택 (stack)</strong>
+            <ul>
+              <li><strong>특징</strong>
+                <ul>
+                  <li>① 삽입·삭제가 같은 곳에서 이루어짐 (포인터 하나로 가능)</li>
+                  <li>② LIFO (Last-In-First-Out list)</li>
+                  <li>③ 인터럽트 호출, 재귀적 호출, 서브 프로그램 호출 시 복귀 주소 저장, 산술식 계산 등에 사용됨</li>
+                  <li>④ 순환 알고리즘, 재귀 알고리즘 등에 사용</li>
+                </ul>
+              </li>
+              <li><strong>배열 스택</strong>
+                <ul>
+                  <li><strong>삽입 전에는 반드시</strong> : 1) 할당 (삽입할 공간 만들기) – 할당이 안 되면 overflow 상태 2) overflow 검사</li>
+                  <li><strong>삭제 전에는 반드시</strong> : 1) 데이터의 유무 확인 – 데이터가 없으면 삭제 불가능 (underflow) 2) 할당받은 공간 해제</li>
+                </ul>
+                <figure>
+                  <img src="1-2-4-fig-1.png" width="1300" height="259" alt="배열 스택의 push(Stack, item) 와 pop(Stack) 코드 표. push 는 top &gt;= N−1(MAXSIZE−1) 이면 overflow, 아니면 top = top + 1 뒤 Stack[top] = item(= Stack[++top] = item), pop 은 top == −1 이면 −1, 아니면 temp = Stack[top] 뒤 top = top − 1 로, 순서가 서로 반대라는 손글씨 화살표가 있다.">
+                </figure>
+              </li>
+            </ul>
+          </li>
+        </ul>
         <h4>연결리스트로 스택 구현</h4>
         <div class="figs">
           <figure>
-            <img src="1-2-4-fig-1.png" width="920" height="352" alt="연결 스택 삽입: 새 노드 D 의 link 가 top 노드 C 를 가리키고(1), top 이 D 를 가리킴(2).">
+            <img src="1-2-4-fig-2.png" width="920" height="352" alt="연결 스택 삽입: 새 노드 D 의 link 가 top 노드 C 를 가리키고(1), top 이 D 를 가리킴(2).">
             <figcaption>삽입 연산</figcaption>
           </figure>
           <figure>
-            <img src="1-2-4-fig-2.png" width="920" height="400" alt="연결 스택 삭제: temp 가 top 노드 C 를 가리키고(1), top 이 B 를 가리키게 한 뒤(2), C 를 free(3).">
+            <img src="1-2-4-fig-3.png" width="920" height="400" alt="연결 스택 삭제: temp 가 top 노드 C 를 가리키고(1), top 이 B 를 가리키게 한 뒤(2), C 를 free(3).">
             <figcaption>삭제 연산</figcaption>
           </figure>
         </div>
@@ -268,9 +384,148 @@
             <tr><td>temp-&gt;link = top;<br>top = temp;</td><td>temp = top;<br>top = temp-&gt;link;<br>free(temp); <span class="fix">원본과 다름 · 원본: “top = tep-&gt;link;”</span></td></tr>
           </tbody>
         </table>
+        <ul>
+          <li><strong>다중 스택</strong>
+            <ul>
+              <li><strong>2개의 스택</strong> : 배열 하나(0 ~ n−1)의 양 끝에서 stack 1 은 오른쪽으로, stack 2 는 왼쪽으로 자람
+                <figure>
+                  <img src="1-2-4-fig-4.png" width="510" height="92" alt="0 부터 n−1 까지인 배열 하나에서 stack 1 은 왼쪽 끝에서 오른쪽으로, stack 2 는 오른쪽 끝에서 왼쪽으로 자라는 손그림.">
+                </figure>
+              </li>
+              <li><strong>N개의 스택 (2개 이상)</strong> : 배열을 같은 크기의 세그먼트로 나눔
+                <ul>
+                  <li><strong>boundary[i]</strong> (0 ≤ i &lt; MAX_STACKS) : 스택의 최하단 원소의 바로 위쪽 원소</li>
+                  <li><strong>top[i]</strong> (0 ≤ i &lt; MAX_STACKS) : 최상단 원소</li>
+                  <li>boundary[i] == top[i] 이면 i 번째 스택은 공백 상태
+                    <figure>
+                      <img src="1-2-4-fig-5.png" width="898" height="229" alt="메모리를 m/n 크기의 칸으로 나눈 손그림. 0 에 top[0]·boundary[0], m/n 에 top[1]·boundary[1], 2m/n … m−1 까지 이어지고, boundary[i] = top[i] 이면 그 스택은 공백 상태라는 메모가 있다.">
+                    </figure>
+                    <figure>
+                      <img src="1-2-4-fig-6.png" width="1277" height="638" alt="N개 스택 코드. MEMORY_SIZE 100, MAX_STACKS 10, memory·top·boundary 배열을 두고 top[j] = boundary[j] = (MEMORY_SIZE/n)*j 로 같은 크기로 나눈다. push(i, item) 은 top[i] == boundary[i+1] 이면 stackFull, 아니면 memory[++top[i]] = item, pop(i) 은 top[i] == boundary[i] 이면 stackEmpty, 아니면 memory[top[i]--] 를 돌려준다.">
+                    </figure>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>기출 2016</strong> : 단방향 연결리스트로 만든 스택의 push() 빈칸
+            <figure>
+              <img src="1-2-4-fig-7.png" width="732" height="1325" alt="2016 기출 7번 문제와 손풀이. push(ikey) 에서 ㉠ ptr-&gt;next = NULL (스택이 비었을 때), ㉡ ptr-&gt;next = top (비어 있지 않을 때), ㉢ top = ptr 이다.">
+            </figure>
+          </li>
+          <li><strong>스택의 응용 – 수식 표기법</strong> (예 : X = (((A + B) * (C − D)) / E) + (F * G))
+            <ul>
+              <li><strong>전위(prefix) 표기법</strong> : = X + / * + A B − C D E * F G
+                <ul>
+                  <li>산술식에서 연산자 우선순위에 따라 괄호를 먼저 친 후, 모든 연산자를 자신이 속한 왼쪽 괄호 바로 앞으로 이동한 후 괄호 제거</li>
+                </ul>
+              </li>
+              <li><strong>중위(infix) 표기법</strong> : X = (A + B) * (C − D) / E + F * G <span class="fix">원본과 다름 · 원본: “X = A + B * C - D / E + F * G”, 괄호를 다 지우면 계산 순서가 바뀜</span>
+                <ul>
+                  <li>수식을 표현하는 일반적인 방식</li>
+                </ul>
+              </li>
+              <li><strong>후위(postfix) 표기법 (= 역폴리시 표기법)</strong> : X A B + C D − * E / F G * + = <span class="fix">원본과 다름 · 원본: “… C D - * D / …”, E 로 나눔</span>
+                <ul>
+                  <li>연산자 우선순위에 따라 괄호를 먼저 친 후, 모든 연산자를 자신이 속한 바로 오른쪽 괄호 밖으로 이동한 후 괄호 제거</li>
+                  <li>연산자 우선순위가 필요 없음</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>후위 표기식의 계산</strong>
+            <ul>
+              <li>예 : {(B * C) + A} − (D / E) → A B C * + D E / −</li>
+              <li><strong>규칙 1</strong> : 피연산자를 읽으면 무조건 스택에 push</li>
+              <li><strong>규칙 2</strong> : 연산자를 읽으면 pop 을 두 번 해서 연산한 뒤 결과를 push (먼저 꺼낸 것이 A, 다음에 꺼낸 것이 B 면 B 연산 A)
+                <figure>
+                  <img src="1-2-4-fig-8.png" width="1034" height="376" alt="후위식 A B C * + D E / − 를 계산하는 스택 그림. A, B, C 를 push 하고 * 에서 C, B 를 꺼내 B*C = X 를 push, + 에서 A+X = Y, D, E 를 push 하고 / 에서 D/E = Z, − 에서 Y−Z 를 구해 스택에 남긴다 (그림의 D/E ⇒ Y 는 Z).">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>중위 표기 → 후위 표기 변환</strong>
+            <ul>
+              <li><strong>손으로 바꾸기</strong>
+                <ul>
+                  <li>① 식을 모두 괄호로 묶는다</li>
+                  <li>② 이항 연산자들을 모두 그들의 오른쪽 괄호와 대체시킨다</li>
+                  <li>③ 모든 괄호를 삭제한다</li>
+                  <li>예 : a/b−c+d*e−a*c ⇒ ((((a/b)−c)+(d*e))−(a*c)) ⇒ ab/c−de*+ac*−</li>
+                </ul>
+              </li>
+              <li><strong>스택으로 바꾸기</strong>
+                <ul>
+                  <li><strong>규칙 1</strong> : 피연산자를 입력받으면 바로 출력 (printf)</li>
+                  <li><strong>규칙 2</strong> : 연산자를 입력받으면 우선순위를 비교해 push
+                    <ul>
+                      <li><strong>ISOP</strong> (In-Stack Operator Priority) : 스택 꼭대기 연산자의 우선순위</li>
+                      <li><strong>ICOP</strong> (In-Coming Operator Priority) : 새로 들어오는 연산자의 우선순위</li>
+                      <li>i) ISOP &lt; ICOP 인 경우 : 스택으로 들어올 연산자를 스택에 저장</li>
+                      <li>ii) ISOP &gt; ICOP 인 경우 : 스택에 있는 연산자를 출력시키고, 들어올 연산자를 스택에 저장 (= 우선순위가 높은 연산자는 스택 밖으로 출력됨) – 안에 있는 것이 새것보다 낮으면 그냥 push, 크면 pop 후 push</li>
+                      <li>iii) ISOP = ICOP 인 경우 : 꺼내고 들어감 (먼저 온 것이 우선순위 높음)</li>
+                    </ul>
+                  </li>
+                </ul>
+                <figure>
+                  <img src="1-2-4-fig-9.png" width="757" height="967" alt="중위식을 후위식으로 출력하는 postfix() 코드. 피연산자면 바로 출력, 오른쪽 괄호면 왼쪽 괄호가 나올 때까지 pop 해서 출력한 뒤 왼쪽 괄호는 버리고, 연산자면 isp[stack[top]] &gt;= icp[token] 인 동안 pop 해서 출력한 뒤 push 하며, 끝나면 eos 전까지 남은 것을 출력한다는 손글씨 설명이 붙어 있다.">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>기출 2007 (10번)</strong> : InStackP[ ]·InputP[ ] 우선순위로 중위식 a * (b + c * d − e) / f − g 를 후위식으로 바꾸기 – 출력 심볼과 스택에 연산자가 가장 많을 때의 내용
+            <figure>
+              <img src="1-2-4-fig-10.png" width="1442" height="1987" alt="2007 기출 10번 문제와 심볼마다 while 문을 따라간 손풀이. 출력은 a b c d * + e − * f / g − 이고, 스택에 연산자가 가장 많을 때의 내용은 $ * ( + * 이다.">
+            </figure>
+            <figure>
+              <img src="1-2-4-fig-11.png" width="522" height="591" alt="2007 기출 10번 손풀이의 이어지는 부분. f, −, g, $ 를 차례로 처리해 − 와 / 를 출력하고 최종 출력 a b c d * + e − * f / g − 를 얻는다.">
+            </figure>
+          </li>
+          <li><strong>기출 2007 (42번)</strong> : X + ( Y − Z ) * W 를 처리할 때 단계마다 스택 내용과 출력 결과를 표로 채우기
+            <figure>
+              <img src="1-2-4-fig-12.png" width="1375" height="1824" alt="2007 기출 42번 문제와 모범답안 표. symbol 을 X, +, (, Y, −, Z, ), *, W, $ 순으로 읽을 때 스택과 출력이 바뀌어 최종 출력은 XYZ−W*+ 이다.">
+            </figure>
+          </li>
+          <li><strong>기출 2010 (9번)</strong> : calculateExp() 로 후위식 &quot;12*345+−*76−/$&quot; 계산 – 출력 결과, 두 번째 * 처리 후 스택 내용, push() 호출 횟수
+            <figure>
+              <img src="1-2-4-fig-13.png" width="1304" height="1965" alt="2010 기출 9번 문제와 토큰마다 스택을 그린 손풀이. 1*2 = 2, 4+5 = 9, 3−9 = −6, 2*(−6) = −12, 7−6 = 1, −12/1 = −12 순으로 계산해 출력은 −12, 두 번째 * 뒤 스택은 −12, push 는 모두 13번이다.">
+            </figure>
+          </li>
+          <li><strong>큐 (queue)</strong>
+            <ul>
+              <li><strong>특징</strong>
+                <ul>
+                  <li>① FIFO</li>
+                  <li>② 삽입·삭제가 다른 곳에서 이루어짐</li>
+                  <li>③ 운영체제에서 많이 사용됨 (buffer : 들어온 순서를 유지해서 밖으로 꺼내 주는 것)</li>
+                  <li>④ 포인터 변수 2개 (front, rear)</li>
+                </ul>
+              </li>
+              <li><strong>배열을 이용한 선형 큐</strong>
+                <ul>
+                  <li><strong>초기 상태</strong> : front = rear = −1</li>
+                  <li><strong>공백 상태</strong> : front = rear</li>
+                  <li><strong>포화 상태</strong> : rear = n − 1 (n : 배열의 크기, n − 1 : 배열의 마지막 인덱스)</li>
+                  <li><strong>f (front)</strong> : 저장된 첫 번째 원소의 이전 index 저장</li>
+                  <li><strong>r (rear)</strong> : 가장 최근에 삽입된 데이터를 가리키는 index</li>
+                  <li><strong>push()</strong> : overflow 검사 → r 을 움직인 후 삽입이 원칙</li>
+                  <li><strong>pop()</strong> : underflow 검사 → f 를 움직인 후 삭제</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>#define MAX_QUEUE_SIZE N<br>extern int front = -1, rear = -1;<br>int Queue[MAX_QUEUE_SIZE];</td></tr>
+          </tbody>
+        </table>
+        <figure>
+          <img src="1-2-4-fig-14.png" width="1337" height="374" alt="배열 선형 큐의 addq·delete 코드 표. addq 는 rear &gt;= N−1 이면 overflow, 아니면 Queue[++rear] = item (Q[r++] 는 X), delete 는 front == rear 면 공백, 아니면 front = front + 1 뒤 Queue[front] 를 돌려준다(= return Queue[++front]). 아래에 push 는 r 을, pop 은 f 를 먼저 움직이는 그림이 있다.">
+        </figure>
         <h4>연결리스트로 큐 구현 (Linked Queue)</h4>
         <figure>
-          <img src="1-2-4-fig-3.png" width="1040" height="280" alt="연결 큐: front 는 첫 노드 A, rear 는 마지막 노드 D 를 가리킴. A → B → C → D → NULL. 노드는 item 과 link 두 칸.">
+          <img src="1-2-4-fig-15.png" width="1040" height="280" alt="연결 큐: front 는 첫 노드 A, rear 는 마지막 노드 D 를 가리킴. A → B → C → D → NULL. 노드는 item 과 link 두 칸.">
         </figure>
         <ul>
           <li><strong>개념</strong>
@@ -284,11 +539,11 @@
         </ul>
         <div class="figs">
           <figure>
-            <img src="1-2-4-fig-4.png" width="960" height="600" alt="빈 큐에 삽입: front 와 rear 가 NULL 일 때, 새 노드 A 를 temp 가 가리키고, 삽입 뒤 front 와 rear 가 모두 A 를 가리킴.">
+            <img src="1-2-4-fig-16.png" width="960" height="600" alt="빈 큐에 삽입: front 와 rear 가 NULL 일 때, 새 노드 A 를 temp 가 가리키고, 삽입 뒤 front 와 rear 가 모두 A 를 가리킴.">
             <figcaption>공백일 때</figcaption>
           </figure>
           <figure>
-            <img src="1-2-4-fig-5.png" width="960" height="600" alt="노드가 있는 큐에 삽입: rear 노드 C 의 link 가 새 노드 D 를 가리키고(1), rear 가 D 를 가리킴(2).">
+            <img src="1-2-4-fig-17.png" width="960" height="600" alt="노드가 있는 큐에 삽입: rear 노드 C 의 link 가 새 노드 D 를 가리키고(1), rear 가 D 를 가리킴(2).">
             <figcaption>기존 노드 존재할 때</figcaption>
           </figure>
         </div>
@@ -304,11 +559,11 @@
         </ul>
         <div class="figs">
           <figure>
-            <img src="1-2-4-fig-6.png" width="960" height="624" alt="노드가 여러 개인 큐에서 삭제: temp 가 front 노드 A 를 가리키고(1), front 가 B 를 가리키게 한 뒤(2), A 를 free.">
+            <img src="1-2-4-fig-18.png" width="960" height="624" alt="노드가 여러 개인 큐에서 삭제: temp 가 front 노드 A 를 가리키고(1), front 가 B 를 가리키게 한 뒤(2), A 를 free.">
             <figcaption>큐에 노드가 여러 개 있을 때</figcaption>
           </figure>
           <figure>
-            <img src="1-2-4-fig-7.png" width="960" height="624" alt="노드가 1개 남은 큐에서 삭제: front 와 rear 가 D 를 가리키다가, temp 가 D 를 가리키고 front 와 rear 는 모두 NULL 이 됨. D 는 free.">
+            <img src="1-2-4-fig-19.png" width="960" height="624" alt="노드가 1개 남은 큐에서 삭제: front 와 rear 가 D 를 가리키다가, temp 가 D 를 가리키고 front 와 rear 는 모두 NULL 이 됨. D 는 free.">
             <figcaption>큐에 노드가 1개 남았을 때</figcaption>
           </figure>
         </div>
@@ -320,6 +575,80 @@
             <tr><td>free(temp);</td><td>temp 삭제</td></tr>
           </tbody>
         </table>
+        <ul>
+          <li><strong>큐의 유형</strong>
+            <ul>
+              <li><strong>① 선형 큐</strong>
+                <ul>
+                  <li>단점 : 빈 공간이 있는데도 overflow 가 발생할 수 있음</li>
+                  <li>해결 : 구조는 그대로 → ② 이동 큐, 구조를 바꿈 → ③ 원형 큐(환형 큐)</li>
+                </ul>
+              </li>
+              <li><strong>② 이동 큐</strong> : 어떤 시점마다 원소를 이동
+                <ul>
+                  <li>단점 : 원소 이동 수가 많아서 성능이 떨어짐</li>
+                </ul>
+              </li>
+              <li><strong>③ 원형 큐 (환형 큐)</strong>
+                <ul>
+                  <li><strong>장점</strong> : 원소 이동 없이 overflow 해결</li>
+                  <li><strong>단점</strong> : ① 원형 큐가 끝까지 차서 f 와 r 의 인덱스가 같아지면 data 가 없다고 판단, 삭제 불가능해짐
+                    <ul>
+                      <li>∵ overflow, underflow 의 조건이 모두 f == r 이어서 구분 불가 → ∴ 반드시 하나의 빈방 필요</li>
+                      <li>② 방의 수보다 1 적게 데이터 저장 가능</li>
+                    </ul>
+                  </li>
+                  <li><strong>빈방을 두기 싫으면 (둘 중 하나 선택)</strong> : i) <strong>Tag</strong> – 가득 찼는지 아닌지 변수를 이용하여 모니터 ii) <strong>Counter</strong> – 개수 세기</li>
+                  <li><strong>특징</strong> : n 개의 환형 큐는 n−1 개의 데이터를 삽입할 수 있음 (= 하나의 여유 공간 필요)</li>
+                  <li><strong>원소 수</strong> : 원형 큐의 전체 크기가 N 이면 (r + N − f) % N
+                    <figure>
+                      <img src="1-2-4-fig-20.png" width="455" height="230" alt="원형 큐의 원소 수 손그림. i) r 이 f 보다 뒤에 있으면 원소 수 = r − f, ii) r 이 한 바퀴 돌아 f 보다 앞에 있으면 원소 수 = r + N − f 이고, 둘을 합쳐 (r + N − f) % N 이다.">
+                    </figure>
+                  </li>
+                  <li>큐의 끝까지 도달하면 rear 를 다시 0 으로 : if (rear == MAX_QUEUE_SIZE-1) rear = 0; else rear++;</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <table>
+          <thead><tr><th scope="col">삽입</th><th scope="col">삭제</th></tr></thead>
+          <tbody>
+            <tr><td>void cpush(int Queue[], int item) {<br>    crear = (crear + 1) % N;   // 순환 표현<br>    if (crear == cfront) {<br>        printf(&quot;Queue Overflow\n&quot;);<br>    }<br>    Queue[crear] = item;<br>}</td><td>int cpop(int Queue[]) {<br>    if (cfront == crear)   // 비어 있는 경우<br>        return -1;<br>    cfront = (cfront + 1) % N;<br>    return Queue[cfront];<br>}</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>선형 큐 vs 환형 큐</strong></li>
+        </ul>
+        <table>
+          <thead><tr><th scope="col"></th><th scope="col">선형 큐</th><th scope="col">환형 큐</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">초기화</th><td>f = r = −1</td><td>f = r = 0</td></tr>
+            <tr><th scope="row">full 조건식</th><td>r &gt;= N − 1 <span class="fix">원본과 다름 · 원본: “r &gt;= N”, r 이 마지막 인덱스 N−1 이면 포화</span></td><td>f == (r + 1) % N <span class="fix">원본과 다름 · 원본: “f == r”, 빈방 하나를 두는 방식에서 f == r 은 공백</span></td></tr>
+            <tr><th scope="row">empty 조건식</th><td>f == r</td><td>f == r</td></tr>
+            <tr><th scope="row">포인터 처리</th><td>f++, r++</td><td>f = (f + 1) % N<br>r = (r + 1) % N</td></tr>
+          </tbody>
+        </table>
+        <figure>
+          <img src="1-2-4-fig-21.png" width="1290" height="531" alt="왼쪽: 크기 6 배열 선형 큐에서 enqueue(3), (7), (5) 와 dequeue 두 번에 따라 front·rear 가 오른쪽으로만 움직이는 그림과, 크기 8 원형 큐의 공백·포화(A~G)·오류(A~H, front == rear) 상태. 오른쪽: 원형 큐에 A, B 삽입, 삭제, C, D 삽입 때 front 와 rear 의 위치(front 는 첫 요소 하나 앞, rear 는 마지막 요소).">
+        </figure>
+        <ul>
+          <li><strong>기출 2019</strong> : 배열로 만든 (가) 선형 큐와 (나) 원형 큐의 insert·delete 빈칸, n = 4 일 때 연산 7번 뒤 front·rear 값
+            <figure>
+              <img src="1-2-4-fig-22.png" width="1370" height="1805" alt="2019 기출 6번 문제와 손풀이. ㉠ front == rear, ㉡ (rear + 1) % n 이고, insert s, q, delete, insert u, e, delete, insert t 를 마치면 front = 2, rear = 1 이다. 원형 큐 그림과 단계별 배열 그림이 있다.">
+            </figure>
+          </li>
+          <li><strong>데크 (Deque, Double Ended Queue)</strong> : 스택과 큐를 혼합한 형태
+            <ul>
+              <li>원소의 삽입·삭제가 리스트의 양쪽 끝에서 모두 허용되는 선형 리스트 (앞쪽 끝·뒤쪽 끝 모두 삽입·삭제 가능)</li>
+            </ul>
+          </li>
+          <li><strong>기출 2010 (8번)</strong> : 데크 연산 insertFirst·insertLast·deleteFirst·deleteLast 로 스택과 큐의 삽입·삭제 만들기
+            <figure>
+              <img src="1-2-4-fig-23.png" width="1339" height="898" alt="2010 기출 8번 문제와 손풀이. 스택은 insertLast 와 deleteLast(같은 끝), 큐는 insertLast 와 deleteFirst(다른 끝)를 쓰므로 ㉠ insertLast, ㉡ insertLast 이다.">
+            </figure>
+          </li>
+        </ul>
       </section>
     </article>
   </main>

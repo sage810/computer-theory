@@ -50,67 +50,291 @@
           </tbody>
         </table>
         <ul>
+          <li><strong>정렬 기법의 기초</strong>
+            <ul>
+              <li><strong>공부할 것</strong> : 정렬마다 처리과정, C 구현, 장단점 비교(성능) — O(n²)이 기본 성능, O(n log₂n)이면 좋은 성능
+                <figure>
+                  <img src="2-3-1-fig-1.png" width="304" height="270" alt="정렬 분류도: DS는 구조와 처리, 처리는 탐색과 정렬로 나뉜다. 정렬은 비교(삽입, 교환-버블·선택·퀵, 트리-힙, 합병)와 분산(기수, radix)으로 나뉜다.">
+                </figure>
+              </li>
+              <li><strong>내부 정렬</strong> : 주기억장치 이용</li>
+              <li><strong>외부 정렬</strong> : 보조기억장치 이용</li>
+              <li><strong>비교에 의한 정렬</strong> : 두 개씩 비교해서 교환 (삽입, 버블·선택·퀵, 힙, 합병)</li>
+              <li><strong>분산에 의한 정렬</strong> : 여러 개 부분집합으로 나눠 집합끼리 사이즈 정렬 (흩어 놓고 모으기, ex. 기수 정렬 radix sort)</li>
+              <li><strong>위 표 보충</strong>
+                <ul>
+                  <li>안정성 : 같은 키값의 위치가 역전되지 않음 — 인접한 것끼리 비교·교환하면 같은 키값끼리 순서가 바뀔 일이 없다</li>
+                  <li>버블 정렬 최선 O(n) : flag bit 로 매 단계에서 확인해 교환이 발생하지 않으면 정렬된 것으로 간주할 때</li>
+                  <li>퀵 정렬 최악 O(n²) : 정렬된 데이터나 역순의 데이터 = 피봇이 가장 작은 값이나 가장 큰 값을 가져서 균등 분할이 안 될 때</li>
+                  <li>퀵 정렬 N(+stack) : stack 은 수행시간에 영향 X</li>
+                  <li>힙 정렬 N(+pointer) : 트리로 구성할 때</li>
+                  <li>합병 정렬 N+N : 진정한 제자리 정렬 X</li>
+                  <li>기수 정렬 평균 : O(d(n+r)) (d: 자리수, r: 진수)</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
           <li><strong>삽입 정렬</strong></li>
         </ul>
         <div class="figs">
           <figure>
-            <img src="2-3-1-fig-1.png" width="446" height="653" alt="삽입 정렬의 과정 그림: 5 3 8 1 2 7 에서 왼쪽부터 정렬된 부분에 다음 원소를 하나씩 꺼내 알맞은 자리에 끼워 넣음 → 1 2 3 5 7 8">
+            <img src="2-3-1-fig-2.png" width="446" height="653" alt="삽입 정렬의 과정 그림: 5 3 8 1 2 7 에서 왼쪽부터 정렬된 부분에 다음 원소를 하나씩 꺼내 알맞은 자리에 끼워 넣음 → 1 2 3 5 7 8">
           </figure>
           <figure>
-            <img src="2-3-1-fig-2.png" width="996" height="526" alt="void insertion_sort(int list[], int n) 코드: i = 1 부터 key = list[i], j = i-1 부터 list[j] &gt; key 인 동안 list[j+1] = list[j] 로 오른쪽 이동, 마지막에 list[j+1] = key">
+            <img src="2-3-1-fig-3.png" width="996" height="526" alt="void insertion_sort(int list[], int n) 코드: i = 1 부터 key = list[i], j = i-1 부터 list[j] &gt; key 인 동안 list[j+1] = list[j] 로 오른쪽 이동, 마지막에 list[j+1] = key">
           </figure>
           <figure>
-            <img src="2-3-1-fig-3.png" width="789" height="1814" alt="기출 47번 (2009학년도 정보컴퓨터 임용): 문자열 &quot;peajade&quot; 를 삽입 정렬하는 C 프로그램의 빈칸 ㉮와 j가 4일 때 출력 결과 고르기. 정답 4번 (㉮ item[k+1] = temp, 출력 aaejpde), 해설에 j = 1 ~ 4 단계별 배열 변화 표">
+            <img src="2-3-1-fig-4.png" width="789" height="1814" alt="기출 47번 (2009학년도 정보컴퓨터 임용): 문자열 &quot;peajade&quot; 를 삽입 정렬하는 C 프로그램의 빈칸 ㉮와 j가 4일 때 출력 결과 고르기. 정답 4번 (㉮ item[k+1] = temp, 출력 aaejpde), 해설에 j = 1 ~ 4 단계별 배열 변화 표">
           </figure>
         </div>
+        <ul>
+          <li><strong>삽입 정렬</strong> : 가장 간단한 정렬. 모든 레코드가 이미 정렬된 순서로 되어 있다고 가정하고, 정렬된 순서대로 적당한 위치를 찾아 그곳에 새로운 레코드를 삽입</li>
+          <li><strong>코드 풀이</strong>
+            <figure>
+              <img src="2-3-1-fig-5.png" width="615" height="573" alt="InsertionSort 코드 손글씨 풀이: 현재 정렬된 배열은 i-1까지이므로 j=i-1부터 역순으로 조사하고, insert_key가 list[j]보다 작으면 뒤로 보낸 뒤 for문 밖에서 list[j+1]에 삽입한다. 아래 그림은 정렬된 데이터 1 2 3 5 6 뒤에 삽입할 값 4가 들어가는 모습.">
+            </figure>
+          </li>
+          <li><strong>다른 구현 (a[1..n] 사용, a[0]에 삽입할 값을 넣어 둠)</strong></li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>void insertionS(element a[ ], int n) {<br>    int j;<br>    for(j=2; j &lt;= n; j++) {<br>        element temp = a[j];<br>        insert(temp, a, j-1);<br>    }<br>}<br>void insert(element e, element a[ ], int i) {<br>    a[0] = e;<br>    while(e.key &lt; a[i].key) {<br>        a[i+1] = a[i];<br>        i--;<br>    }<br>    a[i+1] = e;<br>}</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>처리과정</strong> : k번째 위치한 키를 앞의 (k-1)개의 키와 비교해 삽입할 위치를 찾아 삽입
+            <ul>
+              <li>새 레코드 하나가 삽입될 때마다 삽입된 위치 이후의 레코드들은 한 레코드씩 뒤로 이동</li>
+            </ul>
+          </li>
+        </ul>
+        <table>
+          <thead><tr><th scope="col">단계</th><th scope="col">배열 (] 앞이 정렬된 부분)</th><th scope="col">비교</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">&lt;초기&gt;</th><td>5 ] 4 3 2 1</td><td></td></tr>
+            <tr><th scope="row">&lt;1단계&gt;</th><td>4 5 ] 3 2 1</td><td>4 삽입, 1번 비교</td></tr>
+            <tr><th scope="row">&lt;2단계&gt;</th><td>3 4 5 ] 2 1</td><td>3 삽입, 2번 비교</td></tr>
+            <tr><th scope="row">&lt;3단계&gt;</th><td>2 3 4 5 ] 1</td><td>2 삽입, 3번 비교</td></tr>
+            <tr><th scope="row">&lt;4단계&gt;</th><td>1 2 3 4 5 ]</td><td>1 삽입, 4번 비교</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>성능 분석</strong> : 평균 O(n²)
+            <ul>
+              <li><strong>최상의 경우 O(n)</strong> : 이미 정렬된 상태로 입력되어 매 단계(n-1단계)마다 1번씩의 비교, 2번의 이동이 이루어짐 → 총 비교 횟수 n-1, 총 이동 횟수 2(n-1) ⇒ O(3n-3) = O(n)</li>
+              <li><strong>최악의 경우 O(n²)</strong> : 자료가 역순일 경우, 각 단계에서 앞에 놓인 자료들은 전부 한 칸씩 뒤로 이동해야 함
+                <ul>
+                  <li>외부 루프의 반복마다 i번의 비교 → 총 비교 횟수 Σi = 1+2+…+(n-1) = n(n-1)/2 = O(n²)</li>
+                  <li>외부 루프의 반복마다 i+2번의 이동 → 총 이동 횟수 Σ(i+2) = n(n-1)/2 + 2(n-1) = (n²+3n-4)/2 = O(n²)</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>※ 보간법</strong> : 키 k와 a[i]를 비교, 리스트가 정렬됐을 때만 사용 가능
+            <ul>
+              <li>i = ((k − a[1].key) / (a[n].key − a[1].key)) × n (a[n].key: 리스트에서 가장 큰 키값, a[1].key: 가장 작은 키값) <span class="fix">원본과 다름 · 원본: “(k − a[i].key) / a[n].key − a[l].key”, 분자도 가장 작은 키값을 빼고 분모는 괄호로 묶어야 함</span></li>
+            </ul>
+          </li>
+          <li><strong>스터디 문제 (2022 공무원 7급)</strong> : 연결 리스트로 삽입 정렬 함수 구현, ㉠~㉤에 들어갈 코드 고르기
+            <figure>
+              <img src="2-3-1-fig-6.png" width="1404" height="1836" alt="2022 공무원 7급 문제: 연결 리스트 노드를 정렬 위치에 넣는 Insert 함수와 Sort 함수의 빈칸 ㉠~㉤에 보기 A~G 코드를 연결하는 문제. 손글씨로 B, G, C, D, F 답과 리스트 3→5→2→4 가 2→3→4→5 로 정렬되는 과정을 그렸다.">
+            </figure>
+          </li>
+        </ul>
+        <ul>
+          <li><strong>쉘 정렬</strong> : 삽입 정렬을 발전시킨 것 (어느 정도 정렬된 상태에서 삽입 정렬)
+            <ul>
+              <li><strong>처리 과정</strong>
+                <ul>
+                  <li>① 정렬해야 할 리스트를 일정한 기준에 따라 분류하여 연속적이지 않은 여러 개의 부분 리스트를 만듦 (주어진 리스트에서 간격 k번째 요소를 추출 — 간격은 보통 홀수인 것이 더 효율적)</li>
+                  <li>② 각 부분 리스트를 삽입 정렬을 이용하여 정렬</li>
+                  <li>③ 다시 전체 리스트를 더 적은 개수의 부분 리스트로(간격 보통 n/2) 만든 후 알고리즘 되풀이 (부분 리스트의 개수가 1이 될 때까지)</li>
+                </ul>
+              </li>
+              <li><strong>성능</strong> : 시간 복잡도 평균 O(n^1.5), 최악 O(n²)</li>
+              <li><strong>장점 (삽입 정렬에 비해)</strong>
+                <ul>
+                  <li>연속적이지 않은 부분 리스트에서 자료 교환이 일어나면 삽입 정렬보다 더 큰 거리를 이동 ∴ 교환되는 원소들이 삽입 정렬보다 최종 위치에 더 가까이 있을 가능성이 높음</li>
+                  <li>부분 리스트가 어느 정도 정렬된 상태라서, 부분 리스트의 개수가 1이 되면 거의 정렬된 리스트에 삽입 정렬하는 것과 유사</li>
+                </ul>
+              </li>
+              <li><strong>진행 예 (간격 5 → 3 → 1)</strong>
+                <figure>
+                  <img src="2-3-1-fig-7.png" width="1159" height="735" alt="쉘 정렬 표: 입력 10 8 6 20 4 3 22 1 0 15 16 을 간격 5로 부분 리스트(10 3 16, 8 22, 6 1, 20 0, 4 15)를 만들어 정렬하고, 간격 3으로 다시 부분 리스트를 정렬한 뒤, 간격 1로 정렬해 0 1 3 4 6 8 10 15 16 20 22 가 된다.">
+                </figure>
+              </li>
+              <li><strong>코드</strong></li>
+            </ul>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>// gap 만큼 떨어진 요소들을 삽입 정렬<br>// 정렬의 범위는 first에서 last<br>inc_insertion_sort(int list[], int first, int last, int gap)<br>{<br>    int i, j, key;<br>    for (i = first + gap; i &lt;= last; i = i + gap) {<br>        key = list[i];<br>        for (j = i - gap; j &gt;= first &amp;&amp; key&lt;list[j]; j = j - gap)   // 삽입 정렬<br>            list[j + gap] = list[j];<br>        list[j + gap] = key;<br>    }<br>}<br>//<br>void shell_sort(int list[], int n)   // n = size<br>{<br>    int i, gap;<br>    for (gap = n / 2; gap&gt;0; gap = gap / 2) {<br>        if ((gap % 2) == 0) gap++;   // 짝수면 홀수로<br>        for (i = 0; i&lt;gap; i++)      // 부분 리스트의 개수는 gap<br>            inc_insertion_sort(list, i, n - 1, gap);<br>    }<br>}</td></tr>
+          </tbody>
+        </table>
         <ul>
           <li><strong>버블 정렬</strong></li>
         </ul>
         <div class="figs">
           <figure>
-            <img src="2-3-1-fig-4.png" width="515" height="659" alt="버블 정렬의 한 번의 스캔 (그림 12-15): 5 3 8 1 2 7 에서 이웃한 두 수를 비교해 교환, 한 스캔이 끝나면 가장 큰 8이 맨 뒤로">
+            <img src="2-3-1-fig-8.png" width="515" height="659" alt="버블 정렬의 한 번의 스캔 (그림 12-15): 5 3 8 1 2 7 에서 이웃한 두 수를 비교해 교환, 한 스캔이 끝나면 가장 큰 8이 맨 뒤로">
           </figure>
           <figure>
-            <img src="2-3-1-fig-5.png" width="459" height="657" alt="버블 정렬의 전체 정렬 과정 (그림 12-16): 초기 상태 5 3 8 1 2 7 → 스캔 1 ~ 스캔 5 → 정렬 완료 1 2 3 5 7 8">
+            <img src="2-3-1-fig-9.png" width="459" height="657" alt="버블 정렬의 전체 정렬 과정 (그림 12-16): 초기 상태 5 3 8 1 2 7 → 스캔 1 ~ 스캔 5 → 정렬 완료 1 2 3 5 7 8">
           </figure>
           <figure>
-            <img src="2-3-1-fig-6.png" width="809" height="502" alt="#define SWAP(x, y, t) 와 void bubble_sort(int list[], int n) 코드: i = n-1 부터 1 까지, j = 0 부터 i-1 까지 list[j] &gt; list[j+1] 이면 SWAP">
+            <img src="2-3-1-fig-10.png" width="809" height="502" alt="#define SWAP(x, y, t) 와 void bubble_sort(int list[], int n) 코드: i = n-1 부터 1 까지, j = 0 부터 i-1 까지 list[j] &gt; list[j+1] 이면 SWAP">
           </figure>
         </div>
+        <ul>
+          <li><strong>버블 정렬</strong> : 가장 오래 걸리는 방식 (순서에 맞지 않는 요소를 인접한 요소와 교환하기 때문). 바로 인접해 있는 두 레코드의 키값을 비교하여 순서가 바뀌어 있으면 두 레코드 위치 교환 (인접 교환)
+            <ul>
+              <li>n개면 n-1단계 수행 (매 단계 맨 뒤 데이터는 정렬에서 제외)</li>
+              <li>인접 교환, 안정적, 제자리 정렬</li>
+            </ul>
+          </li>
+          <li><strong>코드와 기출 의사 코드</strong>
+            <ul>
+              <li>안쪽 반복은 j &lt; n-1-i 까지 돌아야 Key[j+1] 이 배열 안에 있다 <span class="fix">원본과 다름 · 원본: “j&lt;n-i”, i=0 일 때 Key[n] 까지 비교해 배열 범위를 넘음</span></li>
+            </ul>
+            <figure>
+              <img src="2-3-1-fig-11.png" width="1335" height="388" alt="BUBBLE_SORT 코드 손글씨 풀이(앞의 값이 뒤의 값보다 크면 둘이 자리를 바꾼다)와, A[5]={38, 26, 7, 15, 19}를 i는 5에서 2까지, j는 2에서 i까지 돌며 A[j-1] &gt; A[j]이면 바꾸는 기출 의사 코드를 C 반복문으로 옮긴 메모.">
+            </figure>
+          </li>
+          <li><strong>처리과정</strong>
+            <figure>
+              <img src="2-3-1-fig-12.png" width="1429" height="387" alt="버블 정렬 처리과정 손글씨 표: 왼쪽은 n=4일 때 i가 0~3으로 늘 때 j가 3, 2, 1, 0까지 도는 모습. 오른쪽은 A=[38, 26, 7, 15, 19]를 기출 의사 코드로 정렬하며 i=5부터 2까지 단계마다 배열이 바뀌어 7 15 19 26 38이 되는 과정.">
+            </figure>
+          </li>
+          <li><strong>성능 분석</strong> : 평균 수행시간 O(n²)
+            <ul>
+              <li><strong>비교 횟수</strong> : 최선·최악·평균 모두 동일, Σ(i=1~n-1) i = n(n-1)/2 = O(n²)</li>
+              <li><strong>이동 횟수</strong>
+                <ul>
+                  <li>최상 : 초기 레코드 배열이 정렬된 순서로 주어진 경우 → 자료 이동이 한 번도 발생하지 않음</li>
+                  <li>최악 : 초기 레코드 배열이 역순으로 주어진 경우 → 비교 횟수 × 3 (∵ SWAP 이 3개의 이동을 포함하기 때문)</li>
+                  <li>평균 : 자료 이동이 0~i까지 같은 확률로 일어남 ⇒ O(n²)</li>
+                </ul>
+              </li>
+              <li><strong>개선</strong> : 매 단계 교환 발생 여부 검사 — 교환이 없으면 이미 전체 정렬이 끝난 것이므로 종료 (하나의 플래그 비트로 정렬 완료 여부 표시)</li>
+            </ul>
+          </li>
+        </ul>
         <ul>
           <li><strong>선택 정렬</strong></li>
         </ul>
         <div class="figs">
           <figure>
-            <img src="2-3-1-fig-7.png" width="468" height="600" alt="선택 정렬의 과정 (그림 12-10): 5 3 8 1 2 7 에서 가장 작은 값을 찾아 맨 앞과 교환 (5와 1 교환, 3과 2 교환, 8과 3 교환, 이미 제자리에 있음, 8과 7 교환) → 정렬 완료">
+            <img src="2-3-1-fig-13.png" width="468" height="600" alt="선택 정렬의 과정 (그림 12-10): 5 3 8 1 2 7 에서 가장 작은 값을 찾아 맨 앞과 교환 (5와 1 교환, 3과 2 교환, 8과 3 교환, 이미 제자리에 있음, 8과 7 교환) → 정렬 완료">
           </figure>
           <figure>
-            <img src="2-3-1-fig-8.png" width="810" height="477" alt="void selection_sort(int list[], int n) 코드: i 마다 least = i, j = i+1 부터 n-1 까지 최소값 탐색 후 SWAP(list[i], list[least], temp)">
+            <img src="2-3-1-fig-14.png" width="810" height="477" alt="void selection_sort(int list[], int n) 코드: i 마다 least = i, j = i+1 부터 n-1 까지 최소값 탐색 후 SWAP(list[i], list[least], temp)">
           </figure>
           <figure>
-            <img src="2-3-1-fig-9.png" width="803" height="1795" alt="기출 22번 (2017학년도 정보컴퓨터 임용): 배열 {8, 3, 7, 2, 1} 을 선택 정렬하는 C 프로그램의 출력 결과, swap() 호출 횟수, 내림차순으로 바꿀 때 ⓐ 문장 쓰기. 모범답안 3, 7 (각(1) 1 2 7 3 8), 3회, if(data[j] &gt; data[key]) key = j;">
+            <img src="2-3-1-fig-15.png" width="803" height="1795" alt="기출 22번 (2017학년도 정보컴퓨터 임용): 배열 {8, 3, 7, 2, 1} 을 선택 정렬하는 C 프로그램의 출력 결과, swap() 호출 횟수, 내림차순으로 바꿀 때 ⓐ 문장 쓰기. 모범답안 3, 7 (각(1) 1 2 7 3 8), 3회, if(data[j] &gt; data[key]) key = j;">
           </figure>
         </div>
+        <ul>
+          <li><strong>선택 정렬 (=위치 교환 방식)</strong> : 입력 레코드에서 가장 작은 키 값을 갖는 레코드를 찾아 첫 번째 위치 레코드와 교환, 나머지 레코드 중에서 가장 작은 키 값을 갖는 레코드를 찾아 두 번째 위치 레코드와 교환 (오른쪽이 공백 상태일 때까지 되풀이)
+            <ul>
+              <li>왼쪽 : 정렬이 완료된 레코드들 / 오른쪽 : 정렬되지 않은 레코드들</li>
+              <li>안정성 X : 먼 거리에서 교체하는 레코드들은 안정성 보장이 어려움 (ex. 1 3ᵃ … 3ᵇ 2 에서 3ᵃ와 2가 바뀌면 3ᵇ가 3ᵃ보다 앞에 옴)</li>
+              <li>제자리 정렬 O, 위치 교환</li>
+            </ul>
+          </li>
+          <li><strong>SELECT_SORT 코드 풀이</strong>
+            <figure>
+              <img src="2-3-1-fig-16.png" width="1218" height="476" alt="SELECT_SORT 코드 손글씨 풀이: i는 0~n-2까지(n-2까지 정렬되면 맨 끝은 어차피 가장 큰 값), j는 i+1부터 n-1까지 돌며 최솟값 위치 min_position을 저장(위치 교환 방식)한 뒤 swap. 오른쪽은 a b c d e (n=5)에서 i마다 min_position과 j 값을 적은 예.">
+            </figure>
+          </li>
+          <li><strong>성능</strong>
+            <ul>
+              <li><strong>비교 횟수</strong> : O(n²)</li>
+              <li><strong>교환 횟수</strong> : 교환은 매 단계 끝날 때만 1번 → 많아야(역순이어야) O(n-1) = O(n)
+                <ul>
+                  <li>교환 횟수 = 외부 루프 실행 횟수, 한 번 교환하려면 3번 이동이 필요 → 전체 이동 횟수 3(n-1)</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>2017 기출 변형</strong>
+            <figure>
+              <img src="2-3-1-fig-17.png" width="1223" height="1357" alt="2017 기출 변형 38번: data[8]={4, 7, 3, 1, 5, 8, 2, 6}을 선택 정렬하는 C 프로그램. i==3일 때 출력 1 2 3 4 5 8 7 6, swap 호출 3번, 내림차순이면 key = (data[j] &gt; data[key]) ? j : key; 손글씨로 i=0~7 단계별 배열 변화를 적었다.">
+            </figure>
+          </li>
+        </ul>
         <ul>
           <li><strong>합병 정렬</strong></li>
         </ul>
         <div class="figs">
           <figure>
-            <img src="2-3-1-fig-10.png" width="743" height="603" alt="2개의 정렬된 리스트를 합병하는 과정 (그림 12-20): 배열 A 2 5 7 8 과 배열 B 1 3 4 6 의 맨 앞끼리 비교해 작은 값을 배열 C 로 옮김 → 1 2 3 4 5 6 7 8">
+            <img src="2-3-1-fig-18.png" width="743" height="603" alt="2개의 정렬된 리스트를 합병하는 과정 (그림 12-20): 배열 A 2 5 7 8 과 배열 B 1 3 4 6 의 맨 앞끼리 비교해 작은 값을 배열 C 로 옮김 → 1 2 3 4 5 6 7 8">
           </figure>
           <figure>
-            <img src="2-3-1-fig-11.png" width="548" height="471" alt="merge의 환경 (그림 12-21): list 의 정렬된 왼쪽 리스트(low ~ mid)와 오른쪽 리스트(mid+1 ~ right)를 인덱스 i, j 로 비교해 sorted 배열의 k 자리에 넣음">
+            <img src="2-3-1-fig-19.png" width="548" height="471" alt="merge의 환경 (그림 12-21): list 의 정렬된 왼쪽 리스트(low ~ mid)와 오른쪽 리스트(mid+1 ~ right)를 인덱스 i, j 로 비교해 sorted 배열의 k 자리에 넣음">
           </figure>
           <figure>
-            <img src="2-3-1-fig-12.png" width="734" height="954" alt="void merge(int list[], int left, int mid, int right) 코드: i 는 왼쪽, j 는 오른쪽, k 는 sorted 인덱스. 분할 정렬된 list 를 합병하고, 남아 있는 레코드를 일괄 복사한 뒤 sorted[] 를 list[] 로 재복사">
+            <img src="2-3-1-fig-20.png" width="734" height="954" alt="void merge(int list[], int left, int mid, int right) 코드: i 는 왼쪽, j 는 오른쪽, k 는 sorted 인덱스. 분할 정렬된 list 를 합병하고, 남아 있는 레코드를 일괄 복사한 뒤 sorted[] 를 list[] 로 재복사">
           </figure>
           <figure>
-            <img src="2-3-1-fig-13.png" width="595" height="234" alt="void merge_sort(int list[], int left, int right) 코드: left &lt; right 이면 mid = (left + right) / 2 로 균등 분할, 두 부분 리스트를 각각 merge_sort 한 뒤 merge">
+            <img src="2-3-1-fig-21.png" width="595" height="234" alt="void merge_sort(int list[], int left, int right) 코드: left &lt; right 이면 mid = (left + right) / 2 로 균등 분할, 두 부분 리스트를 각각 merge_sort 한 뒤 merge">
           </figure>
           <figure>
-            <img src="2-3-1-fig-14.png" width="1334" height="1541" alt="기출 4번 (2022학년도 정보컴퓨터 임용): 두 개의 정렬된 연결 리스트를 합병하는 mergelist() 함수의 빈칸 ㉠ ~ ㉣ 쓰기. 모범답안 ㉠ head = a; rear = a; ㉡ head = b; rear = b; ㉢ rear-&gt;next = b; ㉣ rear-&gt;next = a; 와 처리 과정 그림">
+            <img src="2-3-1-fig-22.png" width="1334" height="1541" alt="기출 4번 (2022학년도 정보컴퓨터 임용): 두 개의 정렬된 연결 리스트를 합병하는 mergelist() 함수의 빈칸 ㉠ ~ ㉣ 쓰기. 모범답안 ㉠ head = a; rear = a; ㉡ head = b; rear = b; ㉢ rear-&gt;next = b; ㉣ rear-&gt;next = a; 와 처리 과정 그림">
           </figure>
         </div>
+        <ul>
+          <li><strong>합병 정렬</strong> : 하나의 리스트를 균등한 크기로 분할하고 분할된 부분 리스트를 정렬한 다음, 리스트를 합하여 전체가 정렬된 리스트를 얻음 (대개 순환 호출 이용)
+            <ul>
+              <li>① 분할 : 입력 배열을 같은 크기의 2개의 배열로 분할</li>
+              <li>② 정복 : 부분 배열을 정렬 (부분 배열의 크기가 충분히 작지 않으면 순환 호출을 이용해 다시 분할 정복 기법 적용)</li>
+              <li>③ 결합 : 정렬된 부분 배열들을 하나의 배열에 통합 (합병 시에도 합병 정렬을 순환적으로 적용)</li>
+            </ul>
+          </li>
+          <li><strong>반복 합병 정렬</strong>
+            <ul>
+              <li>① 입력 리스트를 길이가 1인 n개의 정렬된 서브리스트로 간주</li>
+              <li>② 리스트들을 쌍으로 합병하여 크기가 2인 n/2개의 리스트를 얻음</li>
+              <li>③ 리스트들을 쌍으로 합병하여 크기가 4인 n/4개의 리스트를 얻음 …</li>
+              <li>④ 하나의 서브리스트가 남을 때까지 계속</li>
+              <li>mergePass 의 n : 리스트 요소 개수, s : 정렬된 각 세그먼트의 사이즈</li>
+            </ul>
+            <figure>
+              <img src="2-3-1-fig-23.png" width="485" height="209" alt="반복 합병 정렬: 26 5 77 1 61 11 59 15 48 19 를 길이 1부터 쌍으로 합병해 길이 2, 4, 8로 늘려 1 5 11 15 19 26 48 59 61 77 이 되는 과정.">
+            </figure>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>void mergePass(element initList[], element mergedList[],<br>               int n, int s)<br>{/* perform one pass of the merge sort, merge adjacent<br>    pairs of sorted segments from initList[] into mergedList[],<br>    n is the number of elements in the list, s is<br>    the size of each sorted segment */<br>  int i,j;<br>  for (i = 1; i &lt;= n - 2 * s + 1; i += 2 * s)<br>    merge(initList,mergedList,i,i + s - 1,i + 2 * s - 1);<br>  if (i + s - 1 &lt; n)<br>    merge(initList,mergedList,i,i + s - 1,n);<br>  else<br>    for (j = i; j &lt;= n; j++)<br>      mergedList[j] = initList[j];<br>}<br><br>void mergeSort(element a[], int n)<br>{/* sort a[1:n] using the merge sort method */<br>  int s = 1; /* current segment size */<br>  element extra[MAX_SIZE];<br><br>  while (s &lt; n) {<br>    mergePass(a, extra, n, s);<br>    s *= 2;<br>    mergePass(extra, a, n, s);<br>    s *= 2;<br>  }<br>}</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>순환 합병 정렬 → 분할 정복 알고리즘</strong>
+            <ul>
+              <li>① 분할 : 정렬할 리스트를 거의 똑같이 2개로 나누어 left 서브리스트와 right 서브리스트로 만듦</li>
+              <li>② 정복 : 서브리스트들은 순환적으로 정렬됨</li>
+              <li>③ 합병 : 정렬된 서브리스트들을 합병 → 두 리스트의 요소들을 처음부터 하나씩 비교하여 더 작은 요소를 새로운 리스트로 옮김. 둘 중 하나의 리스트가 먼저 끝나면 나머지 리스트 요소들을 전부 새로운 리스트로 복사</li>
+            </ul>
+            <figure>
+              <img src="2-3-1-fig-24.png" width="1207" height="798" alt="merge_sort와 merge 의사 코드: left &lt; right이면 중간 위치를 계산해 앞쪽·뒤쪽 부분 배열을 순환 호출로 정렬(실제 정렬)하고 합병한다. merge는 i, j, k로 두 부분 배열을 비교해 sorted에 옮기고, 손글씨로 배열 A 2 5 7 8과 배열 B 1 3 4 6이 배열 C 1 2 3 4 5 6 7 8로 합쳐지는 과정을 적었다.">
+            </figure>
+            <figure>
+              <img src="2-3-1-fig-25.png" width="1265" height="1110" alt="merge와 merge_sort C 코드 손글씨 풀이: 추가 공간 sorted[MAX_SIZE]가 필요하고, 두 리스트 중 하나가 먼저 끝나면 남은 쪽을 일괄 복사한다. 오른쪽 Q&amp;A: 굳이 l을 써서 복사하는 이유는 sorted[]의 정렬된 값을 list[]로 재복사하기 위해서이고, 재복사는 다음 단계 합병을 위해 list[]로 옮기는 것이다. merge_sort에는 분할·정복·합병 표시.">
+            </figure>
+          </li>
+          <li><strong>복잡도 분석</strong>
+            <ul>
+              <li><strong>비교 연산</strong> : 하나의 합병 단계에서 최대 n번 비교, 합병 단계 수 k = log₂n → 총 비교 연산 n log₂n ⇒ O(n log₂n)</li>
+              <li><strong>이동 연산</strong> : 하나의 합병 단계에서 2n번 (임시 배열에 복사했다가 다시 가져와야 하므로), 합병 단계 log₂n → 총 이동 연산 2n log₂n ⇒ O(n log₂n)</li>
+            </ul>
+            <figure>
+              <img src="2-3-1-fig-26.png" width="1173" height="495" alt="합병 정렬 복잡도 그림: 27 10 12 20 25 13 15 22를 분할·합병하는 트리 옆에, 합병 단계마다 최대 8번 비교(2×4, 4×2, 8×1)하고 합병 단계 수는 log₂n이라 총 비교 n log₂n, 이동은 단계마다 2n이라 총 2n log₂n, 모두 O(n log₂n)이라고 적었다.">
+            </figure>
+          </li>
+          <li><strong>장점</strong> : ① 안정적 ② 데이터 분포에 영향을 적게 받음 → 최선·최악·평균 모두 O(n log₂n)</li>
+          <li><strong>단점</strong> : ① 임시 배열 필요 ② 레코드들의 크기가 큰 경우 이동 횟수가 많으므로 큰 시간적 낭비 초래 (→ 연결 리스트를 사용하면 효율적)</li>
+        </ul>
         <ul>
           <li><strong>퀵 정렬</strong>
             <ul>
@@ -125,50 +349,175 @@
         </ul>
         <div class="figs">
           <figure>
-            <img src="2-3-1-fig-15.png" width="656" height="592" alt="퀵 정렬에서 피벗을 기준으로 두 개의 리스트로 나누는 과정: left 에서 오른쪽으로 low, right 에서 왼쪽으로 high 를 움직여 피벗보다 큰 값과 작은 값을 교환하고, low 와 high 가 엇갈리면 피벗과 high 를 교환">
+            <img src="2-3-1-fig-27.png" width="656" height="592" alt="퀵 정렬에서 피벗을 기준으로 두 개의 리스트로 나누는 과정: left 에서 오른쪽으로 low, right 에서 왼쪽으로 high 를 움직여 피벗보다 큰 값과 작은 값을 교환하고, low 와 high 가 엇갈리면 피벗과 high 를 교환">
           </figure>
           <figure>
-            <img src="2-3-1-fig-16.png" width="477" height="461" alt="퀵 정렬의 전체 과정 (그림 12-24): 5 3 8 4 9 1 6 2 7 → 피벗 5 기준 분할 → 각 부분 리스트를 다시 분할 → 1 2 3 4 5 6 7 8 9">
+            <img src="2-3-1-fig-28.png" width="477" height="461" alt="퀵 정렬의 전체 과정 (그림 12-24): 5 3 8 4 9 1 6 2 7 → 피벗 5 기준 분할 → 각 부분 리스트를 다시 분할 → 1 2 3 4 5 6 7 8 9">
           </figure>
           <figure>
-            <img src="2-3-1-fig-17.png" width="880" height="955" alt="int partition(int list[], int left, int right) 코드: pivot = list[left], low = left, high = right + 1. do-while 로 low 는 pivot 보다 작은 동안 증가, high 는 pivot 보다 큰 동안 감소, low &lt; high 이면 SWAP. 끝나면 list[left] 와 list[high] 를 SWAP 하고 high 반환">
+            <img src="2-3-1-fig-29.png" width="880" height="955" alt="int partition(int list[], int left, int right) 코드: pivot = list[left], low = left, high = right + 1. do-while 로 low 는 pivot 보다 작은 동안 증가, high 는 pivot 보다 큰 동안 감소, low &lt; high 이면 SWAP. 끝나면 list[left] 와 list[high] 를 SWAP 하고 high 반환">
           </figure>
           <figure>
-            <img src="2-3-1-fig-18.png" width="1326" height="1661" alt="기출 6번 (2021학년도 정보컴퓨터 임용): 퀵 정렬 C 프로그램 partition()·quicksort() 에서 배열 a = {43, 87, 15, 32, 29, 76, 65, 1000} 일 때 ㉠ ㉡ 출력 결과 쓰기. 모범답안 ㉠ 첫 번째 32 29 15 43 87 76 65, 두 번째 15 29 32 43 87 76 65, ㉡ 3 2 0 6 4, 단계별 배열 변화 풀이">
+            <img src="2-3-1-fig-30.png" width="1326" height="1661" alt="기출 6번 (2021학년도 정보컴퓨터 임용): 퀵 정렬 C 프로그램 partition()·quicksort() 에서 배열 a = {43, 87, 15, 32, 29, 76, 65, 1000} 일 때 ㉠ ㉡ 출력 결과 쓰기. 모범답안 ㉠ 첫 번째 32 29 15 43 87 76 65, 두 번째 15 29 32 43 87 76 65, ㉡ 3 2 0 6 4, 단계별 배열 변화 풀이">
           </figure>
           <figure>
-            <img src="2-3-1-fig-19.png" width="804" height="1454" alt="기출 14번 (2019학년도 정보컴퓨터 임용): partition(0, 5) 를 List = {7, 1, 9, 5, 3, 8} 에 수행했을 때 반환값과 List[3] 값 쓰기. 모범답안 3, 7 (각 1점), 단계별 배열 변화 풀이">
+            <img src="2-3-1-fig-31.png" width="804" height="1454" alt="기출 14번 (2019학년도 정보컴퓨터 임용): partition(0, 5) 를 List = {7, 1, 9, 5, 3, 8} 에 수행했을 때 반환값과 List[3] 값 쓰기. 모범답안 3, 7 (각 1점), 단계별 배열 변화 풀이">
           </figure>
           <figure>
-            <img src="2-3-1-fig-20.png" width="1333" height="1629" alt="기출 29번 (2011학년도 정보컴퓨터 임용): 배열 A = {3, 9, 8, 2, 5} 에 partition(A, 0, 4) 를 수행한 결과, 변수 i 의 용도, 학습자 평가 기준 고르기. 정답 1번, 단계별 배열 변화 풀이">
+            <img src="2-3-1-fig-32.png" width="1333" height="1629" alt="기출 29번 (2011학년도 정보컴퓨터 임용): 배열 A = {3, 9, 8, 2, 5} 에 partition(A, 0, 4) 를 수행한 결과, 변수 i 의 용도, 학습자 평가 기준 고르기. 정답 1번, 단계별 배열 변화 풀이">
           </figure>
         </div>
+        <ul>
+          <li><strong>퀵 정렬 특징</strong>
+            <ul>
+              <li>가장 좋은 평균 성능</li>
+              <li>순환을 통해 대상 분할 (피봇에 따라 균등 분할이 되기도, 아니기도 함)</li>
+              <li>안정적 X, 제자리 정렬 O (stack 이 필요하긴 함)</li>
+            </ul>
+          </li>
+          <li><strong>성능</strong>
+            <ul>
+              <li><strong>최선 O(n log n)</strong> : 매번 똑같이 절반으로 나눠지는 경우 (균등 분할) → 최대 순환 깊이가 log n 이 되어 스택 공간으로 O(log n) 필요</li>
+              <li><strong>최악 O(n²)</strong> : 순환의 각 단계에서 크기가 n-1인 왼쪽 서브리스트와 크기가 0인 오른쪽 서브리스트로 나눠지는 경우 (피봇이 가장 큰/작은 값) → 순환 깊이가 n 이 되어 O(n) 스택 공간 필요</li>
+              <li><strong>평균 분석</strong> : n개 레코드를 가지는 리스트 → n/2, n/4, n/8, …, n/2ᵏ 크기로 나눠짐
+                <ul>
+                  <li>크기가 1이 될 때까지 나눠짐 ∴ n/2ᵏ = 1 ⇒ k = log₂n 개의 패스 필요</li>
+                  <li>각 패스에서는 전체 리스트의 대부분 레코드를 비교 → 평균 n번 비교</li>
+                  <li>⇒ n × log₂n = n log₂n, O(n log₂n) (레코드 이동 횟수는 비교 횟수보다 작아서 무시)</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>코드</strong></li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>void QUICK_SORT(int Key[], int left_pos, int right_pos) {<br>    int i, j, pivot_key, temp;<br>    i = left_pos; j = right_pos+1;<br>    pivot_key = Key[left_pos];<br>    if(left_pos &lt; right_pos) {<br>        do {<br>            while(Key[++i] &lt;= pivot_key);<br>            while(Key[--j] &gt; pivot_key);<br>            if(i &lt; j) {<br>                temp = Key[i];<br>                Key[i] = Key[j];<br>                Key[j] = temp;<br>            }<br>        }while (i &lt; j);<br>        temp = Key[left_pos];<br>        Key[left_pos] = Key[j];<br>        Key[j] = temp;<br>        QUICK_SORT(Key, left_pos, j-1);<br>        QUICK_SORT(Key, j+1, right_pos);<br>    }<br>}</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>이석호 ver</strong>
+            <figure>
+              <img src="2-3-1-fig-33.png" width="901" height="700" alt="이석호 교재의 quickSort 코드: a[left].key를 피봇으로 i는 왼쪽에서, j는 오른쪽에서 찾아 교환하고 마지막에 a[left]와 a[j]를 바꾼 뒤 순환 호출한다. 손글씨: temp는 swap에 사용할 변수, left &lt; right는 데이터 개수가 최소 2개 이상(1개면 정렬 마무리).">
+            </figure>
+            <figure>
+              <img src="2-3-1-fig-34.png" width="780" height="267" alt="이석호 quickSort 수행 표: R1~R10 = 26 5 37 1 61 11 59 15 48 19 를 피봇(동그라미)으로 나누며 left, right 구간이 바뀌어 1 5 11 15 19 26 37 48 59 61 로 정렬되는 과정.">
+            </figure>
+          </li>
+          <li><strong>2003 기출</strong> : 퀵 정렬을 기반으로 배열에서 k번째로 작은 수를 찾는 순환 프로그램
+            <figure>
+              <img src="2-3-1-fig-35.png" width="1153" height="1440" alt="2003 기출 44번: kthSelect(list, k, left, right)의 빈칸 ①②③. 손글씨 답: ① k == j+1 (k번째 값 찾음), ② 왼쪽에 존재하면 kthSelect(list, k, left, j-1), ③ 오른쪽에 존재하면 kthSelect(list, k, j+1, right).">
+            </figure>
+          </li>
+          <li><strong>2007 기출 – 복잡도 계산</strong>
+            <figure>
+              <img src="2-3-1-fig-36.png" width="1385" height="1552" alt="2007 기출 44번: Quick-Sort 코드에서 list[left] ≤ list[right+1]을 가정하려고 끝에 ∞를 추가하는 이유, 이를 쓰지 않을 때 while(list[i] &lt;= pivot &amp;&amp; i &lt;= right) i++;로 고치기, 최선 T(n) ≤ cn + 2T(n/2) … = O(n log₂n)과 최악 cn(n-1) = O(n²) 손글씨 풀이, 데이터 60 50 13 92 52 2 69 30 78 42의 첫 단계 결과 30 50 13 42 52 2 60 69 78 92.">
+            </figure>
+          </li>
+        </ul>
         <ul>
           <li><strong>힙 정렬</strong>
             <ul>
               <li>힙 트리 안에 데이터 삽입 &amp; 삭제하면서 정렬 → 새로운 배열에 옮기면 정렬 완성</li>
               <li>힙 트리 삽입
                 <figure>
-                  <img src="2-3-1-fig-21.png" width="840" height="592" alt="void insert_max_heap(HeapType* h, element item) 코드: i = ++(h-&gt;heap_size) 로 맨 끝에 자리를 만들고, i 가 1 이 아니고 item.key 가 부모 키보다 크면 부모를 아래로 내리며 i /= 2, 마지막에 h-&gt;heap[i] = item">
+                  <img src="2-3-1-fig-37.png" width="840" height="592" alt="void insert_max_heap(HeapType* h, element item) 코드: i = ++(h-&gt;heap_size) 로 맨 끝에 자리를 만들고, i 가 1 이 아니고 item.key 가 부모 키보다 크면 부모를 아래로 내리며 i /= 2, 마지막에 h-&gt;heap[i] = item">
                 </figure>
               </li>
               <li>힙 트리 삭제
                 <figure>
-                  <img src="2-3-1-fig-22.png" width="949" height="968" alt="element delete_max_heap(HeapType* h) 코드: item = heap[1], temp = heap[(h-&gt;heap_size)--] (가장 작은 값 가진 노드 값이 temp), parent = 1, child = 2 부터 더 큰 자식과 비교해 temp 가 작으면 자식을 위로 올리며 한 단계 아래로 이동, 마지막에 heap[parent] = temp, item 반환">
+                  <img src="2-3-1-fig-38.png" width="949" height="968" alt="element delete_max_heap(HeapType* h) 코드: item = heap[1], temp = heap[(h-&gt;heap_size)--] (가장 작은 값 가진 노드 값이 temp), parent = 1, child = 2 부터 더 큰 자식과 비교해 temp 가 작으면 자식을 위로 올리며 한 단계 아래로 이동, 마지막에 heap[parent] = temp, item 반환">
                 </figure>
               </li>
             </ul>
           </li>
         </ul>
         <figure>
-          <img src="2-3-1-fig-23.png" width="731" height="1734" alt="기출 38번 (2010학년도 정보컴퓨터 임용): construct()·heapSort() 로 작성된 힙 정렬 프로그램에 대한 설명으로 옳은 것 고르기 (ary = {0, 20, 15, 6, 28, 12, 10, 9}). 정답 4번 (ㄴ ㄷ ㄹ), 해설: ㄱ은 buf &lt;= ary[k] (최소 힙이기 때문), ㅁ은 내림차순으로 정렬">
+          <img src="2-3-1-fig-39.png" width="731" height="1734" alt="기출 38번 (2010학년도 정보컴퓨터 임용): construct()·heapSort() 로 작성된 힙 정렬 프로그램에 대한 설명으로 옳은 것 고르기 (ary = {0, 20, 15, 6, 28, 12, 10, 9}). 정답 4번 (ㄴ ㄷ ㄹ), 해설: ㄱ은 buf &lt;= ary[k] (최소 힙이기 때문), ㅁ은 내림차순으로 정렬">
         </figure>
+        <ul>
+          <li><strong>힙 정렬 (힙 트리 이용) → O(n log n)</strong>
+            <ul>
+              <li>하향식 (2*n) (힙트리는 상향식 - n/2)</li>
+              <li>순서 : 1) 배열값 → 2) 완전 이진트리 구성 → 3) 힙트리로 변환 → 4) 힙 정렬
+                <ul>
+                  <li>3) 힙트리로 변환 : ① adjust (간노드 대상) — 많아야 완전 이진트리 높이 O(log₂n)</li>
+                  <li>4) 힙 정렬 : ② swap (root &amp; 마지막 노드) 후 전체 노드 개수 -1, adjust (root부터 재구성) → O(log₂n)</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>최대 힙의 조정 adjust → O(d) (d: 트리의 깊이) / 힙 정렬 heapSort</strong>
+            <figure>
+              <img src="2-3-1-fig-40.png" width="1249" height="548" alt="이석호 교재의 adjust와 heapSort 코드 손글씨 풀이: adjust는 두 자식 중 큰 쪽과 root key를 비교해 내려가며 자리를 찾는다. heapSort는 i=n/2부터 간노드를 대상으로 초기 힙트리를 만들고(n/2번), 이어 a[1]과 a[i+1]을 SWAP하고 adjust(a,1,i)로 다시 힙을 만든다(n-1번). 트리의 깊이 k=⌈log₂(n+1)⌉, adjust·SWAP n-1번 호출 → O(n log n).">
+            </figure>
+          </li>
+          <li><strong>2010 기출</strong>
+            <figure>
+              <img src="2-3-1-fig-41.png" width="1418" height="1985" alt="2010 기출 40번 힙 정렬 프로그램: ary[]={0, 25, 3, 81, 2, 60, 10, 58, 16, 47, 17}에서 ㉮ buf &lt;= ary[k], 첫 번째 for문 뒤 ary = 0 25 2 10 3 17 81 58 16 47 60 같은 답과 construct 호출마다 트리가 바뀌는 과정을 손글씨로 추적했다.">
+            </figure>
+          </li>
+        </ul>
         <ul>
           <li><strong>기수 정렬</strong></li>
         </ul>
         <figure>
-          <img src="2-3-1-fig-24.png" width="1014" height="681" alt="void radix_sort(int list[], int n) 코드: 큐 BUCKETS 개를 초기화하고, 자릿수 d 마다 (list[i] / factor) % 10 번 버킷 큐에 넣은 뒤 버킷 0 부터 꺼내 list 로 합침, factor *= 10 으로 다음 자리로 이동">
+          <img src="2-3-1-fig-42.png" width="1014" height="681" alt="void radix_sort(int list[], int n) 코드: 큐 BUCKETS 개를 초기화하고, 자릿수 d 마다 (list[i] / factor) % 10 번 버킷 큐에 넣은 뒤 버킷 0 부터 꺼내 list 로 합침, factor *= 10 으로 다음 자리로 이동">
         </figure>
+        <ul>
+          <li><strong>기수 정렬 특징</strong>
+            <ul>
+              <li>레코드를 비교하지 않고 정렬하는 방법</li>
+              <li>장점 : 레코드를 비교하지 않고 정렬하여 빠름 / 단점 : 정렬할 수 있는 레코드 타입이 한정적</li>
+              <li>단계 수 = 키의 자릿수 <span class="fix">원본과 다름 · 원본: “단계수 = 데이터수”, 기수 정렬의 단계(패스) 수는 자릿수 d 와 같음</span></li>
+              <li>큐로 구현 (각각의 버킷에서 먼저 들어간 숫자는 먼저 나와야 함)</li>
+              <li>버킷의 개수 → 키의 표현 방법과 관련 (ex. 2진수 2개, 10진수 10개)</li>
+            </ul>
+          </li>
+          <li><strong>복잡도</strong>
+            <ul>
+              <li>키 : MSD(최상위) … LSD(최하위) 자리. n : 정렬해야 할 키 개수, d : 자리수, r : 진수 (10진수면 r = 10)</li>
+              <li>※ 구현의 편의를 위해 일반적으로 LSD 방식으로 함 (성능 차이 X)</li>
+              <li>LSD → MSD 로 자리수 d만큼 반복 : ① 각 Queue 에 데이터 분산 배치 (데이터 개수 n만큼 수행) → d·n ② Queue 병합 : 데이터 재구성 (Queue 의 개수만큼 수행) → d·r</li>
+              <li>O(dn + dr) (dn, dr 중 더 큰 값을 수행시간으로 인정) = O(d(n+r)) = O(n)</li>
+            </ul>
+          </li>
+          <li><strong>radix_sort 가 쓰는 원형 큐</strong></li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>#include &lt;stdio.h&gt;<br>#include &lt;stdlib.h&gt;<br><br>#define MAX_QUEUE_SIZE 100<br>typedef int element;<br><br>typedef struct {     // 큐 타입<br>    element data[MAX_QUEUE_SIZE];<br>    int front, rear;<br>} QueueType;<br><br>// 오류 함수<br>void error(char *message)<br>{<br>    fprintf(stderr, &quot;%s\n&quot;, message);<br>    exit(1);<br>}<br><br>// 초기화 함수<br>void init_queue(QueueType *q)<br>{<br>    q-&gt;front = q-&gt;rear = 0;<br>}<br><br>// 공백 상태 검출 함수<br>int is_empty(QueueType *q)<br>{<br>    return (q-&gt;front == q-&gt;rear);<br>}<br><br>// 포화 상태 검출 함수<br>int is_full(QueueType *q)<br>{<br>    return ((q-&gt;rear + 1) % MAX_QUEUE_SIZE == q-&gt;front);<br>}<br><br>// 삽입 함수<br>void enqueue(QueueType *q, element item)<br>{<br>    if (is_full(q))<br>        error(&quot;큐가 포화상태입니다&quot;);<br>    q-&gt;rear = (q-&gt;rear + 1) % MAX_QUEUE_SIZE;<br>    q-&gt;data[q-&gt;rear] = item;<br>}<br><br>// 삭제 함수<br>element dequeue(QueueType *q)<br>{<br>    if (is_empty(q))<br>        error(&quot;큐가 공백상태입니다&quot;);<br>    q-&gt;front = (q-&gt;front + 1) % MAX_QUEUE_SIZE;<br>    return q-&gt;data[q-&gt;front];<br>}</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>사용 예 (#define BUCKETS 10, #define DIGITS 4)</strong></li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>#define SIZE 10<br><br>int main(void)<br>{<br>    int list[SIZE];<br>    srand(time(NULL));<br>    for (int i = 0; i&lt;SIZE; i++)   // 난수 생성 및 출력<br>        list[i] = rand() % 100;<br><br>    radix_sort(list, SIZE);        // 기수정렬 호출<br>    for (int i = 0; i&lt;SIZE; i++)<br>        printf(&quot;%d &quot;, list[i]);<br>    printf(&quot;\n&quot;);<br>    return 0;<br>}</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>2018 기출</strong>
+            <figure>
+              <img src="2-3-1-fig-43.png" width="1365" height="1754" alt="2018 기출 46번: 10진수 세 자리 수 127, 145, 870, 252, 325, 691, 471, 512를 radixsort(A, 8)로 정렬할 때 ㉠ Q[2] 출력(252 512 / 325 127), ㉡ 배열 A 출력(870 691 471 252 512 145 325 127 / 512 325 127 145 252 870 471 691), 시간 복잡도 O(d(n+r))를 손글씨로 푼 문제.">
+            </figure>
+          </li>
+        </ul>
+        <ul>
+          <li><strong>계수 정렬 (Count sort)</strong>
+            <ul>
+              <li>안정적 O</li>
+              <li>제자리 정렬 X (B 라는 추가 공간 필요)</li>
+              <li>시간 복잡도 O(n+m) (n : 원소 개수, m : 키의 범위 — 둘 중 큰 쪽)</li>
+              <li><strong>기출 43번</strong>
+                <figure>
+                  <img src="2-3-1-fig-44.png" width="1367" height="1792" alt="계수 정렬 문제: 1, 2, 3만 든 배열 A=[2 1 3 3 1 1 2 1 2 1]을 count 배열로 개수를 세고 누적(count[i] += count[i-1])한 뒤, 뒤에서부터 B[count[A[j]]] = A[j]; count[A[j]]--;로 넣어 B=[1 1 1 1 1 2 2 2 3 3]을 만드는 과정. 시간 복잡도 Θ(N) 또는 O(m+n).">
+                </figure>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </section>
     </article>
     <article class="topic" id="n-2-3-2">
@@ -178,7 +527,111 @@
       <!-- 칸: Word 원고(노트 원고/…/2-3 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-2-3-2-1">
         <h3>탐색 알고리즘</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>탐색 알고리즘의 분류</strong>
+            <ul>
+              <li><strong>자료구조(DS)</strong> : 구조 + 처리, 처리는 다시 탐색과 정렬로 나뉨</li>
+              <li><strong>탐색의 종류</strong> : (선형) 순차 탐색, 제어 탐색, 해싱, 트리
+                <ul>
+                  <li><strong>제어 탐색</strong> : 데이터가 정렬되어 있다고 가정 → 이진 탐색, 피보나치 탐색, 보간 탐색</li>
+                  <li><strong>해싱</strong> : 우수한 수행 시간</li>
+                  <li>공통 : 탐색 키 지정 + 분할</li>
+                </ul>
+                <figure>
+                  <img src="2-3-2-fig-1.png" width="624" height="343" alt="자료구조(DS)를 구조와 처리로, 처리를 탐색과 정렬로 나누고, 탐색을 (선형) 순차 탐색·제어 탐색·해싱(2018)으로 나눈 트리. 제어 탐색 아래 이진 탐색(2004, 균등 분할 (L+R)/2), 피보나치(2016, 나눗셈 안 하기 위해, 불균등 분할), 보간 탐색(2010, 위치 예상), 트리가 있다.">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>순차 탐색</strong>
+            <ul>
+              <li>데이터 가공 없이 처음부터 탐색하기</li>
+              <li><strong>장점</strong> : 단순하고 어떤 상황에서도 사용될 수 있다</li>
+              <li><strong>단점</strong> : 비효율적 (n개의 입력 자료에 대해서 평균적으로 n/2번의 비교를 해야 함)</li>
+              <li><strong>비순서 파일에서의 선형 검색</strong> : 특정 레코드가 없어도 끝까지 탐색해 봐야 함
+                <figure>
+                  <img src="2-3-2-fig-2.png" width="779" height="368" alt="LINEAR_SEARCH(search_key, Key[], n) 코드. index를 -1에서 시작해 하나씩 늘리며 Key[index]와 search_key를 비교하고, 끝까지 못 찾으면 -1을 돌려준다는 손글씨 메모(최악의 경우 끝까지 뒤졌는데 찾지도 못함)가 붙어 있다.">
+                </figure>
+              </li>
+              <li><strong>순서 파일에서의 선형 검색</strong> : 검색 중간에 존재하지 않는 레코드의 판별이 가능
+                <ul>
+                  <li>하지만 끝까지 가 봐야 하는 경우가 여전히 존재 (최악: O(n), 최선: O(1))
+                    <figure>
+                      <img src="2-3-2-fig-3.png" width="957" height="368" alt="정렬된 파일용 순차 탐색 코드. while 조건에 Key[index] &lt; search_key 를 넣어, 데이터가 없어서 실패하는 경우를 더 빨리 알아챌 수 있다는 손글씨 메모가 붙어 있다.">
+                    </figure>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>이진 탐색</strong>
+            <ul>
+              <li>파일의 중간 위치부터 검색 시작</li>
+              <li>데이터가 순서화된 파일 내에서만 가능한 검색 방법</li>
+              <li><strong>장점</strong> : 단순하고 알고리즘 구현이 용이
+                <ul>
+                  <li>평균 검색 시간이 log의 성질을 가지므로 N이 큰 경우 유리 (O(log n)이 평균, 최악이어도 log를 벗어나지 않음)</li>
+                </ul>
+              </li>
+              <li><strong>단점</strong> : 초기 레코드들이 일정한 정렬 순서를 유지해야 함 (+ 나눗셈을 해야 함)
+                <ul>
+                  <li>레코드 삽입, 삭제 시 평균적으로 N/2개의 레코드를 이동해야 함</li>
+                </ul>
+              </li>
+              <li><strong>비교</strong> : key &lt; List[mid] 이면 왼쪽, key = List[mid] 이면 찾음, key &gt; List[mid] 이면 오른쪽
+                <figure>
+                  <img src="2-3-2-fig-4.png" width="1040" height="706" alt="key와 List[mid]의 세 가지 비교 경우, binsearch(List, searchnum, left, right) 반복 코드(순환으로 바꾸면 return binsearch(List, searchnum, left, middle-1) / (…, middle+1, right)), 최악 시간 O(log₂n)·평균 O(log₂n − 1) 메모, 오른쪽에 10을 루트로 한 이진 탐색 트리 그림.">
+                </figure>
+                <figure>
+                  <img src="2-3-2-fig-5.png" width="781" height="380" alt="칠판 사진. 배열 A{2, 3, 5, 12, 22, 42, 43, 62, 72, 92, 105}의 이진 탐색 트리(인덱스 6을 루트, 3·9가 자식)와 평균 탐색 횟수 33/11 = 3회, 균등 분할(좌우 balance 맞음) 메모.">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>피보나치 탐색</strong>
+            <ul>
+              <li>이진 탐색과 같은 방법이지만 피보나치 수열을 이용해 비교 대상을 선정</li>
+              <li><strong>장점</strong>
+                <ul>
+                  <li>① 검색 과정에서 나눗셈 없이 덧셈, 뺄셈만으로도 검색 가능</li>
+                  <li>② 평균적으로 이진 탐색보다 적은 비교 횟수</li>
+                </ul>
+              </li>
+              <li><strong>단점</strong>
+                <ul>
+                  <li>① 최악의 경우 이진 탐색보다 효율이 떨어짐</li>
+                  <li>② 이진 탐색에 비해 불균형의 이진 트리가 형성됨 (검색 속도 ↓)</li>
+                </ul>
+                <figure>
+                  <img src="2-3-2-fig-6.png" width="485" height="482" alt="피보나치 탐색 손그림. F(k)에서 비교해 작으면 F(k−1)−F(k−2) 쪽, 크면 F(k−2)+F(k−1) 쪽으로 옮기고, F(k+1) 위치에 데이터가 없으면 index를 다시 매겨 F(k)+F(k−2)로 간다는 설명.">
+                </figure>
+              </li>
+              <li><strong>2016 기출</strong>
+                <figure>
+                  <img src="2-3-2-fig-7.png" width="1295" height="1413" alt="2016 기출 32번: 피보나치 수를 이용한 search(A, 6, 72) 실행 시 출력값과 ㉠ return -1(탐색 실패)의 의미를 묻는 문제와 손풀이(출력 8, 11, 10, A[10]=72 탐색 성공). 아래 칠판 사진은 같은 배열의 피보나치 탐색 트리(루트 8, 평균 탐색 횟수 35/11회, 불균등).">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>보간 탐색</strong>
+            <ul>
+              <li>값과 위치의 비례성에 따라 탐색</li>
+              <li>정렬된 값 전제</li>
+              <li><strong>위치에 대한 비례식 = 값에 대한 비례식</strong> : (high − low) : (i − low) = (A[high] − A[low]) : (key − A[low])</li>
+              <li><strong>찾으려는 위치(인덱스)</strong> : i = (key − A[low]) × (high − low) / (A[high] − A[low]) + low
+                <ul>
+                  <li>key가 A[i]보다 작으면 왼쪽, 크면 오른쪽 대상을 찾아다니기</li>
+                </ul>
+                <figure>
+                  <img src="2-3-2-fig-8.png" width="954" height="552" alt="A[low] … A[i](key) … A[high] 배열 그림과, 위치 비례식 high−low : i−low = A[high]−A[low] : A[i]−A[low] 에서 i = (A[i]−A[low])(high−low)/(A[high]−A[low]) + low 를 끌어내는 손글씨 풀이.">
+                </figure>
+                <figure>
+                  <img src="2-3-2-fig-9.png" width="1324" height="1077" alt="기출 33번: 정렬된 배열 a = {2, 3, 5, 12, 22, 42, 43, 62, 72, 92, 105}에서 재귀 보간 탐색 search(a, 0, 10, 22)로 22를 찾는 C 프로그램의 출력을 묻는 문제와 손풀이. m이 1 → 3 → 4로 바뀌고 s가 3 → 15 → 37로 쌓여 37을 출력한다.">
+                </figure>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </section>
     </article>
   </main>

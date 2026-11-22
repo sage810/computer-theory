@@ -27,7 +27,21 @@
       <!-- 칸: Word 원고(노트 원고/…/2-2 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-2-2-1-1">
         <h3>재귀 알고리즘 설계 원리</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>순환 알고리즘의 구조 (디자인 방식)</strong></li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>int R(int n) {<br>    if (          )  //종료 가능한 조건식<br>        ______________;  //종료(시 처리해야 할) 값<br>    else<br>        ___________;  //순환 호출하는 부분 (순환 패턴)<br>}</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>분할/정복법 vs 동적 계획법</strong> : 하향식(Top-down)과 상향식(Bottom-up) 비교
+            <figure>
+              <img src="2-2-1-fig-1.png" width="639" height="345" alt="분할/정복법(Top-down 하향식, 분할 위해 내려가니까: 상위해를 구하기 위해 하위해 필요, 중복 계산 필요 – fibo 트리 단말노드에서 f(0)·f(1) 계산 ⇒ 분할 영역이 독립적일 때 효과적)과 동적 계획법(Bottom-up 상향식: 하위해를 구하고 이를 활용해 상위해 구하기, 중복 계산 필요 없음 ⇒ 분할 영역이 의존적일 때 효과적)을 비교한 손글씨 메모">
+            </figure>
+          </li>
+        </ul>
       </section>
     </article>
     <article class="topic" id="n-2-2-2">
@@ -83,7 +97,25 @@
       <!-- 칸: Word 원고(노트 원고/…/2-2 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-2-2-7-1">
         <h3>알고리즘 설계 기법</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>알고리즘 설계 기법</strong>
+            <ul>
+              <li><strong>분할/정복법</strong></li>
+              <li><strong>동적 계획법 (= 동적 프로그래밍)</strong> : 모든 경우 조사
+                <ul>
+                  <li>장점) 항상 최적해를 찾음</li>
+                  <li>단점) 시간 낭비</li>
+                </ul>
+              </li>
+              <li><strong>갈망법 (Greedy)</strong> : 지금 당장 가장 좋은 것
+                <ul>
+                  <li>단점) 최적해를 항상 찾을 수는 없음</li>
+                </ul>
+              </li>
+              <li><strong>백트래킹 (되추적 기법)</strong></li>
+            </ul>
+          </li>
+        </ul>
       </section>
     </article>
   </main>

@@ -28,7 +28,207 @@
       <!-- 칸: Word 원고(노트 원고/…/1-6 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-1-6-1-1">
         <h3>해싱 개념 &amp; 기본 용어</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>해싱의 기초</strong>
+            <ul>
+              <li><strong>해싱</strong> : 원하는 킷값을 가지는 테이블 항목을 검색하기 위해 특정한 변환 함수를 이용하여 킷값을 항목의 주소로 직접 바꿔서 검색하는 방법
+                <ul>
+                  <li>공부 순서 : 개념(용어 多) → 해시 함수(계산하는 방법) → 버킷 오버플로 해결 방안</li>
+                </ul>
+              </li>
+              <li><strong>장점</strong> : 탐색, 삽입, 삭제 시 충돌이나 오버플로가 생기지 않으면 T = O(1) (O(c)가 평균)</li>
+              <li><strong>단점</strong> : 충돌, 군집 발생
+                <ul>
+                  <li><strong>충돌</strong> : 서로 다른 두 개 이상의 명칭이 해시 함수에 의해 동일한 주소로 변환되는 경우 (&#x27;동의어&#x27;에 의한 충돌)</li>
+                  <li><strong>오버플로</strong> : 충돌이 많아져 슬롯의 개수만큼 충돌이 생기면 빈 슬롯이 소진되어 오버플로 발생</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>해시 테이블</strong>
+            <ul>
+              <li><strong>해시 테이블 ht</strong> : ht[0] ~ ht[n−1]의 버킷으로 구성되고, 각 버킷은 여러 슬롯(slot1, slot2 …)을 가짐</li>
+              <li><strong>해싱 함수</strong> : 식별자 x → f(x) = α (키값을 계산하여 인덱스를 내놓는 함수) → 주소 α = ht[i]</li>
+              <li><strong>식별자 밀도 (identifier density)</strong> : n / T (n = 실제 사용(저장)된 식별자 개수, T = 가능한 식별자 개수)</li>
+              <li><strong>적재 밀도 (loading density)</strong> : n / sb (s = 각 버킷의 슬롯 수, b = 버킷의 수, sb = 방의 수)</li>
+              <li><strong>가상 이상적 테이블</strong> : n = b (각 버킷에 1개의 식별자가 있는 경우)
+                <figure>
+                  <img src="1-6-1-fig-1.png" width="1160" height="320" alt="해시 테이블 손그림. ht[0] ~ ht[n−1] 버킷마다 slot1, slot2 두 칸이 있고, 식별자 x가 해싱 함수 f(x) = α를 거쳐 주소 ht[i]로 가는 과정과 식별자 밀도 n/T, 적재 밀도 n/sb, 이상적 테이블 n = b 메모.">
+                </figure>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+      <section class="part" id="s-1-6-1-2">
+        <h3>해싱 함수</h3>
+        <ul>
+          <li><strong>해싱 함수 적용 과정</strong>
+            <ul>
+              <li>1) 문자 자료로 입력된 레코드 키를 적당한 수치의 입력 값으로 바꿈</li>
+              <li>2) 정리된 입력 값에 대해 해싱 함수를 적용하여 주소 계산</li>
+              <li>3) 계산된 주소가 해시 테이블의 정해진 범위 값이 아니면 조정</li>
+              <li><strong>균일 해시 함수</strong> : b개의 버킷 각각에 임의의 k가 대응될 확률이 모두 같은 함수
+                <ul>
+                  <li>h(k) = i 가 될 확률 = 모든 버킷 i에 대해 1/b</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>해싱 함수의 종류</strong>
+            <ul>
+              <li><strong>제산 함수</strong> : 가장 기초적인 방법. %를 사용하여 주소 계산 (key % M → 나머지 값 산출, M = 방 개수)
+                <ul>
+                  <li>레코드 값 = key, 양의 정수 M, 해싱 함수 = h 일 때 h(key) = key mod M (버킷 주소 범위 : 0 ≤ h(key) &lt; M)</li>
+                  <li>M값에 따라 버킷 수가 결정되므로 적당한 값 선정이 중요 (충돌을 최소화하기 위해)
+                    <ul>
+                      <li>M = 2¹ 이면 버킷 주소의 범위는 0 ~ (2−1) : 변수의 끝 1비트만 표시됨, M = 2² 이면 끝 2비트만, M = 2³ 이면 끝 3비트만 표시됨</li>
+                      <li>∴ 해시 테이블의 크기보다 약간 작은 소수를 M으로 선택하는 것이 좋음</li>
+                    </ul>
+                  </li>
+                  <li>문제 : 홀수, 짝수에 대한 군집 발생 → 해결 : i = (i + α) % TABLE_SIZE 에서 α와 TABLE_SIZE가 서로소 (TABLE_SIZE나 α 값이 소수(prime number))
+                    <ul>
+                      <li><strong>서로소</strong> : 1 이외에 공약수를 갖지 않는 둘 이상의 양의 정수 (예: 7 &amp; 13)</li>
+                      <li><strong>소수</strong> : 1과 자기 자신만으로 나누어 떨어지는 1보다 큰 양의 정수</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li><strong>중간제곱 함수 (mid-square)</strong> : key × key 를 계산해 결과 값의 가운데 자리를 주소로 사용
+                <ul>
+                  <li>키값을 제곱하면 결과 값의 중간 비트들은 키값의 모든 비트들로부터 영향을 받으므로 버킷 주소가 고르게 분포될 가능성 높음</li>
+                  <li>버킷의 주소를 얻기 위해 r bit를 사용하면 → 테이블 크기 = 2ʳ
+                    <figure>
+                      <img src="1-6-1-fig-2.png" width="1064" height="238" alt="abc × abc 곱셈에서 가운데 자리를 인덱스로 쓰는 것이 좋다는 손그림과, 예: 레코드 키값 35837, 해시 테이블 크기 10,000일 때 key² = 1284290569 의 중간값 4자리 4290을 인덱스로 고르는 모습.">
+                    </figure>
+                  </li>
+                </ul>
+              </li>
+              <li><strong>접지 함수 (folding)</strong> : 레코드 키를 마지막 부분을 제외한 모든 부분의 길이가 동일하게 여러 부분으로 나누고, 이들 부분을 모두 더하거나 XOR 연산하여 해시 테이블의 홈 주소로 이동하는 방법
+                <ul>
+                  <li><strong>이동 접지 (shift folding)</strong> : 각 부분의 값을 계산하기 위해 마지막을 제외한 모든 부분을 이동시켜 최하위 비트(LSB)가 마지막 부분의 자리와 일치하도록 우측 끝을 맞추어 더한 값을 홈 주소로 함
+                    <figure>
+                      <img src="1-6-1-fig-3.png" width="687" height="162" alt="키 12321631067을 123, 216, 310, 67로 나누어 우측 끝을 맞춰 모두 더하면 716이 되는 이동 접지 예.">
+                    </figure>
+                  </li>
+                  <li><strong>경계 접지 (boundary folding)</strong> : 원래의 키값을 여러 부분으로 나눈 후, 나누어진 각 부분의 경계선을 접어 정렬하고 같은 자리에 위치한 수를 더함
+                    <figure>
+                      <img src="1-6-1-fig-4.png" width="669" height="162" alt="같은 키 12321631067을 나눈 뒤 짝수 번째 부분을 거꾸로 읽어(216 → 612, 67 → 76) 123, 612, 310, 76을 모두 더하면 121이 되는 경계 접지 예.">
+                    </figure>
+                  </li>
+                </ul>
+              </li>
+              <li><strong>숫자 분석 함수</strong> : 키를 구성하는 수들이 모든 키들 내에서 각 자리별로 어떤 분포를 가지고 있는가를 조사하여 비교적 고른 분포를 보이는 자릿수를 필요한 만큼 선택해 레코드의 홈 주소로 사용 (대표 위치를 선정하여 주소 계산)
+                <ul>
+                  <li>정적 파일(파일을 구성하는 모든 레코드 키값이 알려진 경우)에 유리</li>
+                  <li>동적 파일(레코드의 삽입, 삭제가 빈번한 경우)에 불리 (새로운 레코드가 입력되어 키의 분포 상태가 변하게 되면 그때마다 키값의 분포를 다시 조사해야 하므로)</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+      <section class="part" id="s-1-6-1-3">
+        <h3>오버플로 해결 방법</h3>
+        <ul>
+          <li><strong>오버플로 해결 방법 한눈에</strong>
+            <ul>
+              <li><strong>탐색 횟수</strong> : 몇 번 만에 찾았나?</li>
+              <li><strong>충돌 횟수</strong> : (몇 번 만에 − 1)번 (1번 만에 찾은 것은 충돌 횟수 0)
+                <figure>
+                  <img src="1-6-1-fig-5.png" width="950" height="310" alt="선형법의 문제점 ① clustering(군집) → 해결: 비선형법(이차 조사법, 1차 clustering 해결·2차 clustering 발생), 이중 해싱법(2개의 해시 함수 사용, h(k)+h&#x27;(k), 안 되면 h(k)+h&#x27;(k)+h&#x27;(k) …), 문제점 ② 탐색 효율성 ↓ → 해결: 체인법을 정리한 손글씨 도식.">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>선형 개방 주소법 (선형 탐색법)</strong>
+            <ul>
+              <li>가장 기본적인 방법. 충돌 발생 시 그 위치로부터 비어 있는 다른 버킷을 찾아 그곳에 저장</li>
+              <li>해시 테이블은 1차원 배열</li>
+              <li>충돌을 일으킨 key + 1 해서 저장 : H1(key) = H0(key) + 1 (저장 불가능하면 계속 +1), Hi(key) = H0(key) + i</li>
+              <li><strong>단점 1) clustering 군집</strong> : 레코드 값들이 해시 테이블의 어느 곳으로 편중되는 현상 → 2차 검색법
+                <ul>
+                  <li>H0(key)가 해시 테이블의 마지막 주소인데 충돌이 발생한 경우 : 마지막 주소와 처음 주소가 원형으로 연결되어 있다고 생각</li>
+                  <li>HASH_TABLE_SIZE = n 일 때 테이블의 마지막 주소 = n − 1 → i번째 후속 주소 Hi(key) = (H0(key) + i) mod n</li>
+                  <li>h1(key) = h0(key) + α 를 이용하여 군집성 제거 (α값의 선택이 매우 중요)</li>
+                </ul>
+              </li>
+              <li><strong>단점 2)</strong> 불필요한 탐색 과정을 포함할 수 있음 (탐색 효율성 낮음) → 체인법
+                <figure>
+                  <img src="1-6-1-fig-6.png" width="1039" height="472" alt="예: 해시 테이블(b = 26, s = 1, n = 10), 해시 함수 = 식별자의 첫 글자(a:0 … z:25). acos 0, atan 1(0→1), char 2, define 3, exp 4, float 5, ceil 6(2→3→4→5→6, 탐색 5회), floor 7(3회), clock 8(7회), ctime 9(8회)에 저장되는 선형 조사 결과 표.">
+                </figure>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <table>
+          <thead><tr><th scope="col">선형 조사법 삽입</th><th scope="col">선형 조사법 탐색</th></tr></thead>
+          <tbody>
+            <tr><td>void linear_insert(element item, element ht[]) {<br>    int i, hash_value;<br>    hash_value = hash(item.key), i = hash_value;<br>    while (strlen(ht[i].key)) {<br>        if (!strcmp(ht[i].key, item.key)) {<br>            fprintf(stderr, &quot;duplicate entry\n&quot;);<br>            exit(1);<br>        }<br>        i = (i+1) % TABLE_SIZE;<br>        if (i == hash_value) {<br>            fprintf(stderr, &quot;the table is full\n&quot;);<br>            exit(1);<br>        }<br>    }<br>    ht[i] = item;<br>}</td><td>element* search(int k) {<br>/* 선형 조사법 해싱 테이블 ht (각 버킷은 한 슬롯 가짐)에서 k 탐색<br>   이 키를 가진 쌍을 발견하면, 그 쌍을 가리키는 포인터 반환<br>   그렇지 않으면 NULL 반환 */<br>    int homeBucket, currentBucket;<br>    homeBucket = h(k);<br>    for (currentBucket = homeBucket; ht[currentBucket] &amp;&amp;<br>             ht[currentBucket]-&gt;key != k;) {<br>        currentBucket = (currentBucket + 1) % b; //테이블 원형으로 취급<br>        if (currentBucket == homeBucket) //없음<br>            return NULL; //시작 지점으로 되돌아감<br>    }<br>    if (ht[currentBucket]-&gt;key == k) //찾음<br>        return ht[currentBucket];<br>    return NULL;<br>}</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>2차 검색법</strong>
+            <ul>
+              <li>2차 방정식의 해싱 함수를 적용하여 증가치만큼 떨어진 버킷에 저장</li>
+              <li>f(i) = i² : 다음 주소와의 거리 1, 4, 9, 16 … (처음 공간부터 +1, +4, … 해 나가는 것)</li>
+              <li>Hi(key) = (H0(key) + i²) mod n</li>
+              <li><strong>장점</strong> : 계산이 매우 간단, 구현에서 많은 해시 함수를 요구하지 않음, 클러스터링 어느 정도 해결</li>
+              <li><strong>단점</strong> : 해시 테이블의 모든 버킷이 다 검색되지 않음 → 2차 클러스터링이 생길 수 있음 (부분적 클러스터링)</li>
+            </ul>
+          </li>
+          <li><strong>연쇄 처리법 (체인법)</strong>
+            <ul>
+              <li>각 버킷마다 포인터를 가짐. 새로운 레코드 키 삽입 시 하나의 버킷에는 충돌을 유발한 레코드 키를 포함한 모든 레코드를 함께 하나의 연결 리스트인 체인으로 구성</li>
+              <li>레코드 키 저장을 위한 빈 버킷 검색 시 불필요한 비교가 필요 없음 (이미 차 있는 경우 빈 버킷을 찾기 위한 비교 필요 없음)</li>
+              <li>버킷을 구성하는 각 슬롯에는 링크 포인터를 위한 추가적인 공간 필요</li>
+              <li><strong>장점</strong> : 선형 검색에 비해 융통성 있음 (동적해싱 사용하기 때문) <span class="fix">원본과 다름 · 원본: “동적해싱 사용하기 때문”, 체인법은 동적 해싱이 아니라 연결 리스트로 노드를 동적 할당하기 때문</span>
+                <ul>
+                  <li>충돌 발생 시 처리가 쉽고 빠름</li>
+                  <li>해시 테이블로부터 임의의 레코드 삭제가 간단</li>
+                  <li>테이블에 저장할 수 있는 레코드 수에 제한이 적음</li>
+                  <li>클러스터링의 크기도 상대적으로 작아 검색 효율이 높음</li>
+                </ul>
+              </li>
+              <li><strong>단점</strong> : 포인터 저장을 위한 별도의 공간 요구됨
+                <ul>
+                  <li>포인터를 이용하기 때문에 프로그래밍에 부담</li>
+                </ul>
+                <figure>
+                  <img src="1-6-1-fig-7.png" width="474" height="465" alt="예: 해시 테이블(b = 26, s = 1, n = 10), 해시 함수 = 식별자의 첫 글자. 0번 acos → atan, 2번 char → ceil → clock → ctime, 3번 define, 4번 exp, 5번 float → floor 로 체인이 이어진 그림.">
+                </figure>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <table>
+          <thead><tr><th scope="col">체인법 탐색</th></tr></thead>
+          <tbody>
+            <tr><td>element* search(int k) { //k를 찾으면 포인터 값을 리턴하고 아니면 NULL 리턴<br>    nodePointer current;<br>    int homeBucket = h(k);<br>    //ht[homeBucket] 탐색<br>    for (current = ht[homeBucket]; current; current = current-&gt;link)<br>        if (current-&gt;data.key == k)<br>            return &amp;current-&gt;data;<br>    return NULL;<br>}</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>기출 연습</strong>
+            <ul>
+              <li><strong>2018 기출</strong>
+                <figure>
+                  <img src="1-6-1-fig-10.png" width="697" height="1312" alt="2018 기출 34번: 선형 조사로 충돌을 처리하는 construct_HT, search_HT C 코드에서 construct_HT(313), search_HT(313) 실행 시 출력값과, 탐색 시간이 오래 걸리는 이유를 오버플로 처리 관점에서 쓰는 문제(손글씨 답: ① 군집 ② 불필요한 key 탐색 과정).">
+                </figure>
+              </li>
+              <li><strong>2008 기출</strong>
+                <figure>
+                  <img src="1-6-1-fig-11.png" width="529" height="1295" alt="2008 기출 35번: 선형 조사법 linear_probing()과 이중 해시법 double_hash()로 입력 21, 15, 9, 29, 3, 5, 14, 25, 16 을 넣은 해시 테이블(크기 11)을 각각 그리고, 이중 해시법이 선형 조사법의 어떤 문제(군집)를 해결하는지 쓰는 문제.">
+                </figure>
+              </li>
+            </ul>
+            <figure>
+              <img src="1-6-1-fig-8.png" width="1066" height="619" alt="크기 11인 해시 테이블, h(k) = k mod 11, 입력 12, 44, 13, 88, 23, 94, 11, 39, 20, 16, 5 를 (1) 선형 조사법 (2) 이차 조사법 (3) 이중 해시법 h&#x27;(k) = 7 − (k mod 7) (4) 체인법으로 처리한 해시 테이블을 그리라는 문제.">
+            </figure>
+            <figure>
+              <img src="1-6-1-fig-9.png" width="1278" height="1207" alt="위 문제의 손풀이. (1) 선형 조사법 충돌 횟수 20번, (2) 이차 조사법 17번, (3) 이중 해시법 22번, (4) 체인법(뒤에다가 추가) 0: 44 → 88 → 11, 1: 12 → 23, 2: 13, 5: 16 → 5, 6: 94 → 39, 9: 20.">
+            </figure>
+          </li>
+        </ul>
       </section>
     </article>
     <article class="topic" id="n-1-6-2">
@@ -37,7 +237,71 @@
       <!-- 칸: Word 원고(노트 원고/…/1-6 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-1-6-2-1">
         <h3>정적 해싱 &amp; 동적 해싱 개념과 연산</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>정적 해싱과 동적 해싱</strong>
+            <ul>
+              <li><strong>정적 해싱</strong> : 파일 내 자료 전체를 해싱 테이블에 적재 (파일 내의 자료 수 ≤ 가용 메모리)
+                <ul>
+                  <li>밀도 70% 이상 시 충돌 가능성이 있어서 재해싱 필요</li>
+                </ul>
+              </li>
+              <li><strong>동적 해싱</strong> : 파일 내 자료들을 가용 메모리 크기에 맞는 여러 개의 페이지로 분할하고, 각각의 페이지를 별도의 파일로 유지 (해시 테이블의 크기가 동적)</li>
+            </ul>
+          </li>
+          <li><strong>동적 해싱</strong>
+            <ul>
+              <li>오버플로 발생 시 bucket 수 +1</li>
+              <li>1) directory를 쓰지 않는 방법</li>
+              <li>2) directory를 이용해 위치를 저장하는 방법 (포인터 모아 놓기)
+                <ul>
+                  <li><strong>directory size</strong> : 하위 비트 수(k) → 2ᵏ</li>
+                  <li><strong>directory</strong> : 포인터 정보</li>
+                  <li><strong>bucket</strong> : 데이터 정보</li>
+                  <li><strong>depth</strong> : 원소를 구별하는 데 쓰이는 최하위 비트 수 (depth = 2면 size = 2² = 4)
+                    <figure>
+                      <img src="1-6-2-fig-1.png" width="342" height="275" alt="예: depth = 2bit 일 때, directory의 00, 01, 10, 11 네 칸이 각각 슬롯 2개짜리 bucket을 가리키는 그림.">
+                    </figure>
+                  </li>
+                </ul>
+              </li>
+              <li><strong>장점</strong> : 재배치 시간 ↓ (포인터를 그대로 복사해서)</li>
+              <li><strong>삽입</strong>
+                <ul>
+                  <li>1) 버킷 찾기 (하위 비트 비교)</li>
+                  <li>2) 버킷이 비어 있으면 넣고, 오버플로 시 재조정 (문제 된 버킷 하나만 재배치)</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>오버플로 처리 절차</strong>
+            <ul>
+              <li>① 오버플로된 버킷의 모든 키를 구분 가능한 하위 비트(u) 결정
+                <figure>
+                  <img src="1-6-2-fig-2.png" width="522" height="140" alt="0010, 0110, 1010, 1110 처럼 기존 하위 비트(10)가 같은 키들을 구분하기 위해 하위 비트를 얼마나 늘릴지 결정한다는 손그림.">
+                </figure>
+              </li>
+              <li>② u가 depth보다 크면 (u &gt; depth 면) depth 증가 (directory 재구성)
+                <figure>
+                  <img src="1-6-2-fig-3.png" width="390" height="192" alt="directory를 2배로 늘리면 인덱스가 000 ~ 111 여덟 칸이 된다는 손그림.">
+                </figure>
+              </li>
+              <li>③ 포인터 재조정
+                <ul>
+                  <li>3-1) 새로 생성된 directory의 포인터 정보는 원래 값을 복사해 사용</li>
+                  <li>3-2) 문제 되는 버킷을 2개로 분리해서 각 포인터 조정</li>
+                </ul>
+                <figure>
+                  <img src="1-6-2-fig-4.png" width="1176" height="734" alt="000 ~ 111 directory 포인터가 기존 버킷을 복사해 가리키는 그림과 예: 키 5(0101), 8(1000), 11(1011), 7(0111), 6(0110), 15(1111)을 넣을 때 7에서 오버플로가 나 하위 비트를 2개로, 15에서 3개로 늘려 최종적으로 버킷 [8, 6], [5], [11], [7, 15]가 되는 과정.">
+                </figure>
+              </li>
+              <li><strong>2011 기출</strong>
+                <figure>
+                  <img src="1-6-2-fig-5.png" width="1201" height="993" alt="2011 기출 36번: 디렉토리를 이용한 동적 해싱에서 키 5, 6, 7, 8, 11, 15를 넣은 뒤 엔트리(인덱스 = 110)가 가리키는 리프의 ① 키 개수와 ② 두 번째 키 값을 묻는 문제와 손풀이(depth 1 → 2 → 3으로 늘며 답 ① 2개 ② 8).">
+                </figure>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </section>
     </article>
     <article class="topic" id="n-1-6-3">

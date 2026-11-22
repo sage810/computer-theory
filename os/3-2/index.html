@@ -29,7 +29,11 @@
       <section class="part" id="s-3-2-1-1">
         <h3>프로세스와 쓰레드 개념</h3>
         <ul>
-          <li><strong>프로세스</strong> : 현재 실행 중인 프로그램. 곧 실행 가능한 PCB를 가진 프로그램</li>
+          <li><strong>프로세스</strong> : 현재 실행 중인 프로그램. 곧 실행 가능한 PCB를 가진 프로그램
+            <ul>
+              <li>최종적으로 프로세서에 의해 수행되는 프로그램 단위</li>
+            </ul>
+          </li>
           <li>프로그램은 저장된 파일 같은 수동적인 실체, 프로세스는 다음 실행할 명령어를 지정하는 프로그램 카운터를 가진 능동적인 실체</li>
           <li><strong>프로세스의 구성 요소</strong> : 프로그램(code), 데이터(전역변수), 스택(지역변수), PCB(프로세스 제어정보)</li>
           <li><strong>프로세스 제어블록 (PCB)</strong>
@@ -42,6 +46,8 @@
                   <li>프로그램 카운터 (프로세스가 다음에 실행할 명령어의 주소)</li>
                   <li>레지스터 (누산기 인덱스 레지스터 등)</li>
                   <li>계정 정보 (CPU가 사용된 시간량 등)</li>
+                  <li>메모리 관련 정보 (저장 위치)</li>
+                  <li>각종 중간값 (어디까지 했는지)</li>
                 </ul>
               </li>
             </ul>
@@ -89,6 +95,9 @@
             </ul>
           </li>
         </ul>
+        <figure>
+          <img src="3-2-2-fig-3.png" width="1423" height="801" alt="프로세스 상태 전이도 손글씨. 생성(New) → 준비(ready) → dispatch → 실행(running) → exit → 완료(terminated). 실행 → block(입출력 요청) → 대기(waiting) → wake up(입출력 완료) → 준비, 실행 → timeout(인터럽트) → 준비. 준비와 대기는 swap-out(suspend)/swap-in(resume)으로 지연준비(suspended ready)·지연대기(suspended blocked) 상태와 오가고, 지연대기 → wake up → 지연준비. dispatcher는 CPU의 제어를 단기 스케줄러가 선택한 프로세스에게 주는 모듈이고, 각 입출력 장치는 자신의 장치 큐를 가짐">
+        </figure>
       </section>
     </article>
     <article class="topic" id="n-3-2-3">
@@ -98,19 +107,63 @@
       <section class="part" id="s-3-2-3-1">
         <h3>동기화</h3>
         <ul>
+          <li><strong>임계 영역 문제</strong>
+            <ul>
+              <li><strong>임계 영역 (critical section)</strong> : 상호 배제를 구현하기 위해, 여러 프로세스가 함께 쓰는 자원을 참조하는 문장들의 집합 (= 공유 메모리가 참조되는 프로그램 구간)</li>
+              <li><strong>경쟁 상황 (race condition)</strong> : 동시에 여러 프로세스가 같은 자료에 접근해 조작하고, 실행 결과가 접근이 일어난 특정 순서에 따라 달라지는 상황 → 임계 영역 문제를 풀어 해결</li>
+              <li><strong>프로세스의 구조</strong>
+                <ul>
+                  <li><strong>진입 구역</strong> : 임계 영역에 들어가기 위해 허용을 요구하는 코드 영역</li>
+                  <li><strong>출구 구역</strong> : 임계 영역을 벗어나기 위한 코드 영역</li>
+                  <li><strong>잔류 구역</strong> : 프로그램의 나머지 코드 영역</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
           <li><strong>임계영역 해결 방법이 갖춰야 할 3가지 조건</strong>
             <ul>
               <li><strong>상호 배제</strong> : 누군가 임계영역을 실행하고 있다면, 다른 프로세스들은 임계영역 진입 불가</li>
               <li><strong>진행</strong> : 임계영역에 진입하고 싶어서 대기하고 있는 프로세스들 중에서, 다음 임계영역 진입자 결정 가능. 이 선택은 무한 연기 불가 (누군가 계속 선택되어야 함)</li>
               <li><strong>한정된 대기</strong> : 임계영역에 진입하고 싶어서 대기하고 있는 프로세스는, 자기가 임계영역 진입 허락을 받기 전까지 다른 프로세스가 임계영역에 진입하는 것을 보는 횟수가 한정적이어야 함 (무한 대기 X)</li>
+              <li>진입 요청부터 허용까지의 대기 시간에도 한계가 있어야 함. 그렇지 않으면 기아상태 발생</li>
+            </ul>
+          </li>
+          <li><strong>임계 영역 문제를 풀 때 고려할 것</strong>
+            <ul>
+              <li><strong>상호 배제</strong> : 임계영역 알고리즘</li>
+              <li><strong>동기화</strong> : 다른 프로세스에게도 알려 주기 → 세마포어 (모니터)</li>
+              <li><strong>결정성</strong> : 어떤 상황에서도 같은 값이 나와야 함</li>
+              <li><strong>교착상태</strong> : 은행원 알고리즘</li>
+              <li><strong>IPC</strong> : 프로세스 사이에 데이터를 주고받는 전달 체제</li>
+              <li><strong>병행 수행</strong></li>
+            </ul>
+          </li>
+          <li><strong>임계 영역 문제 해결 알고리즘</strong>
+            <ul>
+              <li><strong>SW적 해결 기법</strong>
+                <ul>
+                  <li>2개 프로세스 상호 배제 : Peterson 알고리즘 / Dekker 알고리즘</li>
+                  <li>N개 프로세스 상호 배제 : Lamport의 빵집 알고리즘 / Dijkstra 알고리즘</li>
+                </ul>
+              </li>
+              <li><strong>HW적 해결 기법 (동기화 하드웨어)</strong> : Test-and-Set 명령 / Burns 알고리즘 / SWAP 명령</li>
+              <li><strong>그 밖의 도구</strong> : Mutex / Semaphore</li>
             </ul>
           </li>
           <li><strong>1. turn 변수만 이용 : 상호 배제 O, 진행 X</strong>
             <ul>
-              <li>P₀ → P₁ → P₁ 한 번 더 들어가기 불가능 (엄격한 교대)</li>
+              <li>P₀ → P₁ → P₁ 한 번 더 들어가기 불가능 (엄격한 교대)
+                <figure>
+                  <img src="3-2-3-fig-1.png" width="1221" height="339" alt="1st 알고리즘(공유 변수 turn 이용, 0이면 P0 차례·1이면 P1 차례) 코드와 손글씨 메모. 상호 배제 O, 진행 X: turn 변수만으로는 프로세스가 임계영역에 있는지 잔류구역에 있는지 구분할 수 없고, P0 → P1 다음에 P1이 한 번 더 들어갈 수 없음(엄격한 교대)">
+                </figure>
+              </li>
             </ul>
           </li>
-          <li><strong>2. flag 변수만 이용</strong> : 진입하고 싶으면 손 들어서 자기 flag = true로 만들기</li>
+          <li><strong>2. flag 변수만 이용</strong> : 진입하고 싶으면 손 들어서 자기 flag = true로 만들기
+            <ul>
+              <li>flag[0] = true : P₀이 임계영역에 들어가 있거나 들어갈 의사가 있음 / false : P₀이 임계영역에 없거나 들어갈 의사가 없음</li>
+            </ul>
+          </li>
           <li><strong>(1) 자기 flag부터 설정할 경우</strong> : 상호 배제 O, 진행 X
             <ul>
               <li>둘 다 flag = true일 경우 무한 대기하게 됨 (교착상태)</li>
@@ -140,7 +193,11 @@
           <li><strong>Peterson 알고리즘</strong> : turn, flag 사용 &amp; 상대 flag부터 살피지 않아도, turn으로 상대에게 양보
             <ul>
               <li><strong>flag</strong> : 프로세스 각자의 임계영역 진입 의사 표시</li>
-              <li><strong>turn</strong> : 프로세스 중 누구 순서인지 결정. turn 값이 둘 중 누가 들어갈 건지 순서를 정해 주는 역할!</li>
+              <li><strong>turn</strong> : 프로세스 중 누구 순서인지 결정. turn 값이 둘 중 누가 들어갈 건지 순서를 정해 주는 역할!
+                <ul>
+                  <li>두 프로세스가 동시에 들어가려 하면 turn 은 거의 동시에 i, j 로 지정되지만, 겹쳐 쓰여서 둘 중 한 값만 남음 → turn 의 마지막 값이 누가 먼저 임계구역에 들어갈지 결정</li>
+                </ul>
+              </li>
               <li>상호 배제 O, 진행 O, 한계 대기 O
                 <ul>
                   <li><strong>상호 배제 O</strong> : turn 변수로 가능</li>
@@ -157,9 +214,14 @@
             <tr><td>repeat<br>  flag[0] = true;    //자기 손들기<br>  turn = 1;          //상대에게 턴 양보<br>  while ( flag[1] &amp;&amp; turn == 1 )<br>    do no-op;<br>  #임계영역#<br>  flag[0] = false;  //상대 진입 허용<br>  #잔류영역#<br>until false</td><td>repeat<br>  flag[1] = true;    //자기 손들기<br>  turn = 0;          //상대에게 턴 양보<br>  while ( flag[0] &amp;&amp; turn == 0 )<br>    do no-op;<br>  #임계영역#<br>  flag[1] = false;  //상대 진입 허용<br>  #잔류영역#<br>until false</td></tr>
           </tbody>
         </table>
+        <figure>
+          <img src="3-2-3-fig-2.png" width="678" height="452" alt="Peterson 알고리즘 시나리오 손그림. i) P0, P1이 직렬로 수행되면 P0이 ③을 통과해 임계구역까지 가고, P1은 flag[0] = T 라서 ③에서 대기. ii) 병렬(교대)로 수행되면 P0은 ③ 통과, P1은 turn = 0 이라 ③에서 대기">
+        </figure>
         <ul>
           <li><strong>Dekker 알고리즘</strong>
             <ul>
+              <li>상호 배제 O, 진행 O, 한계 대기 O. 하지만 매우 복잡</li>
+              <li>Peterson 과 다른 점 : 상대 차례이면 자기 flag 를 내리고 turn 이 바뀔 때까지 기다림 (turn 변수를 기다림. Peterson 은 상대 flag 를 기다림)</li>
               <li>아래 코드는 P₀일 때 <span class="fix">원본과 다름 · 코드 끝의 “turn == 1;”은 대입이라 “turn = 1;”로 고침</span></li>
             </ul>
           </li>
@@ -169,6 +231,17 @@
             <tr><td>// P₀ 일 때<br>while () {<br>  flag[0] = true;<br>  while (flag[1]) {<br>    if (turn == j) {<br>      flag[0] = false;<br>      while (turn == 1);  //상대 턴일 동안 기다림<br>      flag[0] = true;<br>    }<br>  }<br>  #임계영역#<br>  turn = 1;  //상대 턴으로 만들어 줌<br>  flag[0] = false;<br>}</td></tr>
           </tbody>
         </table>
+        <div class="figs">
+          <figure>
+            <img src="3-2-3-fig-3.png" width="1055" height="688" alt="Dekker 알고리즘 코드(Pi 기준)에 붙인 손글씨 설명. flag[0] = flag[1] = 0 으로 초기화, turn 은 0·1 어느 쪽이어도 됨. ① 들어갈 의사 표시, ② 상대 의사 확인, ③ 상대 차례면 ④ 내 의사를 잠시 거두고 ⑤ turn 이 바뀔 때까지 기다린 뒤 ⑥ 다시 의사 표시, ⑧ j에게 차례 넘기기, ⑨ 내 진입 의사 철회">
+          </figure>
+          <figure>
+            <img src="3-2-3-fig-4.png" width="1110" height="944" alt="lock1·lock2·turn 변수로 쓴 Dekker 알고리즘(P1, P2) 코드와 손글씨 설명. 먼저 lock 을 걸고 상대 lock 을 확인, 상대도 lock 을 걸었으면 누구 차례인지 확인해 상대 차례면 lock 을 풀고 상대 작업이 끝날 때까지 기다림. 상호 배제 O, 진행 O, 한계 대기 O, 하지만 매우 복잡">
+          </figure>
+          <figure>
+            <img src="3-2-3-fig-5.png" width="1281" height="1114" alt="Dekker 알고리즘 시나리오 손그림. 직렬 수행, 초기값 turn = 0 일 때 교대로 수행(P0 먼저 진입), turn = 0 이고 P1이 먼저 들어온 경우, turn = 1 일 때 P0 먼저·P1 먼저 진입한 경우마다 각 줄 번호의 실행 순서와 flag·turn 값, 누가 ⑤에서 대기하는지를 표로 따라감">
+          </figure>
+        </div>
         <ul>
           <li><strong>Lamport의 빵집 알고리즘</strong>
             <ul>
@@ -193,6 +266,86 @@
             <tr><td>// 프로세스 Pᵢ 시점<br>while (1) {<br>  choosing[i] = true;   // 번호표 뽑으려고 줄 섰음. 대기 중<br>  number[i] = max (number[0], … number[n-1]) + 1;   // 나의 번호표 = 지금까지 뽑힌 번호표의 최대값 + 1<br>  choosing[i] = false;   // 내 상태를 번호표 뽑은 상태로 바꿈<br>  for (j = 0; j &lt; n; j++) {   // 다른 프로세스와 번호표 비교 대조하는 반복문<br>    while ( choosing[j] );   // 다른 프로세스 중, 번호표 뽑으려고 대기 중인 애가 있으면 대기<br>    while ( number[j] &amp;&amp;<br>            (number[j], j) &lt; (number[i], i) );   // 다른 프로세스 j가 번호표를 가지고 있고 &amp;&amp; 내 번호표랑 같은데, 프로세스 번호가 더 작다면 내가 대기 (j가 들어간다)<br>  }<br>  #임계구역<br>  number[i] = 0;   // 사용 완료로 번호표 버리기<br>}</td></tr>
           </tbody>
         </table>
+        <ul>
+          <li><strong>Lamport의 빵집 알고리즘 보충</strong>
+            <ul>
+              <li>단점 : 같은 번호표가 여러 개 생길 수 있음. SW 방식이라 코드 한 줄마다 끼어들 수 있어서 원자성 보장이 필요</li>
+              <li>choosing[] 은 false, number[] 는 0 으로 초기화</li>
+              <li>(a, b) &lt; (c, d) : a &lt; c 이면 true, a = c 이면 b &lt; d 일 때 true
+                <figure>
+                  <img src="3-2-3-fig-6.png" width="1198" height="779" alt="Lamport 빵집 알고리즘 코드에 붙인 손글씨 설명. ①③ choosing 으로 원자성 보장(번호표 받는 중 표시), ② 지금까지 뽑힌 번호표 중 가장 큰 값 + 1 받기(한계 대기 보장), ④⑤⑥ 다른 프로세스와 하나씩 비교해 번호표 뽑는 중이면 기다리고, 나보다 작은 번호표(같으면 작은 프로세스 번호)가 있으면 기다림(상호 배제 보장), 끝나면 number[i] = 0 으로 번호표 반납(진행 보장)">
+                </figure>
+                <figure>
+                  <img src="3-2-3-fig-7.png" width="1248" height="689" alt="Lamport 알고리즘 손글씨 분석. 상호 배제 O(번호표가 0이 아니면서 나보다 작은 P가 있으면 기다림), 진행 O(나오면 number = 0), 한계 대기 O(기껏해야 1 cycle 대기). 번호표 P3=1, P2=2, P1=3, P4=4, P0=5 일 때 P4 기준 for 문 비교 예와, while(choosing[j]) 가 없으면 번호표를 받는 도중 interrupt 가 걸려 생기는 문제 예">
+                </figure>
+              </li>
+              <li><strong>while (choosing[j]); 가 필요한 까닭</strong>
+                <ul>
+                  <li>Pj 가 번호표를 받고 있는 중이면 다 받을 때까지 기다려 준다는 뜻</li>
+                  <li>번호표를 받는 일도 한 순간에 한 프로세스만 해야 하는데, 위 알고리즘은 그렇지 못함</li>
+                  <li>Px 가 번호표를 받는 중에(max 값을 확인하고 +1 하기 전에) Pi 도 번호표를 받아 for 루프로 먼저 들어가 버리면 number[i] 와 number[x] 가 같아질 수 있음 → 이런 경우를 생각해서 기다려 줌</li>
+                </ul>
+                <figure>
+                  <img src="3-2-3-fig-8.png" width="591" height="362" alt="while(choosing[j]) 가 없을 때의 예. P5가 MAX(100)를 읽고 101을 저장하기 전에 P7이 끼어들어 같은 101을 받으면, 번호표가 같아져 ⑥ 비교에서 P5가 들어가게 됨. while(choosing[j]) 가 있으면 P5가 아직 choosing = false 를 안 했으므로 P7이 멈춰 있을 수 있음">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>HW적 해결 기법 ① Test-and-Set 명령</strong>
+            <ul>
+              <li><strong>상호 배제 O</strong> : lock 을 쓰기 때문</li>
+              <li><strong>진행 O</strong> : 빠져나온 프로세스가 lock 을 풀어 주기 때문</li>
+              <li><strong>한계 대기 X</strong> : lock 이 풀리기를 기다리는 프로세스가 여럿이면 하드웨어 속도(랜덤)에 따라 갈림 → 기아 문제가 생길 수 있음 (하드웨어 속도 차이로 인한 무한 연기)</li>
+              <li><strong>동작</strong>
+                <ul>
+                  <li>lock 값이 true 일 때는 initial 값이 항상 true 이므로 TestAndSet 은 항상 true 를 반환 → 프로세스는 while(TestAndSet(&amp;lock)); 루프를 빠져나가지 못함 (다른 프로세스 하나가 임계구역에 들어가 있다는 뜻)</li>
+                  <li>그때 기다리던 프로세스 중 가장 먼저 TestAndSet 을 실행한 프로세스가 루프에서 false 를 반환받고 while 문을 빠져나와 임계구역에 진입</li>
+                  <li>이 과정에서 boolean initial = lock; 과 lock = true; 는 동시에 실행되므로 다른 프로세스들은 계속 루프를 빠져나오지 못하고 대기</li>
+                  <li>임계구역에 들어갔던 프로세스는 빠져나오면서 lock = false; 를 수행</li>
+                </ul>
+                <figure>
+                  <img src="3-2-3-fig-10.png" width="316" height="127" alt="Test-and-Set 의 lock, target, 반환값 관계 손그림. lock 이 T 이면 target 은 T → T, 반환값 T. lock 이 F 이면 target 은 F → T, 반환값 F">
+                </figure>
+                <figure>
+                  <img src="3-2-3-fig-11.png" width="1072" height="699" alt="Test-and-Set 손그림 예. P1, P3, P5가 lock = T 인 동안 while 을 돌며 기다리다가 lock = F 가 되면 접근 순서가 하드웨어 속도에 따라 랜덤하게 정해짐(기아 가능). 빠른 P1이 먼저 들어가고, 나온 뒤 다시 들어오면 느린 P5는 계속 대기. 진입 순서가 랜덤하게 정해지므로 대기 순서에 차례를 주자는 것이 Burns">
+                </figure>
+              </li>
+            </ul>
+            <figure>
+              <img src="3-2-3-fig-9.png" width="1071" height="734" alt="Test-and-Set 명령의 프로세스 구조와 함수 코드, 손글씨 설명. TestSet 은 target 을 무조건 true 로 바꾸고 원래 값을 돌려줌(call by reference 로 공유 변수 lock 을 바꿈). while 로 lock 을 기다리다 빠져나오면 임계 구역 진입, 나올 때 lock = false. 이 명령어는 HW 지원으로 원자적으로 실행되므로(while(lock == true)와 lock = true 가 한꺼번에 실행) 중간에 타임아웃이 걸려 임계구역을 못 지키는 문제가 생기지 않음">
+            </figure>
+          </li>
+          <li><strong>HW적 해결 기법 ② Burns 알고리즘</strong> (Test-and-Set 개선)
+            <ul>
+              <li>Test-and-Set 명령을 사용해 임계 구역 문제의 모든 요구 조건을 충족하는 알고리즘 → 대기 순서에 차례를 줌 (순환 순서)</li>
+              <li><strong>key, j</strong> : 지역 변수 (자기 프로세스 한정)</li>
+              <li><strong>lock, waiting</strong> : 공유 변수, false 로 초기화
+                <figure>
+                  <img src="3-2-3-fig-12.png" width="1381" height="781" alt="Burns 알고리즘 공통 변수와 repeat 코드, 손글씨 설명. 전역 waiting[0..n-1](프로세스마다의 진입 상태, 개인 가림판)과 lock(임계 영역 사용 여부, 중앙 신호등), 지역 j(지금 쓰는 index)와 key(Test-and-Set 결과, 개인 신호등). 경마장 출발대 사진으로 개인 신호등·개인 가림판·중앙 신호등을 모두 따져야 함을 비유">
+                </figure>
+                <figure>
+                  <img src="3-2-3-fig-13.png" width="1166" height="523" alt="Burns 알고리즘 while(1) 코드의 entry section·exit section 손글씨 설명. 처음 T-a-S 를 호출한 프로세스는 key = F 가 되어 while 을 빠져나가고, 나머지는 기다림. 나올 때 j = (i+1) % N 부터 차례로 들어갈 의사가 있는 프로세스를 찾아 waiting[j] = F 로 깨워 주고, 한 바퀴 다 돌아도 없으면 lock = F 로 풂">
+                </figure>
+              </li>
+              <li><strong>상호 배제 O</strong> : 임계 영역에 들어가려면 waiting[i] = false 이거나 key = false 여야 함
+                <ul>
+                  <li>어떤 프로세스가 임계구역을 떠날 때 기다리는 다른 프로세스가 없으면 lock = false 가 되고, 그 뒤 처음 Test-and-Set 을 호출한 프로세스만 key = false 가 됨. 기다리는 다른 프로세스들이 있으면 그중 한 프로세스만 waiting[i] = false 가 됨</li>
+                </ul>
+              </li>
+              <li><strong>진행 O</strong> : 대기하는 프로세스 중 waiting[j] = false 가 되는 Pj 가 임계 영역에 들어감</li>
+              <li><strong>한계 대기 O</strong> : 순환 순서로 대기 중인 프로세스를 검사하므로 i 다음 순서부터 차례로 순서가 돌아옴 (최대로 기다려도 n − 1)
+                <figure>
+                  <img src="3-2-3-fig-14.png" width="658" height="292" alt="Burns 알고리즘 손그림 예. P1~P5의 waiting 값과 lock 값 변화: P2가 lock 을 차지하고(T), 나머지가 기다리는 동안 waiting 이 T 가 되며, P2가 끝나면 waiting 중인 P에게 순번을 넘겨줌. i 다음 j부터 순서대로 돌아가며 의사를 물음">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>2021 기출</strong>
+            <figure>
+              <img src="3-2-3-fig-15.png" width="1040" height="1808" alt="2021 기출 4번 문제 스캔과 손글씨 풀이. 파일 생성 시스템 호출 create()(하나의 프로세스만 성공, 이미 있으면 -1)와 remove()로 enterCS·exitCS 를 만드는 문제. 답: ㉠ -1 (이미 있으면 while 에서 대기), ㉡ remove(pathname). 한계 대기는 못 지키지만(무작위로 성공, test &amp; set 과 같음) 상호 배제와 진행은 충족">
+            </figure>
+          </li>
+        </ul>
       </section>
     </article>
     <article class="topic" id="n-3-2-4">
@@ -202,12 +355,99 @@
       <section class="part" id="s-3-2-4-1">
         <h3>교착상태</h3>
         <ul>
+          <li><strong>교착상태 한눈에 보기</strong>
+            <figure>
+              <img src="3-2-4-fig-1.png" width="800" height="321" alt="교착상태 정리 그림. 발생조건 ①상호배제 ②점유와 대기 ③비선점은 가능성, ④환형대기까지 모이면 확정. 처리기법은 예방·회피·탐지·회복(탐지가 회복의 전제). 회피는 DL 발생 X·미리 예측·회복(rollback) 필요 X·Available·Allocation·Request·Max·Need 사용, 탐지는 DL 발생 전제·DL 모니터링·회복과 병행·Allocation·Request·Available 사용">
+            </figure>
+          </li>
+          <li><strong>교착상태의 필요조건 (발생조건)</strong>
+            <ul>
+              <li>네 가지 조건이 동시에 성립될 때 발생</li>
+              <li><strong>① 상호배제 (mutual exclusion)</strong></li>
+              <li><strong>② 점유와 대기 (hold and wait)</strong> : 자신에게 할당된 자원이 있으면서 다른 자원의 할당을 대기 <span class="fix">원본과 다름 · 원본: “wait-for”, 이 조건의 영어 이름은 hold and wait</span></li>
+              <li><strong>③ 비선점 (no preemption)</strong> : 어떤 프로세스에 할당된 자원을 빼앗을 수 없음</li>
+              <li><strong>④ 환형대기 (circular wait)</strong> : 프로세스가 closed chain 을 이루고 있으면서 각 프로세스가 체인의 다음 프로세스가 필요로 하는 자원을 최소 하나씩 갖고 있는 상태
+                <ul>
+                  <li>환형대기는 점유와 대기를 암시하므로 완전 독립적인 조건은 아니지만 구분함</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>교착상태 예방 방법</strong>
+            <ul>
+              <li>조건 중에서 최소한 하나가 성립하지 않도록 보장함으로써 교착상태 예방</li>
+              <li><strong>① 상호배제</strong> : 모든 자원을 공유 가능하도록 함
+                <ul>
+                  <li>단점 : 현실적으로 공유 불가능한 자원이 있음 (ex. 프린터)</li>
+                </ul>
+              </li>
+              <li><strong>② 점유와 대기</strong>
+                <ul>
+                  <li>i) 각 프로세스가 실행되기 전에 자신의 모든 자원을 요청하고 미리 할당받을 것</li>
+                  <li>ii) 프로세스가 자원을 전혀 갖고 있지 않을 때만 자원을 요청할 수 있음 (요청하려면 갖고 있던 자원을 모두 반납해야 함)</li>
+                  <li>단점 : 자원의 이용도가 낮아짐, 기아 상태 가능 (인기 많은 자원을 필요로 하는 프로세스는 무한정 대기해야 할 수 있음)</li>
+                </ul>
+              </li>
+              <li><strong>③ 비선점</strong> : 선점 허용
+                <ul>
+                  <li>어떤 자원을 점유 중인 프로세스가 즉시 할당할 수 없는 다른 자원을 요청하면 갖고 있던 자원을 뺏김</li>
+                  <li>프로세스가 요청 중인 새로운 자원을 할당받고, 대기 중에 선점되었던 모든 자원을 회복할 때만 다시 시작 가능</li>
+                  <li>단점 : 선점에 따른 동기화 알고리즘이나 오버헤드 증가</li>
+                </ul>
+              </li>
+              <li><strong>④ 환형대기</strong> : 모든 자원 타입에 전체적인 순서를 부여하여, 각 프로세스가 열거된 순서대로 오름차순으로 자원을 요청하도록 요구
+                <ul>
+                  <li>단점 : 새로운 자원 추가 시 현존 프로그램, 시스템 재구성</li>
+                </ul>
+              </li>
+              <li><strong>예방의 문제점</strong> : 장치의 이용률이 저하되고 시스템 처리율이 감소됨</li>
+            </ul>
+          </li>
+          <li><strong>교착상태 회피</strong>
+            <ul>
+              <li>자원이 어떻게 요청될지에 대한 추가 정보를 제공하도록 요구</li>
+              <li>자원 상태 정보를 이용하여 안전 상태를 유지하도록 능동적으로 조정하는 방법</li>
+              <li>프로세스들이 자원을 요청하면 시스템은 그것을 바로 들어줄지, 기다리게 할지를 결정</li>
+              <li><strong>자원 할당 상태 (State)</strong> : 사용 가능한 자원 / 할당한 자원 / 프로세스 자원 요구의 최대 값</li>
+              <li><strong>안전 상태 (Safe State)</strong> : 모든 프로세스들이 교착상태를 일으키지 않으면서 수행을 끝낼 수 있는 순서가 최소 하나 이상 존재
+                <ul>
+                  <li>안전 : OS 가 프로세스에게 자원을 할당해도 교착상태에 빠지지 않는다</li>
+                  <li>시스템이 안전 순서를 찾을 수 있는 상태</li>
+                </ul>
+              </li>
+              <li><strong>불안전 상태 (Unsafe State)</strong> : 교착상태가 발생할 수 있는 상태 (불안전하다고 반드시 교착상태가 발생하는 것 X)
+                <ul>
+                  <li>시스템이 안전 순서를 찾을 수 없는 상태</li>
+                </ul>
+                <figure>
+                  <img src="3-2-4-fig-2.png" width="309" height="148" alt="안전 상태와 불안전 상태의 관계. 전체 상태가 아래쪽 안전 상태와 위쪽 불안전 상태로 나뉘고, 교착상태는 불안전 상태 안에 들어 있음">
+                </figure>
+              </li>
+              <li><strong>안전 순서 (Safe sequence)</strong> : 모든 프로세스들의 종료 순서</li>
+              <li><strong>회피의 문제점</strong>
+                <ul>
+                  <li>① 프로세스가 수행을 위해 필요한 자원을 모두 파악하는 것이 어려움</li>
+                  <li>② 자원 이용률은 회피를 쓰지 않을 때에 비해 낮아짐</li>
+                  <li>③ 프로세스의 실행 순서가 우선순위나 동기화에 의해 수행 순서의 제한을 받지 않아야 함 (가용 자원이 할당 가능하면 프로세스 수행을 시작해야 해서 프로세스 스케줄링 정책과 충돌 발생)</li>
+                  <li>④ 어떤 프로세스도 자원을 보유한 상태로 exit 될 수 없어야 함</li>
+                  <li>→ 회피 전략은 교착상태 가능성을 예측할 뿐</li>
+                </ul>
+              </li>
+              <li><strong>회피 알고리즘</strong> : 자원 할당 그래프 알고리즘 (인스턴스 하나), 은행원 알고리즘 (인스턴스 여러 개) → 3.2.8</li>
+            </ul>
+          </li>
           <li><strong>교착상태 탐지</strong>
             <ul>
               <li>주기적으로 환형대기 발생했는지 탐지 → 발생 시 해결</li>
               <li>자원 할당이 가능하다면 항상 자원을 할당해줌</li>
               <li>교착상태가 발생하면 회복 작업 수행</li>
               <li><strong>해결법</strong> : 자원할당그래프 소거법, 개선된 은행원 알고리즘</li>
+              <li>회피 vs 탐지
+                <ul>
+                  <li>① 교착상태에 빠질 수 있는지 미리 예측하는 부분이 탐지 알고리즘에는 존재 X</li>
+                  <li>② 각 프로세스는 시작할 때 운영체제에게 자신이 요구할 자원의 최대량을 미리 알릴 필요 X (Max 필요 없음)</li>
+                </ul>
+              </li>
             </ul>
           </li>
           <li><strong>자원할당 그래프</strong>
@@ -235,7 +475,7 @@
                   <li>③ 반복</li>
                 </ul>
                 <figure>
-                  <img src="3-2-4-fig-1.png" width="1440" height="859" alt="소거법 손그림: 자원할당 그래프(R1 → P1 할당, P1 → R2 요청, R1 → P2, P2 → R2, P3·P4 와 두 자원 사이 순환)에서 unblocked 인 P1 을 골라 간선을 지우고, 이어서 P2 를 골라 간선을 지움. P3·P4 의 순환 대기는 지울 수 없어 남음 → 종료 불가능(순환 대기 존재), 자원을 몰아주는 등의 해결책 필요">
+                  <img src="3-2-4-fig-3.png" width="1440" height="859" alt="소거법 손그림: 자원할당 그래프(R1 → P1 할당, P1 → R2 요청, R1 → P2, P2 → R2, P3·P4 와 두 자원 사이 순환)에서 unblocked 인 P1 을 골라 간선을 지우고, 이어서 P2 를 골라 간선을 지움. P3·P4 의 순환 대기는 지울 수 없어 남음 → 종료 불가능(순환 대기 존재), 자원을 몰아주는 등의 해결책 필요">
                 </figure>
               </li>
             </ul>
@@ -247,9 +487,29 @@
               <li>사이클 탐지 알고리즘 이용해 검사</li>
             </ul>
             <figure>
-              <img src="3-2-4-fig-2.png" width="1240" height="680" alt="(a) 자원 할당 그래프: P1 → R1 → P2, P2 → R3 → P5, P2 → R4 → P3, P3 → R5, P2 → R5, R5 → P4, P4 → R2 → P1. (b) 대응되는 대기 그래프: P1 → P2, P2 → P5, P2 → P3, P2 → P4, P3 → P4, P4 → P1 (자원 노드를 빼고 기다림만 남김)">
+              <img src="3-2-4-fig-4.png" width="1240" height="680" alt="(a) 자원 할당 그래프: P1 → R1 → P2, P2 → R3 → P5, P2 → R4 → P3, P3 → R5, P2 → R5, R5 → P4, P4 → R2 → P1. (b) 대응되는 대기 그래프: P1 → P2, P2 → P5, P2 → P3, P2 → P4, P3 → P4, P4 → P1 (자원 노드를 빼고 기다림만 남김)">
               <figcaption>교재 그림 7.9와 같은 구성으로 다시 그림</figcaption>
             </figure>
+          </li>
+          <li><strong>개선된 은행원 알고리즘</strong>
+            <ul>
+              <li>자원 타입마다 인스턴스가 여러 개 존재하는 경우 (m × n²)</li>
+              <li>프로세스의 자원 할당 → 요청 항상 할당 (주어진 상태에서 교착상태 여부 찾기)</li>
+              <li>프로세스는 존재하지만 아직 자원을 할당받기 전인 프로세스 (Allocation = 0)는 어차피 교착상태와 상관 X → 처음부터 Finish[i] = true</li>
+              <li><strong>안전 알고리즘과 다른 점</strong> : 처음에 Allocation[i] ≠ 0 인 프로세스만 Finish[i] = false, Need[i] 대신 Request[i] ≤ Work 로 찾음
+                <figure>
+                  <img src="3-2-4-fig-5.png" width="831" height="646" alt="개선된 은행원 알고리즘(탐지) 순서도. Work = Available, Allocation[i] ≠ 0 이면 Finish[i] = false 아니면 true 로 시작 → Finish[i] = false 이고 Request[i] ≤ Work 인 프로세스 i 를 찾으면 Work = Work + Allocation[i], Finish[i] = true (종료시킴) 를 반복 → 더 없으면 모든 Finish[i] 가 true 인지 확인, 아니면(NO) 교착상태">
+                </figure>
+              </li>
+              <li>예 : P0 ~ P4 프로세스 / 자원 A(7), B(2), C(6)
+                <ul>
+                  <li>work = (0, 0, 0) 에서 Request ≤ work 인 프로세스를 P0 → P2 → P1 → P3 → P4 순으로 끝낼 수 있어 모든 Finish[i] = true → 교착상태 아님</li>
+                </ul>
+                <figure>
+                  <img src="3-2-4-fig-6.png" width="957" height="306" alt="탐지 예제. Allocation P0 010, P1 200, P2 303, P3 211, P4 002 / Request P0 000, P1 202, P2 000, P3 100, P4 002 / Available 000. work 가 (0,0,0) → P0 (0,1,0) → P2 (3,1,3) → P1 (5,1,3) → P3 (7,2,4) → P4 (7,2,6)">
+                </figure>
+              </li>
+            </ul>
           </li>
           <li><strong>교착상태 회복</strong>
             <ul>
@@ -271,7 +531,9 @@
                     <ul>
                       <li>① <strong>희생자 선택</strong> : 비용 최소화하는 방향으로 자원 선점 순서 결정해야함</li>
                       <li>② <strong>복귀 (rollback)</strong> : 시스템이 실행하는 모든 프로세스들의 상태 정보 유지해야함 <span class="fix">원본과 다름 · 원본: “복귀 (rollover)”</span></li>
+                      <li><strong>복귀 방법</strong> : 프로세스를 안전한 상태로 후퇴시키고, 그 상태부터 재시작</li>
                       <li>③ <strong>기아</strong> : 기아상태 발생하면 안됨</li>
+                      <li><strong>기아 방지</strong> : 동일 프로세스가 계속 희생될 수 있으므로 비용 요소에 후퇴(rollback) 횟수를 포함시킴</li>
                     </ul>
                   </li>
                 </ul>
@@ -295,12 +557,25 @@
                 <ul>
                   <li><strong>CPU이용률 (CPU utilization)</strong> : 프로세스들이 CPU를 사용하는 비율</li>
                   <li><strong>시스템 처리율 (throughput)</strong> : 단위 시간당 완료한 프로세스 개수 (= 처리한 프로세스 개수)</li>
-                  <li><strong>반환시간 (turnaround time)</strong> : 프로세스가 제출된 때부터 실행을 마칠 때까지 걸린 시간 <span class="fix">원본과 다름 · 원본: “프로세스들이 준비큐에서 대기하는 시간”</span></li>
-                  <li><strong>대기시간 (waiting time)</strong> : 프로세스들이 준비큐에서 대기하는 시간 <span class="fix">원본과 다름 · 원본의 반환시간 설명을 이 줄로 옮김</span></li>
+                  <li><strong>반환시간 (turnaround time)</strong> : 프로세스가 제출된 때부터 실행을 마칠 때까지 걸린 시간 <span class="fix">원본과 다름 · 원본: “프로세스들이 준비큐에서 대기하는 시간”</span>
+                    <ul>
+                      <li>= 총 처리시간. 메모리에 들어가기 위해 기다린 시간, 준비큐에서 대기하는 시간 등을 모두 포함</li>
+                    </ul>
+                  </li>
+                  <li><strong>대기시간 (waiting time)</strong> : 프로세스들이 준비큐에서 대기하는 시간 <span class="fix">원본과 다름 · 원본의 반환시간 설명을 이 줄로 옮김</span>
+                    <ul>
+                      <li>큐의 길이에 의해 측정될 수 있음</li>
+                    </ul>
+                  </li>
                   <li><strong>응답시간 (response time)</strong> : 프로세스가 요구한 시간부터 첫 번째 응답이 나올 때까지의 시간 (= 반응시간)</li>
                 </ul>
               </li>
             </ul>
+          </li>
+          <li><strong>MTBF · MTTF · MTTR</strong>
+            <figure>
+              <img src="3-2-5-fig-1.png" width="744" height="339" alt="① MTBF(Mean Time Between Failure) : 고장 ~ 다음 고장까지의 시간. ② MTTF(Mean Time To Failure) : (처음 &amp; 다시) 사용하기 시작해서 고장 나기 전까지 시간(= 동작 시간), 시스템 가용도(availability)에 가장 큰 영향. ③ MTTR(Mean Time To Recovery) : 수리 시간. 아래 막대는 동작(MTTF) - 고장(MTTR) - 동작 … 이 반복되고 MTBF = MTTR + MTTF 구간임을 보임">
+            </figure>
           </li>
           <li><strong>스케줄링 기본요소</strong>
             <ul>
@@ -312,11 +587,19 @@
               </li>
               <li><strong>CPU 중심 job vs I/O 중심 job</strong>
                 <ul>
-                  <li>CPU 중심 프로그램은 긴 CPU 버스트를 가짐</li>
+                  <li>CPU 중심 프로그램은 긴 CPU 버스트를 가짐
+                    <ul>
+                      <li>연산을 위해 많은 명령어를 수행</li>
+                    </ul>
+                  </li>
                   <li>I/O 중심 프로그램은 짧은 CPU 버스트, 입출력을 위해 많은 시간을 대기</li>
                 </ul>
               </li>
-              <li><strong>CPU 스케줄러</strong> : CPU가 쉬고 있을 때 운영체제가 다음에 실행할 프로세스를 준비큐에서 선택하는 과정. 실행준비가 된 프로세스를 선택하고 CPU를 할당</li>
+              <li><strong>CPU 스케줄러</strong> : CPU가 쉬고 있을 때 운영체제가 다음에 실행할 프로세스를 준비큐에서 선택하는 과정. 실행준비가 된 프로세스를 선택하고 CPU를 할당
+                <ul>
+                  <li>단기 스케줄러가 맡음</li>
+                </ul>
+              </li>
               <li><strong>문맥 교환 (Context switch)</strong> : CPU가 한 프로세스에서 다른 프로세스로 전환할 때, 실행하던 프로세스 상태를 보관하고 새로운 프로세스 정보를 적재해 실행 준비하는 것</li>
             </ul>
           </li>
@@ -324,13 +607,21 @@
             <ul>
               <li>프로세스는 준비큐에서 CPU를 할당받은 후 실행 상태가 됨</li>
               <li>프로세스가 실행 중일 때 I/O 요청이 들어오면 대기 상태가 되고, I/O queue에서 대기</li>
-              <li>실행 중에 인터럽트 발생 시, 준비 상태가 되어 준비큐에서 CPU 할당을 기다림</li>
-              <li><strong>작업 큐 (job queue)</strong> : 주기억장치의 할당을 기다리며 대용량의 기억장치에 있는 프로세스들로 구성됨</li>
+              <li>실행 중에 인터럽트 발생 시, 준비 상태가 되어 준비큐에서 CPU 할당을 기다림
+                <figure>
+                  <img src="3-2-5-fig-2.png" width="623" height="400" alt="ready Q → CPU 할당 → CPU → 장치Q → 작업 수행 흐름. i) 프로세스가 I/O 요청 → I/O Q에 넣어짐 → I/O 수행 → ready Q로, ii) 프로세스가 자식 프로세스 생성 → 자식 프로세스의 종료 기다림 → 종료 시 ready Q로, iii) 인터럽트에 의해 CPU로부터 제거됨 → ready Q로">
+                </figure>
+              </li>
+              <li><strong>작업 큐 (job queue)</strong> : 주기억장치의 할당을 기다리며 대용량의 기억장치에 있는 프로세스들로 구성됨
+                <ul>
+                  <li>아직 프로세스로 활성화되지 않은 상태</li>
+                </ul>
+              </li>
               <li><strong>준비 큐 (ready queue)</strong> : 주기억장치에 적재되어 있으면서 CPU에 의해 실행되기를 준비하는 프로세스들로 구성됨</li>
               <li><strong>장치 큐 (device queue)</strong> : 특정 입출력 장치를 기다리고 있는 프로세스들로 구성됨</li>
             </ul>
             <figure>
-              <img src="3-2-5-fig-1.png" width="650" height="410" alt="스케줄링 큐: job → 작업 큐 (spool, FIFO) → 장기 스케줄러 → 준비 큐 → 단기 스케줄러 → 실행 프로세스로, 실행 → 대기 → 장치 큐 (FIFO) → 준비">
+              <img src="3-2-5-fig-3.png" width="650" height="410" alt="스케줄링 큐: job → 작업 큐 (spool, FIFO) → 장기 스케줄러 → 준비 큐 → 단기 스케줄러 → 실행 프로세스로, 실행 → 대기 → 장치 큐 (FIFO) → 준비">
             </figure>
           </li>
           <li><strong>프로세스 스케줄링 (CPU 자원할당) 유형별 분류</strong>
@@ -341,25 +632,48 @@
                     <ul>
                       <li>호출을 가끔 하기 때문에 장기 스케줄러</li>
                       <li>새로운 프로세스가 생성되었을 때, 현재 활동 중인 프로세스 모임에 새로운 프로세스를 추가하는 역할</li>
+                      <li>풀에서 프로세스들을 선택해 실행하기 위해 메모리로 적재</li>
                       <li>다중 프로그래밍 정도를 결정 (동시에 올라가 있는 프로세스 수 조절)</li>
                     </ul>
                   </li>
                   <li><strong>중기 스케줄러</strong> : 메모리에 적재된 프로세스 수 관리
                     <ul>
                       <li>너무 많은 프로세스에게 메모리를 할당해 시스템 성능 저하 시, 적재된 프로세스 수 조절 (swap out 시킴)</li>
+                      <li>메모리에서 CPU를 경쟁하는 일부 프로세스를 제거해 다중 프로그래밍 정도를 완화</li>
+                      <li>차후에 제거되었던 프로세스를 다시 메모리로 불러와 중단되었던 지점부터 실행 재개 (swap in)</li>
                     </ul>
                   </li>
                   <li><strong>단기 스케줄러</strong> : 어떤 프로세스에게 CPU를 할당할 것인가? (= cpu 스케줄러)
                     <ul>
                       <li>준비 상태의 프로세스 중에서 어떤 프로세스를 다음에 실행 상태로 만들 것인지 결정</li>
+                      <li>CPU를 위해 반드시 자주 새로운 프로세스를 선택해야 함</li>
                     </ul>
                   </li>
                 </ul>
+                <figure>
+                  <img src="3-2-5-fig-4.png" width="359" height="162" alt="스케줄러 위치 스케치. job(디스크) 쪽은 장기 스케줄러, 메모리의 process 쪽은 단기 스케줄러, PCB만 남은 쪽은 중기 스케줄러가 맡음">
+                </figure>
+                <figure>
+                  <img src="3-2-5-fig-5.png" width="1102" height="574" alt="스케줄러별 상태 전이도. new → Ready는 장기 스케줄러(빨강), Ready → Running(kernel mode) dispatch와 Timer interrupt는 단기 스케줄러(파랑), Blocked ↔ Suspended Blocked, Ready ↔ Suspended Ready의 Swap out/in은 중기 스케줄러(초록). Running(user mode) ↔ Running(kernel mode)은 System Call·Interrupt·Trap과 복귀, Running → terminated(exit), Blocked → Ready(Wake up)">
+                </figure>
               </li>
               <li><strong>방법별 분류</strong>
                 <ul>
-                  <li><strong>선점 (preemptive) 방식</strong> : 실행 중인 프로세스보다 높은 우선 순위의 프로세스가 있으면, 현재 실행 중인 프로세스를 중지시키고 실행한다</li>
-                  <li><strong>비선점 (Non-preemptive) 방식</strong> : 수행 프로세스를 중지하고 다른 프로세스를 수행시킬 수 없는 스케줄링 방법</li>
+                  <li><strong>선점 (preemptive) 방식</strong> : 실행 중인 프로세스보다 높은 우선 순위의 프로세스가 있으면, 현재 실행 중인 프로세스를 중지시키고 실행한다
+                    <ul>
+                      <li>종류 : RR, SRT, MLQ, MFQ</li>
+                      <li>높은 우선순위 프로세스에게 빠른 반응시간 제공</li>
+                      <li>실시간 시스템, 대화식 시분할 시스템에 적합</li>
+                      <li>단점 : 오버헤드 발생 (수행 프로세스를 중지시키고, 수행한 내용이 제거됨)</li>
+                    </ul>
+                  </li>
+                  <li><strong>비선점 (Non-preemptive) 방식</strong> : 수행 프로세스를 중지하고 다른 프로세스를 수행시킬 수 없는 스케줄링 방법
+                    <ul>
+                      <li>종류 : FIFO, SJF, HRN</li>
+                      <li>응답시간 예측이 용이</li>
+                      <li>단점 : 호송효과 (호위효과) – 많은 프로세스들이 하나의 긴 프로세스 때문에 대기</li>
+                    </ul>
+                  </li>
                 </ul>
               </li>
             </ul>
@@ -372,6 +686,16 @@
             <tr><td>처리시간 빨라짐</td><td>문맥교환에 따른 오버헤드 적음</td></tr>
           </tbody>
         </table>
+        <ul>
+          <li><strong>프로세스 스케줄링 발생 상황</strong>
+            <ul>
+              <li>① 한 프로세스가 실행 → 대기로 전환될 때 : 비선점</li>
+              <li>② 프로세스가 종료할 때 : 비선점</li>
+              <li>③ 프로세스가 실행 → 준비완료 상태로 전환될 때 (ex. 인터럽트 발생 시) : 선점</li>
+              <li>④ 프로세스가 대기 → 준비완료 상태로 전환될 때 (ex. 입출력 종료 시) : 선점</li>
+            </ul>
+          </li>
+        </ul>
         <p>알고리즘별 분류(FIFO·SJF·HRN·SRT·RR)는 <a href="#n-3-2-6">3.2.6 CPU 스케줄링 알고리즘</a>에 있어요.</p>
       </section>
     </article>
@@ -381,17 +705,37 @@
       <section class="part" id="s-3-2-6-1">
         <h3>CPU 스케줄링 알고리즘</h3>
         <ul>
+          <li><strong>알고리즘별 분류</strong>
+            <ul>
+              <li>우선순위, 기한부, FIFO, 라운드 로빈, SJF, SRT, HRN, MLQ, MFQ</li>
+            </ul>
+          </li>
           <li><strong>FIFO (First In First Out)</strong> : 비선점
             <ul>
               <li>FIFO = FCFS. 도착순서대로 CPU 할당</li>
               <li>긴 작업에게 유리, 짧은 작업에게 불리</li>
+              <li>장점 : 간단한 코드, 공정성 제공, 선입선출 큐를 이용해 쉽게 관리 가능</li>
+              <li>단점 : 호송효과 (호위효과) 발생 – 짧은 프로세스들에게 불리
+                <ul>
+                  <li>대화식 시스템, 시분할 시스템에 부적합</li>
+                  <li>CPU 이용률이 떨어짐, 평균 대기시간 ↑</li>
+                </ul>
+              </li>
             </ul>
           </li>
           <li><strong>SJF (Shortest Job First)</strong> : 비선점
             <ul>
-              <li>처리해야 할 실행 시간이 가장 작은 프로세스에게 CPU 할당</li>
+              <li>처리해야 할 실행 시간이 가장 작은 프로세스에게 CPU 할당
+                <ul>
+                  <li>실행 시간 = 프로세스 전체 길이가 아니라 다음 CPU burst 길이가 기준</li>
+                  <li>실행 시간이 같으면 FCFS 적용</li>
+                </ul>
+              </li>
               <li>짧은 작업에게 유리</li>
               <li>기아현상 발생 → 긴 프로세스는 자기 차례 기다리다가 굶어죽게 됨</li>
+              <li>장점 : 최소 평균 대기시간</li>
+              <li>단점 : 작업 실행 시간 (CPU 요청의 길이) 예측이 어려움 → 장기 스케줄링에서 주로 사용 (단기 스케줄링은 다음 CPU burst 길이를 알 수 없음)</li>
+              <li>시분할 시스템, 트랜잭션 시스템에 부적합</li>
             </ul>
           </li>
           <li><strong>HRN (Highest Response Ratio Next)</strong> : 비선점
@@ -410,26 +754,87 @@
             <ul>
               <li>SJF (실행시간 가장 짧은 것) + 선점</li>
               <li>완료되기까지의 실행 시간 추정치가 가장 작은 프로세스에게 CPU 할당</li>
+              <li>단점 : 오버헤드, 기아현상 발생할 수 있음</li>
             </ul>
           </li>
           <li><strong>RR (Round Robin)</strong> : 선점
             <ul>
-              <li>큐에 먼저 들어온 프로세스가 먼저 CPU 할당받음 + timeslice동안만 실행 후, 완료되지 않았으면 준비큐 맨 뒤로 이동</li>
+              <li>큐에 먼저 들어온 프로세스가 먼저 CPU 할당받음 + timeslice동안만 실행 후, 완료되지 않았으면 준비큐 맨 뒤로 이동
+                <ul>
+                  <li>각 프로세스는 시간 할당량만큼 CPU 점유, 클록 인터럽트 발생 시 레디큐로 이동</li>
+                  <li>원형 큐 사용 – FCFS 방식으로 다음 큐가 실행됨</li>
+                </ul>
+              </li>
               <li>순서 + timeslice 선점</li>
               <li>timeslice
                 <ul>
+                  <li>시간 할당량 (타임 퀀텀)은 문맥교환의 효과를 고려해 정함 (성능 좌우)</li>
                   <li>크다 : FIFO와 동일해짐</li>
                   <li>작다 : 선점 횟수 많아짐 → 오버헤드 증가</li>
                 </ul>
               </li>
               <li>단점 : 선점 발생, 선점 횟수 많아짐</li>
               <li>선점 최적화 방법 → 멀티큐 (다중큐)</li>
+              <li>대화식 시분할 시스템에 적합
+                <figure>
+                  <img src="3-2-6-fig-2.png" width="784" height="149" alt="RR 예. P1 24, P2 3, P3 3, time quantum = 4 → P1(0~4), P2(4~7), P3(7~10) 다음 P1이 10~30까지 4씩 실행. 손글씨 메모 : program counter = null (다시 처음부터)">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>우선순위 스케줄링 : 선점형 / 비선점형 둘 다 가능</strong>
+            <ul>
+              <li><strong>정적 우선순위</strong> : 실행이 쉽고 오버헤드 적음 / 주위 여건 적응 X, 우선순위 바뀌지 X</li>
+              <li><strong>동적 우선순위</strong> : 상황 변화에 잘 적응 / 구현 복잡, 오버헤드 큼</li>
+              <li><strong>내부적 우선순위</strong> : 시간 제한, 메모리 요구, 열린 파일의 수, 평균 입출력 버스트의 평균 CPU 버스트에 대한 비율 등</li>
+              <li><strong>외부적 우선순위</strong> : 프로세스의 중요성, 컴퓨터 사용을 위해 지불되는 비용의 타입과 양, 그 작업을 후원하는 부서 등</li>
+              <li>단점 : 무한 봉쇄, 기아 → 노화 (aging) 사용</li>
+            </ul>
+          </li>
+          <li><strong>MLQ (Multi-Level Queue, 다단계 큐 스케줄링) : 선점 (우선순위 큐에 따른 선점)</strong>
+            <ul>
+              <li>작업을 여러 종류의 그룹으로 나누어 각 큐의 독자적 스케줄링에 따라 CPU 할당 (고정 할당, 큐 간 이동 없음)</li>
+              <li>큐들 간에 작업 이동 불가능 (큐를 처음부터 우선순위로 정렬해야 함 – 트리로 구현하기도 함)</li>
+              <li>장점 : 스케줄링 오버헤드 ↓</li>
+              <li>단점 : 융통성 없음
+                <figure>
+                  <img src="3-2-6-fig-3.png" width="475" height="156" alt="MLQ 손그림. highest priority queue는 FIFO로 주로 시스템 프로세스, lower priority queue는 FIFO로 대화형 프로세스, 그 아래로 큐가 더 이어짐">
+                </figure>
+              </li>
+              <li>우선순위 낮은 프로세스들은 계속 밀려나게 됨 → MFQ</li>
             </ul>
           </li>
           <li><strong>MFQ (Multi-level Feedback Queue)</strong>
             <ul>
               <li>다단계 피드백 큐에서 우선순위 높은 큐에 대기 중인 프로세스가 존재한다면, 무조건 그 큐가 먼저 CPU를 점유하고 그 큐를 진행하러 감</li>
+              <li>다단계 귀환 스케줄링, 선점 – 선점의 최소화 (최적 선점이 목적)</li>
+              <li>입출력 위주와 CPU 위주인 프로세스의 특성에 따라 서로 다른 time slice 부여</li>
+              <li>주어진 시간 할당량이 완료되면 다음 단계의 큐에 배치 (큐 간 이동 허용, aging)</li>
+              <li>프로세스의 실행시간이 길수록 점점 낮은 순위를 지니게 됨, 가장 낮은 우선순위 큐에 도달하면 순환 할당 (RR) 방식으로 스케줄링</li>
+              <li>RR에 비해 MFQ의 장점 : 선점 횟수 최소화
+                <ul>
+                  <li>6초짜리 작업이면 2초씩 3번 (2×3) 나누는 것보다, 2×1 다음 큐에서 4×1 로 하는 것이 선점 횟수가 더 적음</li>
+                </ul>
+                <figure>
+                  <img src="3-2-6-fig-4.png" width="529" height="296" alt="MFQ 구조 손그림. 초기 진입 → Q#0(최상위 큐) → CPU(TS : 2⁰) → 완료, 끝나지 않으면 Q#1 → CPU(TS : 2¹) → 완료, … Q#n → CPU(TS : 2ⁿ) → 완료. 아래 큐로 갈수록 시간 할당량이 2배씩 커짐">
+                </figure>
+              </li>
+              <li>큐마다 정책, 알고리즘, 퀀텀이 다 다름</li>
+              <li>매개변수
+                <ul>
+                  <li>① 큐의 개수</li>
+                  <li>② 각 큐를 위한 스케줄링 알고리즘</li>
+                  <li>③ 한 프로세스를 높은 우선순위 큐로 올려 주는 시기 결정 방법</li>
+                  <li>④ 한 프로세스를 낮은 우선순위 큐로 강등시키는 시기 결정 방법</li>
+                  <li>⑤ 프로세스가 서비스를 필요로 할 때 프로세스가 들어갈 큐 결정 방법</li>
+                </ul>
+              </li>
             </ul>
+          </li>
+          <li><strong>기출문제 (MFQ)</strong>
+            <figure>
+              <img src="3-2-6-fig-5.png" width="863" height="466" alt="MFQ 기출 풀이 손글씨. 할당시간 Q1 4ms, Q2 8ms, Q3 16ms, 격상 조건 Q2 15ms, Q3 30ms. P1 도착 0 요구 16, P2 도착 4 요구 10, P3 도착 8 요구 10, P4 도착 15 요구 14. 아래는 0~50ms 간트 차트로, P2·P3가 Q2에서 15ms 기다린 뒤 Q1으로 격상되는 과정과 각 프로세스 완료 시점(P2 42, P3 44, P1 48, P4 50)을 표시">
+            </figure>
           </li>
         </ul>
         <table>
@@ -444,6 +849,23 @@
             <tr><th scope="row">SRT (Shortest Remaining Time)</th><td>현재 실행 중인 프로세스의 남아있는 실행시간과 다른 프로세스의 남은 실행시간을 계속 비교해 짧은 것으로 대체</td></tr>
           </tbody>
         </table>
+        <ul>
+          <li><strong>2008 기출 – 실시간 스케줄링</strong>
+            <ul>
+              <li>답 : ㉠ 역전, ㉡ 상속, ㉢ 올림 <span class="fix">원본과 다름 · 원본: 문제지 손글씨 “㉡ 올림, ㉢ 상속”, T1과 같은 우선순위를 주는 것이 상속, 한 단계 높게 정하는 것이 올림</span></li>
+              <li><strong>우선순위 역전</strong> : t4에서 T1이 임계영역 진입을 위해 세마포어를 잡으려 하지만 이미 T3에게 잡혀 있어 T1은 블록 상태가 됨. 그 와중에 (T3가 임계영역을 차지하는 동안) T3보다 우선순위가 높은 T2가 끼어들어 T3의 작업이 더 늦어지고, T1이 블록 상태에서 깨어나는 것도 더 늦어짐</li>
+              <li>해결 : T3에게 우선순위 상속 or 올림
+                <ul>
+                  <li><strong>우선순위 상속</strong> : T3에게 T1과 동일한 우선순위를 부여해 T2의 개입을 막음</li>
+                  <li><strong>우선순위 올림</strong> : T3의 우선순위를 T1의 우선순위보다 한 단계 높은 우선순위로 설정</li>
+                </ul>
+              </li>
+            </ul>
+            <figure>
+              <img src="3-2-6-fig-6.png" width="641" height="1221" alt="2008 기출 11번 문제지. T1(우선순위 가장 높음), T2, T3가 이진 세마포어 s로 동기화되고, (가)는 t1~t8 시점별 실행 순서와 간트 차트, (나)는 빈칸 ㉠·㉡·㉢을 채우는 설명. 문제지에 손글씨로 ㉠ 역전, ㉡ 올림, ㉢ 상속이 적혀 있음">
+            </figure>
+          </li>
+        </ul>
       </section>
     </article>
     <article class="topic" id="n-3-2-7">
@@ -452,7 +874,153 @@
       <!-- 칸: Word 원고(노트 원고/…/3-2 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-3-2-7-1">
         <h3>임계영역 알고리즘과 세마포어의 사례</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>세마포어 (semaphore)</strong>
+            <ul>
+              <li>상호 배제를 해결하기 위한 동기화 도구
+                <ul>
+                  <li>임계영역에 들어가기 전에 스위치를 &#x27;사용 중&#x27;으로 놓고 들어가므로, 다른 알고리즘처럼 임계영역이 잠겼는지 검사하거나 바쁜 대기하거나 다른 프로세스에 동기화 메시지를 보낼 필요가 없음</li>
+                </ul>
+              </li>
+              <li><strong>세마포어 변수</strong> : 정수 변수. 초기화 연산과 표준 연산 wait(), signal() 로만 접근할 수 있음</li>
+              <li><strong>wait(s) = P(s)</strong> : S 를 줄임 (−)
+                <figure>
+                  <img src="3-2-7-fig-1.png" width="1302" height="237" alt="wait(s) 코드와 메모. S &lt;= 0 이면 지금 프로세스는 list 에서 기다림(바쁜 대기, busy waiting), 아니면(S &gt; 0) 들어가면서 S = S − 1. 임계영역에 들어가기 전에 통과하며, S &lt; 0 이면 다른 프로세스가 임계영역 안에 있으므로 S &gt; 0 이 될 때까지 대기">
+                </figure>
+              </li>
+              <li><strong>signal(s) = V(s)</strong> : S 를 늘림 (+)
+                <figure>
+                  <img src="3-2-7-fig-2.png" width="1375" height="227" alt="signal(s) 코드와 메모. list 에서 기다리는 프로세스가 있으면 그중 한 프로세스만 진행(불을 바꿀 필요 없이 빨간불인 채로 교체), 없으면 S = S + 1 (파란불). 임계영역을 떠날 때 S 를 늘려 양수로 만들어 다른 프로세스들이 들어올 수 있게 함">
+                </figure>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <table>
+          <thead><tr><th scope="col">이진 세마포어 변수 (s)</th><th scope="col">카운팅 세마포어 변수 (T)</th></tr></thead>
+          <tbody>
+            <tr><td>0 과 1 만 가능 (Boolean)</td><td>제한 없는 영역 (Integer)</td></tr>
+            <tr><td>상호 배제 도구</td><td>동기화 도구</td></tr>
+            <tr><td>다중 프로세스 간 임계영역 문제에 사용</td><td>유한 개 자원(버퍼)에 대한 접근 제어</td></tr>
+            <tr><td>구현이 쉬움<br>바쁜 대기 처리 안 된 상태</td><td>바쁜 대기 처리된 상태</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>세마포어 변수의 유형</strong>
+            <ul>
+              <li><strong>이진 세마포어 (binary semaphore)</strong> : 공중전화 박스
+                <ul>
+                  <li>mutex lock 과 비슷하게 동작</li>
+                  <li>S = 1 : 임계영역 사용 가능 / S = 0 : 임계영역 사용 중</li>
+                  <li>wait(s) : S 가 1 이 되면 0 으로 바꾸며 들어감 / signal(s) : 나올 때 기다리던 프로세스를 들여보내거나 S = 1 로 함</li>
+                </ul>
+              </li>
+              <li><strong>카운팅 세마포어 (counting semaphore, 범용 세마포어)</strong> : 주차장
+                <ul>
+                  <li>가용 자원의 개수로 초기화</li>
+                  <li>n 대 주차할 수 있는 주차장 (n : 정수형 세마포어, 주차장 : 공유 자원)</li>
+                  <li>n &gt; 0 : 주차장(공유 자원)으로 들어가면서 n − 1 / n = 0 : n &gt; 0 이 될 때까지 대기 / (n &lt; 0 : 공유 자원을 기다리는 프로세스 수)</li>
+                  <li>wait(s) : 주차장에 빈 곳을 기다렸다가 빈 곳이 생기면 S − 1 하고 진입 / signal(s) : 주차장에서 나올 때 기다리던 차 입장 (S + 1)</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>바쁜 대기와 대기 리스트</strong>
+            <ul>
+              <li><strong>바쁜 대기 (busy waiting)</strong> : 어떤 프로세스가 임계영역 안에 있는 동안, 기다리는 다른 프로세스들이 진입 코드에서 계속 무한 루프를 도는 현상 (CPU 시간 낭비)</li>
+              <li><strong>block / wake up</strong> : CPU 스케줄러를 이용해 프로세스를 block / wake up 해서 바쁜 대기를 없앰
+                <ul>
+                  <li>wait, signal 연산을 고치고, 세마포어 정의에 프로세스 대기 리스트(process waiting list)를 추가</li>
+                  <li>세마포어가 음수일 때, 그 절댓값은 세마포어를 기다리는 프로세스 수</li>
+                  <li>같은 세마포어에 대해 두 프로세스가 동시에 wait(), signal() 을 할 수 없음 (원자성이 반드시 보장되어야 함)</li>
+                </ul>
+                <figure>
+                  <img src="3-2-7-fig-3.png" width="1247" height="685" alt="대기 리스트가 있는 wait(s)·signal(s) 코드(왼쪽 의사 코드, 오른쪽 C 코드)와 메모. wait 는 value 를 1 줄이고 0 보다 작으면(가용 자원이 없으면) 자기를 list 에 넣고 block(), signal 은 value 를 1 늘리고 0 이하이면(전에 −1 이하였다는 뜻, 대기 list 에 P 가 있었음) list 에서 P 하나를 꺼내 wakeup(P). 대기 큐가 있을 때 value 1 = 빈 곳 있음, 0 = 빈 곳 없음, −1 이하 = 빈 곳 없고 대기 큐에 프로세스가 있음">
+                </figure>
+                <figure>
+                  <img src="3-2-7-fig-4.png" width="523" height="248" alt="세마포어 값 변화 손그림. wait() 는 값을 줄인 뒤 S &gt;= 0 이면 진행, 음수(−2, −1)면 block 되어 대기 큐로 들어감. signal() 은 값을 늘린 뒤 S &lt;= 0 이면 대기 큐에서 기다리던 프로세스를 wakeup, S &gt; 0 이면 그냥 진행">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>고전적인 동기화 문제 ① 생산자 &amp; 소비자 문제</strong>
+            <ul>
+              <li>카운팅 세마포어 사용</li>
+              <li><strong>semaphore mutex = 1</strong> : 버퍼 접근 상호 배제용 (Boolean 변수, 이진 세마포어)</li>
+              <li><strong>semaphore empty = n</strong> : 빈 방 개수 (카운팅 세마포어)</li>
+              <li><strong>semaphore full = 0</strong> : 데이터 개수 (카운팅 세마포어)
+                <figure>
+                  <img src="3-2-7-fig-5.png" width="1280" height="557" alt="생산자(producer)·소비자(consumer) 코드와 메모. 생산자는 wait(empty)로 빈 곳을 확인(있으면 −1 하고 진입), wait(mutex)로 들어가도 되는지 확인 후 버퍼에 추가하고 signal(mutex), signal(full)로 데이터 개수 +1. 소비자는 wait(full), wait(mutex), 버퍼에서 제거, signal(mutex), signal(empty). 생산자의 wait 두 개 순서를 바꾸면 mutex 를 건 채 빈 곳을 기다려 소비자가 들어오지 못하므로 교착상태">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>2008 기출 - 모니터</strong>
+            <ul>
+              <li>원래 모니터에는 mutex 를 쓰지 않음 → 오류가 있는 문제
+                <figure>
+                  <img src="3-2-7-fig-6.png" width="1392" height="1128" alt="2008 기출 15번 스캔과 손글씨 풀이. 유한 버퍼 생산자/소비자 문제를 모니터로 푸는 코드의 ①~④ 채우기(① false, ② is_full = false, ③ signal(empty), ④ signal(full)). 옆에 세마포어(세마포어 변수, wait·signal)와 모니터(조건 변수 사용 - 값 없이 대기 큐만, wait 는 조건 변수의 대기 큐로 block, signal 은 대기 큐에서 하나 wake)를 비교하고, 모니터 그림(함수들과 대기 Q, Cwait·Csignal)과 &#x27;한 번에 한 P 만 쓸 수 있어 상호 배제가 필요 없음&#x27;을 적음">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>고전적인 동기화 문제 ② 읽기-쓰기 문제</strong>
+            <ul>
+              <li>자료 객체(파일, 레코드)는 여러 프로세스 사이에서 공유</li>
+              <li>reader(판독자), writer(기록자)가 있음</li>
+              <li>판독(reading)은 동시에 할 수 있음 / 기록(writing)은 상호 배제가 필요</li>
+              <li><strong>semaphore rw_mutex (= wrt) = 1</strong> : R, W 모두 공유. W 에 대한 상호 배제 (R&amp;W, W&amp;W 모두)</li>
+              <li><strong>semaphore mutex = 1</strong> : read_count 상호 배제를 위해 사용</li>
+              <li><strong>int read_count = 0</strong> : 몇 개의 프로세스가 읽고 있는가 (R 개수)
+                <figure>
+                  <img src="3-2-7-fig-7.png" width="1030" height="503" alt="쓰기 프로세스(상호 배제 필요: wait(wrt), 쓰기 수행, signal(wrt))와 읽기 프로세스(상호 배제 필요 없음: entry 에서 wait(mutex), read_count++, 처음 읽기면 wait(wrt), signal(mutex) / 읽기 수행 / exit 에서 wait(mutex), read_count--, 마지막 읽기면 signal(wrt), signal(mutex)) 코드와 메모">
+                </figure>
+                <figure>
+                  <img src="3-2-7-fig-8.png" width="956" height="481" alt="읽기 프로세스 코드 손글씨 설명. read_count 가 1이 아닌 R 들은 R1 이 기다리고 있어도 if 문을 실행할 수 있어서 코드 전체에 mutex 상호 배제가 필요. 처음 들어온 읽기 P 만 쓰기 P 가 동작 중인지 wait(wrt)로 검사(한 읽기 P 가 들어왔으면 나머지 읽기는 다 들어올 수 있음), 마지막 읽기 P 가 signal(wrt)로 다시 쓰기가 들어올 수 있게 함">
+                </figure>
+              </li>
+              <li><strong>Q. 읽기 프로세스 두 개가 들어왔는데 쓰기가 실행 중이면?</strong> : R1 은 wait(wrt) 에서 기다리고, R2 는 wait(mutex) 에서 기다림</li>
+              <li>쓰기 프로세스의 기아 상태가 생길 수 있음 (읽기 프로세스에게 새치기당해서)</li>
+              <li><strong>예제 (1)</strong> : 읽기 프로세스가 6 을 수행하고 있는 동안 쓰기1 → 읽기2 → 읽기3 의 요구가 들어옴 (읽기3 은 읽기2 가 3 을 수행할 때 시작, 읽기2 는 읽기3 이 6 을 수행할 때 읽기 영역을 빠져나감)
+                <figure>
+                  <img src="3-2-7-fig-9.png" width="1027" height="742" alt="쓰기 프로세스 a·b·c, 읽기 프로세스 ①~⑪ 번호를 붙인 코드와 예제 (1)의 실행 순서 손그림. 기준 읽기가 ⑥ 수행 중일 때 쓰기1은 ⓐ에서 기다리고, 읽기2·읽기3이 이어서 읽기를 하는 동안 계속 기다리다 마지막 읽기가 ⑩ signal(wrt)를 한 뒤에야 ⓑ ⓒ 수행">
+                </figure>
+              </li>
+              <li><strong>예제 (2)</strong> : 쓰기1 프로세스가 b 를 수행하고 있는 동안 읽기1 → 쓰기2 → 읽기2 요구가 들어온다면, 이를 처리할 때 wrt 대기 리스트에 들어가는 프로세스를 순서대로 나열하시오.
+                <figure>
+                  <img src="3-2-7-fig-10.png" width="244" height="183" alt="예제 (2) 풀이 손그림. 쓰기1이 ⓑ 수행 중일 때 읽기1은 ①②③ 다음 ④ wait(wrt)에서, 쓰기2는 ⓐ에서 wrt 대기 리스트로 들어가고, 읽기2는 ① wait(mutex)에서 기다림">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>고전적인 동기화 문제 ③ 식사하는 철학자 문제</strong>
+            <ul>
+              <li>포크 2 개를 이용해 식사하고, 식사가 끝나면 포크를 내려놓고 thinking</li>
+              <li>포크를 세마포어를 이용해 공유 자원(배열)으로 정의하고, 모든 원소를 1 로 초기화</li>
+              <li>wait 명령으로 포크를 잡고, signal 명령으로 포크를 제자리에 둠</li>
+            </ul>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>Program DiningPhilosophers<br>  var fork: array[0, 1, 2, 3, 4] of semaphore(=1); n: integer<br>  procedure philosopher(i: integer);<br>do {<br>  wait(fork[i]);            //포크 0번 잡고<br>  wait(fork[(i+1) % 5]);    //포크 1번 잡고<br>  //eat<br>  signal(fork[i]);          //포크 0번 놓고<br>  signal(fork[(i+1) % 5]);  //포크 1번 놓고 (내려놓는 순서 상관없음)<br>  //think<br>} while (true);</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>알고리즘의 문제점</strong> : 5 명의 철학자가 동시에 식사하면 모두 왼쪽 포크만 가지게 되고(왼쪽부터 잡음), 이미 다른 철학자가 가진 오른쪽 포크를 기다리는 교착상태가 생김 → 기아 현상 초래</li>
+          <li><strong>교착상태 방지법</strong>
+            <ul>
+              <li><strong>① 동시성 제어</strong> : 한 번에 최대 4 명의 철학자만 테이블에 동시에 앉을 수 있게 함 (room 변수를 넣어 4 로 인원 제한)
+                <figure>
+                  <img src="3-2-7-fig-11.png" width="972" height="353" alt="room = 4 로 인원을 제한한 코드: P(room); P(fork[i]); P(fork[(i+1) % 5]); eat; V(fork[(i+1) % 5]); V(fork[i]); V(room); 손글씨 메모: P0~P4 중 4명만 들어와 P0~P3이 각자 자리에서 포크를 잡고 기다리는 상황을 따라감. V(room)을 중간에 넣으면 P0, P1이 첫 번째 포크를 잡고 빠져나가 room 에 자리가 생겨 5명이 들어오게 됨">
+                </figure>
+              </li>
+              <li><strong>②</strong> 한 철학자가 포크 두 개를 모두 집을 수 있을 때만 포크를 집게 함 (임계영역 안에서만 포크를 집어야 함)</li>
+              <li><strong>③ 비대칭 해결안</strong> : 홀수 번호 철학자는 L → R 순으로, 짝수 번호 철학자는 R → L 순으로 집게 함</li>
+              <li><strong>④ 순환 끊기</strong> : 마지막 철학자만 R → L 순으로 집게 함</li>
+            </ul>
+          </li>
+        </ul>
       </section>
     </article>
     <article class="topic" id="n-3-2-8">
@@ -461,7 +1029,114 @@
       <!-- 칸: Word 원고(노트 원고/…/3-2 ….docx)를 반영하면 이 줄 아래 공부 칸이 바뀌어요 -->
       <section class="part" id="s-3-2-8-1">
         <h3>교착상태(deadlock)와 은행원 알고리즘</h3>
-        <p class="empty">아직 비어 있어요.</p>
+        <ul>
+          <li><strong>자원 할당 그래프 알고리즘</strong>
+            <ul>
+              <li>자원 타입마다 인스턴스가 하나만 존재하는 경우</li>
+              <li><strong>예약 간선</strong> : Pi → Rj 는 Pi 가 미래에 자원 Rj 를 요청할 것이라는 의미, 점선으로 표시</li>
+              <li>사이클 탐지 알고리즘을 이용하여 검사</li>
+            </ul>
+          </li>
+          <li><strong>은행원 알고리즘</strong>
+            <ul>
+              <li>자원 타입마다 인스턴스가 여러 개 존재하는 경우</li>
+              <li>프로세스는 시작할 때 작업 수행을 위해 요구되는 자원의 최대 값을 신고</li>
+              <li>최대 값은 시스템이 보유한 자원의 총합을 넘지 않아야 함</li>
+              <li>프로세스가 자원들을 요청하면 시스템은 그것을 들어주었을 때 시스템이 계속 안전 상태에 머무르게 되는지 여부를 판단
+                <ul>
+                  <li>그렇지 않다면 이 프로세스의 요청은 허락이 안 된 채 다른 프로세스가 끝나기까지 기다리게 됨</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>은행원 알고리즘 자료구조</strong> (M : 프로세스의 수, N : 자원의 종류 수)</li>
+        </ul>
+        <table>
+          <thead><tr><th scope="col">배열 이름</th><th scope="col">배열 요소</th><th scope="col">쓰는 알고리즘</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Available (가용 자원)</th><td>해당 자원의 가용한 인스턴스 개수 (길이 = N) <span class="fix">원본과 다름 · 원본: “길이 = M”, 자원 종류마다 하나씩이므로 N</span><br>현재 시스템이 보유한 가용한 자원</td><td>회피, 탐지</td></tr>
+            <tr><th scope="row">Max (최대 자원)</th><td>해당 프로세스가 필요로 하는 해당 자원의 인스턴스 개수 (길이 = M × N / 행렬)<br>프로세스가 시작하기 전에 운영체제에게 알리는, 자신이 요구하는 자원의 최대 값</td><td>회피</td></tr>
+            <tr><th scope="row">Allocation (할당 자원)</th><td>해당 프로세스에게 이미 할당한 해당 자원의 인스턴스 개수 (길이 = M × N / 행렬)<br>운영체제가 프로세스에게 할당한 자원</td><td>회피, 탐지</td></tr>
+            <tr><th scope="row">Need (요구 자원)</th><td>해당 프로세스가 필요로 하는 해당 자원의 인스턴스 개수 (길이 = M × N / 행렬)<br>프로세스가 작업을 완수하기 위해 앞으로 운영체제에게 요구할 자원의 수</td><td>회피</td></tr>
+            <tr><th scope="row">Request (요청 자원)</th><td>해당 프로세스가 요청한 해당 자원의 인스턴스 개수 (길이 = M × N / 행렬)<br>주어진 시점에 프로세스가 운영체제에게 요청한 자원의 수</td><td>회피, 탐지</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>① 자원 요청 알고리즘</strong> : 한 프로세스의 자원 요청 시 할당이 가능한지 알아보는 알고리즘
+            <ul>
+              <li>운영체제는 프로세스 Pi 의 자원 할당 요청 Request[i] 를 받는다 (Request[i, j] == k : Pi 가 Rj 를 k 개까지 요청하고 있음)</li>
+              <li>모든 자원에 대해 가상으로 할당해 보기</li>
+            </ul>
+          </li>
+        </ul>
+        <table>
+          <tbody>
+            <tr><td>Available     = Available     - Request[i]<br>Allocation[i] = Allocation[i] + Request[i]<br>Need[i]       = Need[i]       - Request[i]</td></tr>
+          </tbody>
+        </table>
+        <figure>
+          <img src="3-2-8-fig-1.png" width="1190" height="629" alt="자원 요청 알고리즘 순서도. Request[i] ≤ Need[i] 가 아니면 오류(error, 최대값을 넘는 잘못된 요청), Request[i] ≤ Available 이 아니면 대기(wait = block), 둘 다 맞으면 Available·Allocation[i]·Need[i] 를 가상으로 바꿔 보고 안전 상태면 승인(accept), 아니면 원래 값으로 되돌리고 거절(reject). 손글씨 메모: 값은 안전 순서를 찾는 과정에서만 쓰이고 안전 순서가 없으면 원래 값으로 복원">
+        </figure>
+        <ul>
+          <li><strong>② 안전 알고리즘</strong> : 시스템의 상태가 안전 상태인지 불안전 상태인지를 확인하는 알고리즘 (m × n²)
+            <ul>
+              <li><strong>finish[ ]</strong> : 요소가 boolean 이고 길이 n 인 일차원 배열</li>
+              <li><strong>work[ ]</strong> : 요소가 정수이고 길이 m 인 일차원 배열, 처음 값 : work = Available <span class="fix">원본과 다름 · 원본: “최대값”, 순서도처럼 처음에 Available 로 놓는 값</span>
+                <figure>
+                  <img src="3-2-8-fig-2.png" width="1324" height="690" alt="안전 알고리즘 순서도. Work = Available, finish[i] = false 로 시작 → finish[i] = false 이고 Need[i] ≤ Work 인 프로세스 i 를 찾으면 Work = Work + Allocation[i], finish[i] = true (종료시켜 자원 반환받기) 를 반복 → 더 없으면 모든 finish[i] 가 true 인지 확인해 그렇다면 안전 상태, false 가 하나라도 있으면 불안전 상태">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>은행원 알고리즘 예</strong> : P0 ~ P4 프로세스 / 자원 A(10), B(5), C(7)
+            <ul>
+              <li><strong>t0</strong> : 처음 상태 (Need = Max − Allocation). 안전 순서 &lt;P3, P1, P4, P2, P0&gt; (또는 &lt;P1, P3, P0, P2, P4&gt;) 가 있어 안전 상태
+                <figure>
+                  <img src="3-2-8-fig-3.png" width="1045" height="309" alt="t0 표. Allocation P0 010, P1 200, P2 302, P3 211, P4 002 / Max P0 753, P1 322, P2 902, P3 222, P4 433 / Available 332 / Need P0 743, P1 122, P2 600, P3 011, P4 431. Work 가 332 → 543 → 743 → 745 → 1047 → 1057 로 늘어나며 모두 끝남 → 안전 상태">
+                </figure>
+              </li>
+              <li><strong>t1</strong> : Request1 = (1, 0, 2) <span class="fix">원본과 다름 · 원본: 그림의 P4 Need “4 1 1”, Max 433 − Allocation 002 = 4 3 1</span>
+                <ul>
+                  <li>① Request1 ≤ Need1 (O) ② Request1 ≤ Available : (1, 0, 2) ≤ (3, 3, 2) (O)</li>
+                  <li>가상으로 할당 → Available (2, 3, 0), Allocation1 (3, 0, 2), Need1 (0, 2, 0) → 안전 순서 &lt;P1, P3, P0, P2, P4&gt; 가 있어 요청 승인</li>
+                </ul>
+                <figure>
+                  <img src="3-2-8-fig-4.png" width="1212" height="326" alt="t1 표. P1 의 요청 (1,0,2) 를 가상으로 할당해 Available 230, P1 Allocation 302, Need 020 으로 바꾼 뒤 Work 가 230 → 532 → 743 → 753 → 1055 → 1057 로 늘어나 안전 → 요청 승인">
+                </figure>
+              </li>
+              <li><strong>t2</strong> : Request4 = (3, 3, 0) <span class="fix">원본과 다름 · 원본: 그림의 P4 Allocation “0 2 2”, t1 그대로 0 0 2</span>
+                <ul>
+                  <li>① Request4 ≤ Need4 (O) ② Request4 ≤ Available : (3, 3, 0) &gt; (2, 3, 0) (X) → 대기</li>
+                </ul>
+                <figure>
+                  <img src="3-2-8-fig-5.png" width="990" height="340" alt="t2 표. t1 승인 뒤 상태 (Available 230) 에서 P4 의 요청 (3,3,0) 이 Available 보다 커서 대기">
+                </figure>
+              </li>
+              <li><strong>t3</strong> : Request0 = (0, 2, 0)
+                <ul>
+                  <li>① Request0 ≤ Need0 : (0, 2, 0) ≤ (7, 4, 3) (O) ② Request0 ≤ Available : (0, 2, 0) ≤ (2, 3, 0) (O)</li>
+                  <li>가상으로 할당하면 Available (2, 1, 0) 으로 Need ≤ Work 인 프로세스가 없음 → 안전 순서 X → 불안전 상태라 요청 거절 (원래 값으로 되돌림)</li>
+                </ul>
+                <figure>
+                  <img src="3-2-8-fig-6.png" width="1045" height="312" alt="t3 표. P0 의 요청 (0,2,0) 을 가상으로 할당해 P0 Allocation 030, Available 210, Need 723 으로 바꿔 보면 끝낼 수 있는 프로세스가 없어 X 표시 (거절)">
+                </figure>
+              </li>
+            </ul>
+          </li>
+          <li><strong>&lt;2021 기출&gt;</strong>
+            <ul>
+              <li>풀이 이어서 : ② 도 가상 할당하면 Available (2, 0, 0, 0, 1) 로 안전 순서가 없어 거절 (block), ③ 반환은 Allocation 에서만 빼고 Need 에는 더하지 않아 Available (2, 0, 1, 3, 1)
+                <figure>
+                  <img src="3-2-8-fig-8.png" width="685" height="1031" alt="2021 기출 손글씨 풀이 이어서. ② P3 요청은 가상 할당하면 Available (2,0,0,0,1) 로 할당 가능한 프로세스가 없어 거절(block). ③ P5 반환 요청은 더 이상 필요 없어서 반환하므로 Need 에 더하지 않고 Allocation 에서만 빼서 Available (2,0,1,3,1), 요청 허용">
+                </figure>
+              </li>
+              <li><strong>답</strong> : (가) P3, P4 / (나) ②, V = (2, 0, 1, 1, 1) <span class="fix">원본과 다름 · 원본: “③ (2 0 1 3 1)”, ③은 반환 요청이라 답이 될 수 없음. ③ 반환 뒤 Available (2,0,1,3,1) 에서 ① 은 여전히 불안전하지만 ② 는 안전해져 바로 할당됨</span></li>
+            </ul>
+            <figure>
+              <img src="3-2-8-fig-7.png" width="1385" height="1753" alt="2021 기출 9번 문제지와 손글씨 풀이. (가) 요구 행렬 C(= Max), 할당 행렬 A, 가용 벡터 V = (2,0,0,2,1). (나) 요청 순서 ① P1 할당 요청 (1,0,0,0,1) ② P3 할당 요청 (0,0,0,2,0) ③ P5 반환 요청 (0,0,1,1,0) ④ P4 할당 요청 (0,1,0,1,0). 손글씨로 Need 행렬과 안전 순서 P2 → P3 → P4 → P1 → P5 를 구하고, ① 요청은 가상 할당하면 Available (1,0,0,2,0) 으로 할당 가능한 프로세스가 없어 거절(block)">
+            </figure>
+          </li>
+        </ul>
       </section>
     </article>
   </main>
