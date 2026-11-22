@@ -389,7 +389,7 @@
             <ul>
               <li><strong>2개의 스택</strong> : 배열 하나(0 ~ n−1)의 양 끝에서 stack 1 은 오른쪽으로, stack 2 는 왼쪽으로 자람
                 <figure>
-                  <img src="1-2-4-fig-4.png" width="510" height="92" alt="0 부터 n−1 까지인 배열 하나에서 stack 1 은 왼쪽 끝에서 오른쪽으로, stack 2 는 오른쪽 끝에서 왼쪽으로 자라는 손그림.">
+                  <img src="1-2-4-fig-4.png" width="940" height="228" alt="0 부터 n−1 까지인 배열 하나에서 stack 1 은 왼쪽 끝에서 오른쪽으로, stack 2 는 오른쪽 끝에서 왼쪽으로 자라는 그림.">
                 </figure>
               </li>
               <li><strong>N개의 스택 (2개 이상)</strong> : 배열을 같은 크기의 세그먼트로 나눔
@@ -398,7 +398,7 @@
                   <li><strong>top[i]</strong> (0 ≤ i &lt; MAX_STACKS) : 최상단 원소</li>
                   <li>boundary[i] == top[i] 이면 i 번째 스택은 공백 상태
                     <figure>
-                      <img src="1-2-4-fig-5.png" width="898" height="229" alt="메모리를 m/n 크기의 칸으로 나눈 손그림. 0 에 top[0]·boundary[0], m/n 에 top[1]·boundary[1], 2m/n … m−1 까지 이어지고, boundary[i] = top[i] 이면 그 스택은 공백 상태라는 메모가 있다.">
+                      <img src="1-2-4-fig-5.png" width="960" height="564" alt="메모리를 m/n 크기의 칸으로 나눈 그림. 0 에 top[0]·boundary[0], ⌊m/n⌋ 에 top[1]·boundary[1], 2⌊m/n⌋ … m−1 까지 이어지고, 스택은 위로 자라며, boundary[i] = top[i] 이면 그 스택은 공백 상태다.">
                     </figure>
                     <figure>
                       <img src="1-2-4-fig-6.png" width="1277" height="638" alt="N개 스택 코드. MEMORY_SIZE 100, MAX_STACKS 10, memory·top·boundary 배열을 두고 top[j] = boundary[j] = (MEMORY_SIZE/n)*j 로 같은 크기로 나눈다. push(i, item) 은 top[i] == boundary[i+1] 이면 stackFull, 아니면 memory[++top[i]] = item, pop(i) 은 top[i] == boundary[i] 이면 stackEmpty, 아니면 memory[top[i]--] 를 돌려준다.">
@@ -439,7 +439,7 @@
               <li><strong>규칙 1</strong> : 피연산자를 읽으면 무조건 스택에 push</li>
               <li><strong>규칙 2</strong> : 연산자를 읽으면 pop 을 두 번 해서 연산한 뒤 결과를 push (먼저 꺼낸 것이 A, 다음에 꺼낸 것이 B 면 B 연산 A)
                 <figure>
-                  <img src="1-2-4-fig-8.png" width="1034" height="376" alt="후위식 A B C * + D E / − 를 계산하는 스택 그림. A, B, C 를 push 하고 * 에서 C, B 를 꺼내 B*C = X 를 push, + 에서 A+X = Y, D, E 를 push 하고 / 에서 D/E = Z, − 에서 Y−Z 를 구해 스택에 남긴다 (그림의 D/E ⇒ Y 는 Z).">
+                  <img src="1-2-4-fig-8.png" width="960" height="720" alt="후위식 A B C * + D E / − 를 계산하는 스택 그림. A, B, C 를 push 하고 * 에서 C, B 를 꺼내 B*C = X 를 push, + 에서 X, A 를 꺼내 A+X = Y, D, E 를 push 하고 / 에서 D/E = Z, − 에서 Y−Z 를 구해 스택에 남긴다. 화살표 옆 동그라미 번호는 원본의 순서 표시다.">
                 </figure>
               </li>
             </ul>
@@ -602,7 +602,7 @@
                   <li><strong>특징</strong> : n 개의 환형 큐는 n−1 개의 데이터를 삽입할 수 있음 (= 하나의 여유 공간 필요)</li>
                   <li><strong>원소 수</strong> : 원형 큐의 전체 크기가 N 이면 (r + N − f) % N
                     <figure>
-                      <img src="1-2-4-fig-20.png" width="455" height="230" alt="원형 큐의 원소 수 손그림. i) r 이 f 보다 뒤에 있으면 원소 수 = r − f, ii) r 이 한 바퀴 돌아 f 보다 앞에 있으면 원소 수 = r + N − f 이고, 둘을 합쳐 (r + N − f) % N 이다.">
+                      <img src="1-2-4-fig-20.png" width="960" height="908" alt="원형 큐의 원소 수. i) r 이 f 보다 뒤에 있으면 원소 수 = r − f, ii) r 이 한 바퀴 돌아 f 보다 앞에 있으면 r 을 r + N 으로 펼쳐 원소 수 = r + N − f 이고, 둘을 합쳐 (r + N − f) % N 이다.">
                     </figure>
                   </li>
                   <li>큐의 끝까지 도달하면 rear 를 다시 0 으로 : if (rear == MAX_QUEUE_SIZE-1) rear = 0; else rear++;</li>
@@ -629,13 +629,21 @@
             <tr><th scope="row">포인터 처리</th><td>f++, r++</td><td>f = (f + 1) % N<br>r = (r + 1) % N</td></tr>
           </tbody>
         </table>
-        <figure>
-          <img src="1-2-4-fig-21.png" width="1290" height="531" alt="왼쪽: 크기 6 배열 선형 큐에서 enqueue(3), (7), (5) 와 dequeue 두 번에 따라 front·rear 가 오른쪽으로만 움직이는 그림과, 크기 8 원형 큐의 공백·포화(A~G)·오류(A~H, front == rear) 상태. 오른쪽: 원형 큐에 A, B 삽입, 삭제, C, D 삽입 때 front 와 rear 의 위치(front 는 첫 요소 하나 앞, rear 는 마지막 요소).">
-        </figure>
+        <div class="figs">
+          <figure>
+            <img src="1-2-4-fig-21.png" width="960" height="792" alt="크기 6 배열 선형 큐에서 (a) 초기 상태(front·rear = −1), (b)~(d) enqueue(3), (7), (5) 로 rear 가 0, 1, 2 로, (e)~(f) dequeue 두 번으로 front 가 0, 1 로 오른쪽으로만 움직이는 그림.">
+          </figure>
+          <figure>
+            <img src="1-2-4-fig-22.png" width="960" height="400" alt="크기 8 원형 큐의 (a) 공백 상태(front == rear == 0), (b) 포화 상태(A~G, front 0, rear 7), (c) 오류 상태(A~H 를 다 채워 front == rear == 0).">
+          </figure>
+          <figure>
+            <img src="1-2-4-fig-23.png" width="960" height="1280" alt="원형 큐에서 front 는 첫 번째 요소 하나 앞, rear 는 마지막 요소를 가리킨다. (a) 초기 front = rear = 0, (b) A 삽입 rear 1, (c) B 삽입 rear 2, (d) 삭제 front 1, (e) C 삽입 rear 3, (f) D 삽입 rear 4.">
+          </figure>
+        </div>
         <ul>
           <li><strong>기출 2019</strong> : 배열로 만든 (가) 선형 큐와 (나) 원형 큐의 insert·delete 빈칸, n = 4 일 때 연산 7번 뒤 front·rear 값
             <figure>
-              <img src="1-2-4-fig-22.png" width="1370" height="1805" alt="2019 기출 6번 문제와 손풀이. ㉠ front == rear, ㉡ (rear + 1) % n 이고, insert s, q, delete, insert u, e, delete, insert t 를 마치면 front = 2, rear = 1 이다. 원형 큐 그림과 단계별 배열 그림이 있다.">
+              <img src="1-2-4-fig-24.png" width="1370" height="1805" alt="2019 기출 6번 문제와 손풀이. ㉠ front == rear, ㉡ (rear + 1) % n 이고, insert s, q, delete, insert u, e, delete, insert t 를 마치면 front = 2, rear = 1 이다. 원형 큐 그림과 단계별 배열 그림이 있다.">
             </figure>
           </li>
           <li><strong>데크 (Deque, Double Ended Queue)</strong> : 스택과 큐를 혼합한 형태
@@ -645,7 +653,7 @@
           </li>
           <li><strong>기출 2010 (8번)</strong> : 데크 연산 insertFirst·insertLast·deleteFirst·deleteLast 로 스택과 큐의 삽입·삭제 만들기
             <figure>
-              <img src="1-2-4-fig-23.png" width="1339" height="898" alt="2010 기출 8번 문제와 손풀이. 스택은 insertLast 와 deleteLast(같은 끝), 큐는 insertLast 와 deleteFirst(다른 끝)를 쓰므로 ㉠ insertLast, ㉡ insertLast 이다.">
+              <img src="1-2-4-fig-25.png" width="1339" height="898" alt="2010 기출 8번 문제와 손풀이. 스택은 insertLast 와 deleteLast(같은 끝), 큐는 insertLast 와 deleteFirst(다른 끝)를 쓰므로 ㉠ insertLast, ㉡ insertLast 이다.">
             </figure>
           </li>
         </ul>
